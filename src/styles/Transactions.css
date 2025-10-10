@@ -1,0 +1,122 @@
+table {
+    padding: 20px 20px 34px 20px;
+    border-radius: 16px;
+    width: 100%;
+    height: 734px;
+    border: 1px solid #00000026;
+}
+
+.trans-head {
+    margin-bottom: 18px;
+}
+
+.tb-head {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.row-titles {
+    background: #F5F5F9;
+    color: #00000099;
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(9, 1fr);
+    font-weight: 400;
+    padding: 0px 13px;
+    height: 36px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.row-titles.row-data {
+    color: black;
+    background: none;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.row-titles.row-data:not(:last-child) {
+    margin-bottom: 20px;
+}
+
+table tr p {
+    text-align: center;
+    width: 100%;
+}
+
+table tr div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+table tr div p {
+    width: fit-content;
+}
+
+table tr p:last-child {
+    text-align: right;
+}
+
+table tr p:first-child {
+    text-align: left;
+}
+
+.no-data {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    height: 550px;
+}
+
+.pags {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 24px 0px 108px 0px;
+}
+
+.pags button {
+    cursor: pointer;
+    border-radius: 4px;
+    border-width: 1px;
+    font-size: 13px;
+    height: 36px;
+    width: 36px;
+}
+
+.pags button.active-btn {
+    background: #2D85EA;
+    color: white;
+    border: none;
+    outline: none;
+}
+
+.pags button.inactive-btn {
+    color: black;
+    background: none;
+    border: 1px solid #00000026;
+}
+
+.trans-load {
+    margin-top: 24px;
+}
+
+.grid-load {
+    display: grid;
+    gap: 9px;
+    grid-template-columns: repeat(9, 1fr);
+}
+
+.grid-load div {
+    min-height: 32px;
+}
+
+.loads {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}

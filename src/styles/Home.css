@@ -1,0 +1,268 @@
+.Home {
+    padding: 0px 120px;
+}
+
+.page-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-head form {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.page-head {
+    margin-top: 24px;
+}
+
+.page-head h1 {
+    font-size: 36px;
+}
+
+.nav-filter {
+    position: relative;
+}
+
+.nav-filter button,
+.filter-btn {
+    background: none;
+    cursor: pointer;
+    gap: 9px;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #00000026;
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn.blue-nav {
+    background: #2D85EA;
+    color: white;
+}
+
+.grid-blocks {
+    margin-top: 18px;
+}
+
+.grid-blocks {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.g-block {
+    padding: 18px 16px 15px 16px;
+    border-radius: 16px;
+    border: 1.5px solid #00000026;
+}
+
+.g-block div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.g-block-num {
+    margin: 12px 0px 10px 0px;
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.tooltip {
+    display: flex;
+    position: relative;
+    margin-left: auto;
+}
+
+.tooltip:hover span {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.tooltip span {
+    position: absolute;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    width: 215px;
+    top: 50%;
+    left: 170px;
+    transform: translate(-50%, -50%);
+    padding: 11.5px 0px;
+    background-color: white;
+    border: 1px solid #00000026;
+    border-radius: 10px;
+    font-size: 12px;
+    transition: 0.3s;
+}
+
+.filter-drop {
+    background-color: white;
+    position: absolute;
+    pointer-events: none;
+    opacity: 0;
+    right: 0%;
+    top: calc(0% + 45px);
+    width: 360px;
+    border-radius: 10px;
+    padding-bottom: 7px;
+    border: 1px solid #0000001A;
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.1);
+}
+
+.filter-drop.drop {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.prof-flex.filter-flex {
+    background: #F9F9F9;
+    border-bottom: 1px solid #00000026;
+    margin-bottom: 0px;
+    padding: 17px;
+}
+
+.prof-flex.filter-flex span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-opts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 17px;
+}
+
+.filter-opts span {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.filter-select {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 13.5px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #00000026;
+}
+
+.drop-options {
+    background-color: white;
+    position: absolute;
+    top: 0%;
+    right: calc(100% + 35px);
+    border: 1px solid #0000001A;
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.05);
+    width: 100%;
+    border-radius: 10px;
+    padding: 13px 10px;
+}
+
+.drop-options.days {
+    width: 120px;
+    right: 0%;
+    transform: translateY(50px);
+}
+
+.drop-options p {
+    cursor: pointer;
+    padding: 8.5px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.opt-active {
+    background: #F1F4FF;
+}
+
+.opts-head {
+    display: flex;
+    justify-content: space-between;
+}
+
+.reset-btn {
+    color: #0035CC;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#home-charts {
+    margin-top: 24px;
+}
+
+.chart-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 19px;
+}
+
+.chart-grid .chart-block {
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    border-radius: 16px;
+    border: 1px solid #00000026;
+    min-height: 420px;
+}
+
+.chart-head {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+.chart-grid .chart-container {
+    flex: 1;
+    min-height: 0;
+}
+
+#tool-cont {
+    border-left: 3px solid #5682FF;
+    padding-left: 10px;
+}
+
+#chartjs-tooltip {
+    background-color: white;
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.1);
+    transition: all 0.15s ease;
+    transform: translate(-50%, -120%);
+    width: 215px;
+    pointer-events: none;
+    padding: 14px 20px;
+    border-radius: 10px;
+    border: 1px solid #00000026;
+    z-index: 1000;
+}
+
+#t-flex {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#t-span1 {
+    color: #00000099;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#t-span2 {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#t-span3 {
+    color: #05A360;
+    font-size: 14px;
+}

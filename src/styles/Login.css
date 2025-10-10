@@ -1,0 +1,105 @@
+.logo {
+    padding-top: 32px;
+}
+
+.lang-box {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 12px;
+}
+
+.log-span {
+    color: #00000099;
+    display: flex;
+    max-width: 309px;
+    margin-top: 12px;
+}
+
+.Login form {
+    margin: 32px auto 0px auto;
+    max-width: 393px;
+}
+
+.Login form div {
+    margin-bottom: 16px;
+}
+
+.Login form div input {
+    outline: none;
+    border: 1px solid #00000026;
+    font-size: 16px;
+    padding: 12.5px 16px;
+    font-weight: 400;
+    border-radius: 8px;
+    transition: 0.3s;
+
+    &:focus {
+        border-color: #0035CC;
+    }
+}
+
+.Login form div p {
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.Login form input {
+    width: 100%;
+}
+
+.Login form button {
+    color: white;
+    background: #0035CC;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 8px;
+    width: 100%;
+    padding: 13px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+.log-span.span2 {
+    max-width: 393px;
+    margin-top: 16px;
+}
+
+.log-span.span3 {
+    color: #0035CC;
+    max-width: fit-content;
+    margin-top: 32px;
+}
+
+.alerts {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    top: 93%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.alt {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid;
+    width: 360px;
+    padding: 18px 16px;
+    border-radius: 10px;
+}
+
+.alt.green {
+    background: #EAF7EE;
+    border-color: #C2D7C8;
+}
+
+.alt-close {
+    margin-left: auto;
+    cursor: pointer;
+}

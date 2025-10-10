@@ -1,0 +1,56 @@
+.help-desc {
+    color: #00000099;
+    display: flex;
+    margin-top: 16px;
+}
+
+.faqs {
+    max-width: 672px;
+    margin: 31px auto auto auto;
+}
+
+.faq-flex {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 45px;
+}
+
+.f-flex-block {
+    margin-left: 32px;
+    display: flex;
+    gap: 12px;
+}
+
+.faq-flex span {
+    font-weight: bold;
+    border: 1px solid #00000026;
+    font-size: 14px;
+    padding: 9.5px 12px;
+    border-radius: 10px;
+}
+
+.faq {
+    margin-top: 31px;
+}
+
+.faq svg {
+    min-width: 24px;
+    min-height: 24px;
+}
+
+.faq p {
+    font-weight: bold;
+}
+
+.faq span {
+    color: #00000099;
+    display: flex;
+    max-width: 620px;
+    font-size: 14px;
+    margin-top: 14px;
+}
+
+.quest {
+    margin-bottom: 36px;
+}

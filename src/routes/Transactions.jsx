@@ -37,17 +37,17 @@ function Transactions() {
 
     // Full transactions list (sampled from your markup)
     const transactions = [
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "rejected", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "pending", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
-        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785...", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "rejected", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "pending", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
+        { date: "Авг 6, 2024", time: "15:56", txId: "x0565847856584785", orderId: "x0565847856584785", category: "Игра", description: "Merhaba 10gb, 3 day", extId: "x056584785", status: "success", amount: "+325ТМТ" },
         // ...add the rest
     ];
 
@@ -137,46 +137,47 @@ function Transactions() {
                             <div>
                                 <p className="tb-head">Последние транзакции</p>
 
-                                <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p>Дата</p>
-                                    <p>Время</p>
-                                    <p>ID Транзакции</p>
-                                    <p>ID заказа</p>
-                                    <p>Категория</p>
-                                    <p>Описание</p>
-                                    <p>Внешний ID</p>
-                                    <p>Статус</p>
-                                    <p>Сумма</p>
-                                </tr>
+                                <div className="table-auto">
+                                    <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
+                                        <p>Дата</p>
+                                        <p>Время</p>
+                                        <p>ID Транзакции</p>
+                                        <p>ID заказа</p>
+                                        <p>Категория</p>
+                                        <p>Описание</p>
+                                        <p id="exid">Внешний ID</p>
+                                        <p>Статус</p>
+                                        <p>Сумма</p>
+                                    </tr>
 
-                                {hasTransactions ? (
-                                    transactions.map((tx, i) => {
-                                        const meta = STATUS[tx.status] || STATUS.pending;
-                                        const Icon = meta.Icon;
-                                        return (
-                                            <tr key={i} className='row-titles row-data'>
-                                                <p>{tx.date}</p>
-                                                <p>{tx.time}</p>
-                                                <p style={{ color: "#2D85EA" }}>{tx.txId}</p>
-                                                <p style={{ color: "#2D85EA" }}>{tx.orderId}</p>
-                                                <p>{tx.category}</p>
-                                                <p>{tx.description}</p>
-                                                <p>{tx.extId}</p>
-
-                                                <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                    <Icon />
-                                                    <p>{meta.label}</p>
-                                                </div>
-                                                <p>{tx.amount}</p>
-                                            </tr>
-                                        );
-                                    })
-                                ) : (
-                                    // Keep it a row so the table never collapses
-                                    <div className="no-data">
-                                        <p>У вас пока нет транзакций</p>
-                                    </div>
-                                )}
+                                    {hasTransactions ? (
+                                        transactions.map((tx, i) => {
+                                            const meta = STATUS[tx.status] || STATUS.pending;
+                                            const Icon = meta.Icon;
+                                            return (
+                                                <tr key={i} className='row-titles row-data'>
+                                                    <p>{tx.date}</p>
+                                                    <p>{tx.time}</p>
+                                                    <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.txId}</p>
+                                                    <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.orderId}</p>
+                                                    <p>{tx.category}</p>
+                                                    <p className='trans-overflow'>{tx.description}</p>
+                                                    <p className='trans-overflow' id="exid">{tx.extId}</p>
+                                                    <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                        <Icon />
+                                                        <p className='trans-overflow'>{meta.label}</p>
+                                                    </div>
+                                                    <p>{tx.amount}</p>
+                                                </tr>
+                                            );
+                                        })
+                                    ) : (
+                                        // Keep it a row so the table never collapses
+                                        <div className="no-data">
+                                            <p>У вас пока нет транзакций</p>
+                                        </div>
+                                    )}
+                                </div>
                             </div>
                         </table>
 
@@ -190,7 +191,6 @@ function Transactions() {
                             <button className='inactive-btn'>24</button>
                         </div>
                     </div>
-
                 </div>
             )}
         </div>

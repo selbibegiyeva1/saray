@@ -22,7 +22,6 @@ table {
     align-items: center;
     grid-template-columns: repeat(9, 1fr);
     font-weight: 400;
-    padding: 0px 13px;
     height: 36px;
     border-radius: 6px;
     font-size: 12px;
@@ -49,6 +48,14 @@ table tr div {
     align-items: center;
     justify-content: center;
     gap: 8px;
+}
+
+.trans-overflow {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 table tr div p {
@@ -119,4 +126,18 @@ table tr p:first-child {
     display: flex;
     flex-direction: column;
     gap: 24px;
+}
+
+@media(max-width: 768px) {
+    .row-titles.row-data {
+        font-size: 12px;
+    }
+
+    #exid {
+        display: none;
+    }
+
+    .row-titles {
+        grid-template-columns: repeat(8, 1fr);
+    }
 }

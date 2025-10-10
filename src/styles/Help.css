@@ -54,3 +54,17 @@
 .quest {
     margin-bottom: 36px;
 }
+
+@media(max-width: 425px) {
+    .f-flex-block {
+        flex-direction: column;
+    }
+
+    .faq-flex {
+        gap: 0px;
+    }
+
+    .f-flex-block span {
+        width: fit-content;
+    }
+}

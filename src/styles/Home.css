@@ -203,7 +203,7 @@
 
 .chart-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 19px;
 }
 
@@ -265,4 +265,90 @@
 #t-span3 {
     color: #05A360;
     font-size: 14px;
+}
+
+@media(max-width: 1440px) {
+    .Home {
+        padding: 0px 80px;
+    }
+}
+
+@media(max-width: 1024px) {
+    .grid-blocks {
+        grid-template-columns: repeat(3, 1fr)
+    }
+
+    .Home {
+        padding: 0px 60px;
+    }
+
+    .page-head h1 {
+        font-size: 24px;
+    }
+
+    .grid-blocks {
+        margin-top: 24px;
+    }
+
+    .g-block-num {
+        font-size: 20px;
+    }
+
+    #home-charts {
+        margin-top: 44px;
+    }
+}
+
+@media(max-width: 768px) {
+    .Home {
+        padding: 0px 32px;
+    }
+
+    .grid-blocks {
+        gap: 16px;
+    }
+
+    .g-block {
+        padding: 14px;
+    }
+
+    .g-block div {
+        font-size: 12px;
+    }
+
+    .chart-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .drop-options {
+        right: 0px;
+        top: 55px;
+        z-index: 1;
+    }
+
+    .drop-options.days {
+        top: 0px;
+    }
+
+    .tooltip span {
+        left: -125px;
+    }
+
+    #home-charts {
+        margin-bottom: 106px;
+    }
+}
+
+@media(max-width: 425px) {
+    .grid-blocks {
+        grid-template-columns: 1fr;
+    }
+
+    .Home {
+        padding: 0px 16px;
+    }
+
+    .page-head {
+        display: none;
+    }
 }

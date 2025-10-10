@@ -59,7 +59,7 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
-    z-index: 1;
+    z-index: 10;
     opacity: 0;
     top: 0%;
     left: 0%;
@@ -148,4 +148,39 @@
     border: 1px solid #00000026;
     border-radius: 10px;
     font-size: 12px;
+}
+
+@media(max-width: 1024px) {
+    .Navbar {
+        gap: 32px;
+    }
+
+    .nav-ul {
+        gap: 24px;
+    }
+
+    .nav-ul.ul2 {
+        gap: 14px;
+    }
+}
+
+@media(max-width: 768px) {
+    .Navbar {
+        padding: 12px 0px;
+    }
+}
+
+@media(max-width: 425px) {
+    .nav-ul {
+        display: none;
+    }
+
+    .nav-ul.ul2 {
+        display: flex;
+        gap: 8px;
+    }
+
+    .nav-ul.ul2 a:nth-child(1) {
+        display: none;
+    }
 }

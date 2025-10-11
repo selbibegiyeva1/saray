@@ -134,62 +134,58 @@ function Transactions() {
 
                     <div className="transactions-container">
                         <table>
-                            <div>
-                                <p className="tb-head">Последние транзакции</p>
+                            <p className="tb-head">Последние транзакции</p>
 
-                                <div className="table-auto">
-                                    <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
-                                        <p>Дата</p>
-                                        <p>Время</p>
-                                        <p>ID Транзакции</p>
-                                        <p>ID заказа</p>
-                                        <p>Категория</p>
-                                        <p>Описание</p>
-                                        <p id="exid">Внешний ID</p>
-                                        <p>Статус</p>
-                                        <p>Сумма</p>
-                                    </tr>
+                            <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
+                                <p>Дата</p>
+                                <p>Время</p>
+                                <p>ID Транзакции</p>
+                                <p>ID заказа</p>
+                                <p>Категория</p>
+                                <p>Описание</p>
+                                <p id="exid">Внешний ID</p>
+                                <p>Статус</p>
+                                <p>Сумма</p>
+                            </tr>
 
-                                    {hasTransactions ? (
-                                        transactions.map((tx, i) => {
-                                            const meta = STATUS[tx.status] || STATUS.pending;
-                                            const Icon = meta.Icon;
-                                            return (
-                                                <tr key={i} className='row-titles row-data'>
-                                                    <p>{tx.date}</p>
-                                                    <p>{tx.time}</p>
-                                                    <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.txId}</p>
-                                                    <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.orderId}</p>
-                                                    <p>{tx.category}</p>
-                                                    <p className='trans-overflow'>{tx.description}</p>
-                                                    <p className='trans-overflow' id="exid">{tx.extId}</p>
-                                                    <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                        <Icon />
-                                                        <p className='trans-overflow'>{meta.label}</p>
-                                                    </div>
-                                                    <p>{tx.amount}</p>
-                                                </tr>
-                                            );
-                                        })
-                                    ) : (
-                                        // Keep it a row so the table never collapses
-                                        <div className="no-data">
-                                            <p>У вас пока нет транзакций</p>
-                                        </div>
-                                    )}
+                            {hasTransactions ? (
+                                transactions.map((tx, i) => {
+                                    const meta = STATUS[tx.status] || STATUS.pending;
+                                    const Icon = meta.Icon;
+                                    return (
+                                        <tr key={i} className='row-titles row-data'>
+                                            <p>{tx.date}</p>
+                                            <p>{tx.time}</p>
+                                            <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.txId}</p>
+                                            <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.orderId}</p>
+                                            <p>{tx.category}</p>
+                                            <p className='trans-overflow'>{tx.description}</p>
+                                            <p className='trans-overflow' id="exid">{tx.extId}</p>
+                                            <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <Icon />
+                                                <p className='trans-overflow'>{meta.label}</p>
+                                            </div>
+                                            <p>{tx.amount}</p>
+                                        </tr>
+                                    );
+                                })
+                            ) : (
+                                // Keep it a row so the table never collapses
+                                <div className="no-data">
+                                    <p>У вас пока нет транзакций</p>
                                 </div>
-                            </div>
+                            )}
                         </table>
 
-                        <div className="pags">
-                            <button className='active-btn'>1</button>
-                            <button className='inactive-btn'>2</button>
-                            <button className='inactive-btn'>3</button>
-                            <button className='inactive-btn'>4</button>
-                            <button className='inactive-btn'>5</button>
-                            <button className='inactive-btn'>...</button>
-                            <button className='inactive-btn'>24</button>
-                        </div>
+                    </div>
+                    <div className="pags">
+                        <button className='active-btn'>1</button>
+                        <button className='inactive-btn'>2</button>
+                        <button className='inactive-btn'>3</button>
+                        <button className='inactive-btn'>4</button>
+                        <button className='inactive-btn'>5</button>
+                        <button className='inactive-btn'>...</button>
+                        <button className='inactive-btn'>24</button>
                     </div>
                 </div>
             )}

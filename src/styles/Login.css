@@ -79,6 +79,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     top: 93%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -102,4 +103,19 @@
 .alt-close {
     margin-left: auto;
     cursor: pointer;
+}
+
+@media(max-width: 425px) {
+    .Login, 
+    .alerts {
+        padding: 0px 24px;
+    }
+
+    .alt {
+        width: 100%;
+    }
+
+    .logo {
+        padding-top: 80px;
+    }
 }

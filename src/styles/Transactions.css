@@ -1,4 +1,4 @@
-table {
+.transactions-container {
     padding: 20px 20px 34px 20px;
     border-radius: 16px;
     width: 100%;
@@ -139,5 +139,28 @@ table tr p:first-child {
 
     .row-titles {
         grid-template-columns: repeat(8, 1fr);
+    }
+
+    .status-cell p {
+        display: none;
+    }
+}
+
+@media(max-width: 425px) {
+    .transactions-container {
+        max-width: 100%;
+        overflow: auto;
+    }
+
+    table {
+        width: 1000px;
+    }
+
+    .page-head.trans-head {
+        display: flex;
+    }
+
+    .page-head.trans-head button span {
+        display: none;
     }
 }

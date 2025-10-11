@@ -1,9 +1,12 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 // CSS
 import "../styles/Login.css";
 
 function Login() {
+    const navigate = useNavigate();
+
     return (
         <div className='Login'>
             <div className="logo" style={{ display: "flex", justifyContent: "center", marginBottom: 23.5 }}>
@@ -29,7 +32,7 @@ function Login() {
                     <p>Логин</p>
                     <input type="text" placeholder='Введите пароль' required />
                 </div>
-                <button>Войти</button>
+                <button onClick={() => navigate("/home")}>Войти</button>
             </form>
 
             <center><span className='log-span span2'>Самостоятельная регистрация недоступна. Доступ выдаёт поддержка</span></center>

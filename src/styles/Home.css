@@ -271,6 +271,10 @@
     .Home {
         padding: 0px 80px;
     }
+
+    #home-charts {
+        margin: 24px 0px 54px 0px;
+    }
 }
 
 @media(max-width: 1024px) {
@@ -295,7 +299,7 @@
     }
 
     #home-charts {
-        margin-top: 44px;
+        margin: 44px 0px 46px 0px;
     }
 }
 
@@ -335,7 +339,7 @@
     }
 
     #home-charts {
-        margin-bottom: 106px;
+        margin: 26px 0px 106px 0px;
     }
 }
 
@@ -350,5 +354,9 @@
 
     .page-head {
         display: none;
+    }
+
+        #home-charts {
+        margin: 39px 0px 246px 0px;
     }
 }

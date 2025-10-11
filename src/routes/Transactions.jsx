@@ -176,7 +176,6 @@ function Transactions() {
                                 </div>
                             )}
                         </table>
-
                     </div>
                     <div className="pags">
                         <button className='active-btn'>1</button>

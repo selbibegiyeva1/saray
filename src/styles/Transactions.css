@@ -6,6 +6,10 @@
     border: 1px solid #00000026;
 }
 
+table {
+    width: 100%;
+}
+
 .trans-head {
     margin-bottom: 18px;
 }

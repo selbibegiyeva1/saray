@@ -181,6 +181,12 @@
     width: 180px;
 }
 
+.drop-options.days.langs.langLogin {
+    top: 95px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .drop-options p {
     cursor: pointer;
     padding: 8.5px 10px;

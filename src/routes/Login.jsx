@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // CSS
@@ -6,6 +6,12 @@ import "../styles/Login.css";
 
 function Login() {
     const navigate = useNavigate();
+
+    const initialPeriod = 'Русский';
+
+    const [openDay, setOpenDay] = useState(false);
+    const [period, setPeriod] = useState(initialPeriod);
+    const periods = ['Русский', 'Туркменский'];
 
     return (
         <div className='Login'>
@@ -19,10 +25,35 @@ function Login() {
             </div>
             <div className="lang" style={{ display: "flex", justifyContent: "center" }}>
                 <div className="lang-box">
-                    <span>TM</span>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
-                    </svg>
+                    <div className='nav-filter langs'>
+                        <button
+                            type='button'
+                            onClick={() => { setOpenDay(v => !v); setOpenCat(false); setOpenPay(false); }}
+                            aria-expanded={openDay}
+                            role="button"
+                            id='log-lang'
+                            tabIndex={0}
+                        >
+                            <p>{period}</p>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z" fill="black" />
+                            </svg>
+                        </button>
+
+                        {openDay && (
+                            <div className="drop-options days langs langLogin">
+                                {periods.map(opt => (
+                                    <p
+                                        key={opt}
+                                        className={opt === period ? 'opt-active' : ''}
+                                        onClick={() => { setPeriod(opt); setOpenDay(false); }}
+                                    >
+                                        {opt}
+                                    </p>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
             <center><h2 style={{ marginTop: 35.5 }}>Личный кабинет</h2></center>
@@ -34,7 +65,7 @@ function Login() {
                     <input type="text" placeholder='Введите логин' required />
                 </div>
                 <div>
-                    <p>Логин</p>
+                    <p>Пароль</p>
                     <input type="text" placeholder='Введите пароль' required />
                 </div>
                 <button onClick={() => navigate("/home")}>Войти</button>

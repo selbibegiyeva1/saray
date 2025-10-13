@@ -27,6 +27,11 @@
     margin-top: 12px;
 }
 
+#log-lang {
+    border: none;
+    font-size: 14px;
+}
+
 .Login form {
     margin: 32px auto 0px auto;
     max-width: 393px;

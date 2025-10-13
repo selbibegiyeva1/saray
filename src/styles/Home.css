@@ -58,6 +58,7 @@
 .g-block {
     padding: 18px 16px 15px 16px;
     border-radius: 16px;
+    height: 140px;
     border: 1.5px solid #00000026;
 }
 
@@ -308,6 +309,10 @@
     #home-charts {
         margin: 44px 0px 46px 0px;
     }
+
+    .g-block {
+        height: 130px;
+    }
 }
 
 @media(max-width: 768px) {
@@ -343,6 +348,10 @@
 
     #home-charts {
         margin: 26px 0px 106px 0px;
+    }
+
+    .g-block {
+        height: 120px;
     }
 }
 

@@ -1,0 +1,45 @@
+.report-links {
+    display: flex;
+    gap: 24px;
+    font-weight: 500;
+    margin: 7.5px 0px 27.5px 0px;
+}
+
+.report-btn {
+    background: none;
+    position: relative;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #000;
+}
+
+.report-btn.active {
+    color: #2D85EA;
+    font-weight: 600;
+}
+
+.report-btn.active::before {
+    background: #2D85EA;
+    content: "";
+    position: absolute;
+    top: 150%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 1px;
+    width: 105%;
+}
+
+.transactions-container.with {
+    margin-top: 18px;
+    height: 596px;
+}
+
+.row-titles.withdrawn {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.row-titles.withdrawn {
+    grid-template-columns: repeat(5, 1fr);
+}

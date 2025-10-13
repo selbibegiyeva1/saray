@@ -1,9 +1,27 @@
-import Navbar from '../components/Navbar'
+import Navbar from '../components/Navbar';
+import { useState } from 'react';
+
+import WithdrawnReport from "../components/WithdrawnReport";
+import EarnedReport from "../components/EarnedReport";
+import AvailableReport from "../components/AvailableReport";
 
 // CSS
 import "../styles/Reports.css";
 
 function Reports() {
+    const [activeButton, setActiveButton] = useState("withdrawn");
+
+    const renderReport = () => {
+        switch (activeButton) {
+            case "earned":
+                return <EarnedReport />;
+            case "available":
+                return <AvailableReport />;
+            default:
+                return <WithdrawnReport />;
+        }
+    };
+
     return (
         <div className='Home'>
             <Navbar />
@@ -33,8 +51,30 @@ function Reports() {
                 </form>
             </div>
 
-            <div className="chart-grid reports-grid">
 
+            <div className="report-links">
+                <button
+                    className={activeButton === "withdrawn" ? "report-btn active" : "report-btn"}
+                    onClick={() => setActiveButton("withdrawn")}
+                >
+                    Выведено
+                </button>
+                <button
+                    className={activeButton === "earned" ? "report-btn active" : "report-btn"}
+                    onClick={() => setActiveButton("earned")}
+                >
+                    Всего заработано
+                </button>
+                <button
+                    className={activeButton === "available" ? "report-btn active" : "report-btn"}
+                    onClick={() => setActiveButton("available")}
+                >
+                    Доступно к выводу
+                </button>
+            </div>
+
+            <div className="report-display">
+                {renderReport()}
             </div>
         </div>
     )

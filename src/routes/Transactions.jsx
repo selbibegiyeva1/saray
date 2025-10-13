@@ -133,57 +133,59 @@ function Transactions() {
                     </div>
 
                     <div className="transactions-container">
-                        <table>
-                            <div className="search-table">
-                                <p className="tb-head">Последние транзакции</p>
-                                <div className="search">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11.1572 11.1572L15.833 15.833M7.91634 12.4997C10.4476 12.4997 12.4997 10.4476 12.4997 7.91634C12.4997 5.38504 10.4476 3.33301 7.91634 3.33301C5.38504 3.33301 3.33301 5.38504 3.33301 7.91634C3.33301 10.4476 5.38504 12.4997 7.91634 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                    </svg>
-                                    <input type="text" placeholder='Введите ID транзакции' />
+                        <div className="table-viewport">
+                            <table>
+                                <div className="search-table">
+                                    <p className="tb-head">Последние транзакции</p>
+                                    <div className="search">
+                                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.1572 11.1572L15.833 15.833M7.91634 12.4997C10.4476 12.4997 12.4997 10.4476 12.4997 7.91634C12.4997 5.38504 10.4476 3.33301 7.91634 3.33301C5.38504 3.33301 3.33301 5.38504 3.33301 7.91634C3.33301 10.4476 5.38504 12.4997 7.91634 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                        <input type="text" placeholder='Введите ID транзакции' />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
-                                <p>Дата</p>
-                                <p>Время</p>
-                                <p>ID Транзакции</p>
-                                <p>ID заказа</p>
-                                <p>Категория</p>
-                                <p>Описание</p>
-                                <p id="exid">Внешний ID</p>
-                                <p>Статус</p>
-                                <p>Сумма</p>
-                            </tr>
+                                <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
+                                    <p>Дата</p>
+                                    <p>Время</p>
+                                    <p>ID Транзакции</p>
+                                    <p>ID заказа</p>
+                                    <p>Категория</p>
+                                    <p>Описание</p>
+                                    <p id="exid">Внешний ID</p>
+                                    <p>Статус</p>
+                                    <p>Сумма</p>
+                                </tr>
 
-                            {hasTransactions ? (
-                                transactions.map((tx, i) => {
-                                    const meta = STATUS[tx.status] || STATUS.pending;
-                                    const Icon = meta.Icon;
-                                    return (
-                                        <tr key={i} className='row-titles row-data'>
-                                            <p>{tx.date}</p>
-                                            <p>{tx.time}</p>
-                                            <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.txId}</p>
-                                            <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.orderId}</p>
-                                            <p>{tx.category}</p>
-                                            <p className='trans-overflow'>{tx.description}</p>
-                                            <p className='trans-overflow' id="exid">{tx.extId}</p>
-                                            <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                                                <Icon />
-                                                <p className='trans-overflow'>{meta.label}</p>
-                                            </div>
-                                            <p>{tx.amount}</p>
-                                        </tr>
-                                    );
-                                })
-                            ) : (
-                                // Keep it a row so the table never collapses
-                                <div className="no-data">
-                                    <p>У вас пока нет транзакций</p>
-                                </div>
-                            )}
-                        </table>
+                                {hasTransactions ? (
+                                    transactions.map((tx, i) => {
+                                        const meta = STATUS[tx.status] || STATUS.pending;
+                                        const Icon = meta.Icon;
+                                        return (
+                                            <tr key={i} className='row-titles row-data'>
+                                                <p>{tx.date}</p>
+                                                <p>{tx.time}</p>
+                                                <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.txId}</p>
+                                                <p className='trans-overflow' style={{ color: "#2D85EA" }}>{tx.orderId}</p>
+                                                <p>{tx.category}</p>
+                                                <p className='trans-overflow'>{tx.description}</p>
+                                                <p className='trans-overflow' id="exid">{tx.extId}</p>
+                                                <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                    <Icon />
+                                                    <p className='trans-overflow'>{meta.label}</p>
+                                                </div>
+                                                <p>{tx.amount}</p>
+                                            </tr>
+                                        );
+                                    })
+                                ) : (
+                                    // Keep it a row so the table never collapses
+                                    <div className="no-data">
+                                        <p>У вас пока нет транзакций</p>
+                                    </div>
+                                )}
+                            </table>
+                        </div>
                     </div>
                     <div className="pags">
                         <button className='active-btn'>1</button>

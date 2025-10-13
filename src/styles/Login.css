@@ -1,11 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Wix+Madefor+Display:wght@400..800&display=swap');
+
 .logo {
     padding-top: 32px;
+}
+
+.logo p {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
 }
 
 .lang-box {
     display: flex;
     align-items: center;
     cursor: pointer;
+    position: relative;
     gap: 12px;
 }
 
@@ -106,7 +117,8 @@
 }
 
 @media(max-width: 425px) {
-    .Login, 
+
+    .Login,
     .alerts {
         padding: 0px 24px;
     }

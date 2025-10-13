@@ -93,7 +93,7 @@
     opacity: 0;
     width: 215px;
     top: 50%;
-    left: 170px;
+    left: -125px;
     transform: translate(-50%, -50%);
     padding: 11.5px 0px;
     background-color: white;
@@ -167,12 +167,17 @@
     width: 100%;
     border-radius: 10px;
     padding: 13px 10px;
+    z-index: 1;
 }
 
 .drop-options.days {
     width: 120px;
     right: 0%;
     transform: translateY(50px);
+}
+
+.drop-options.days.langs {
+    width: 180px;
 }
 
 .drop-options p {
@@ -275,12 +280,13 @@
     #home-charts {
         margin: 24px 0px 54px 0px;
     }
+
+    .grid-blocks {
+        grid-template-columns: repeat(4, 1fr)
+    }
 }
 
 @media(max-width: 1024px) {
-    .grid-blocks {
-        grid-template-columns: repeat(3, 1fr)
-    }
 
     .Home {
         padding: 0px 60px;
@@ -292,6 +298,7 @@
 
     .grid-blocks {
         margin-top: 24px;
+        grid-template-columns: repeat(3, 1fr)
     }
 
     .g-block-num {
@@ -332,10 +339,6 @@
 
     .drop-options.days {
         top: 0px;
-    }
-
-    .tooltip span {
-        left: -125px;
     }
 
     #home-charts {

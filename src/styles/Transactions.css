@@ -17,6 +17,7 @@ table {
 .tb-head {
     font-size: 18px;
     font-weight: 500;
+    width: fit-content;
 }
 
 .row-titles {
@@ -132,6 +133,29 @@ table tr p:first-child {
     gap: 24px;
 }
 
+.search-table {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 1.5px solid #00000026;
+    padding: 10px 38px 10px 16px;
+    border-radius: 8px;
+}
+
+.search input {
+    border: none;
+    outline: none;
+    background-color: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
 @media(max-width: 768px) {
     .row-titles.row-data {
         font-size: 12px;
@@ -166,5 +190,13 @@ table tr p:first-child {
 
     .page-head.trans-head button span {
         display: none;
+    }
+
+    .search-table {
+        flex-direction: column;
+        align-items: initial;
+        justify-content: initial;
+        width: fit-content;
+        gap: 14px;
     }
 }

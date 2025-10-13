@@ -7,13 +7,17 @@ import "../styles/Navbar.css";
 function Navbar() {
   const TOKEN =
     "8d5b81f8-e8125-4578-b1a7-e093b318d5b81f8-e8125-4578-b1a7-e093b31";
+  const initialPeriod = 'Русский';
 
   // show a shortened version in the input, keep full token elsewhere
   const displayToken = `${TOKEN.slice(0, 32)}...`;
 
   const [profile, setProfile] = useState(false);
-
   const [copied, setCopied] = useState(false);
+  const [period, setPeriod] = useState(initialPeriod);
+
+  const [openDay, setOpenDay] = useState(false);
+  const periods = ['Русский', 'Туркменский'];
 
   const copyToken = async () => {
     try {
@@ -47,7 +51,11 @@ function Navbar() {
         className={({ isActive }) => (isActive ? "active" : "")}
         style={{ display: "flex" }}
       >
-        <img src="/logo.png" style={{ width: 56 }} alt="logo" />
+        <svg width="32" height="36" viewBox="0 0 36 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M36 25.3555C36 29.2185 32.8679 32.3506 29.0049 32.3506L17.3447 32.3506L30.6182 16.1748L17.3457 -8.15405e-07L29.0049 -3.05766e-07C32.8679 -1.36907e-07 36 3.13206 36 6.99512L36 25.3555Z" fill="#283FFF" />
+          <path d="M6.99512 32.3506C3.13206 32.3506 -1.27718e-06 29.2185 -1.10832e-06 25.3555L-3.05766e-07 6.99512C-1.36907e-07 3.13206 3.13206 -6.21254e-07 6.99512 -4.52394e-07L17.3447 0L4.07129 16.1748L17.3447 32.3506L6.99512 32.3506Z" fill="#283FFF" />
+          <rect width="10.397" height="10.397" transform="matrix(0.634368 0.773031 -0.634368 0.773031 17.7041 8.30566)" fill="#283FFF" />
+        </svg>
       </NavLink>
       <ul className='nav-ul'>
         <li>
@@ -77,11 +85,33 @@ function Navbar() {
       </ul>
       <ul className='nav-ul ul2'>
         <li>
-          <div className="lang-box">
-            <span>TM</span>
-            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
-            </svg>
+          <div className='nav-filter langs'>
+            <button
+              type='button'
+              onClick={() => { setOpenDay(v => !v); setOpenCat(false); setOpenPay(false); }}
+              aria-expanded={openDay}
+              role="button"
+              tabIndex={0}
+            >
+              <p>{period}</p>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z" fill="black" />
+              </svg>
+            </button>
+
+            {openDay && (
+              <div className="drop-options days langs">
+                {periods.map(opt => (
+                  <p
+                    key={opt}
+                    className={opt === period ? 'opt-active' : ''}
+                    onClick={() => { setPeriod(opt); setOpenDay(false); }}
+                  >
+                    {opt}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         </li>
         <li>

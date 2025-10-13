@@ -9,8 +9,13 @@ function Login() {
 
     return (
         <div className='Login'>
-            <div className="logo" style={{ display: "flex", justifyContent: "center", marginBottom: 23.5 }}>
-                <img src="/logo.png" style={{ width: 64 }} alt="logo" />
+            <div className="logo" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 23.5, gap: 12 }}>
+                <svg width="32" height="36" viewBox="0 0 36 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M36 25.3555C36 29.2185 32.8679 32.3506 29.0049 32.3506L17.3447 32.3506L30.6182 16.1748L17.3457 -8.15405e-07L29.0049 -3.05766e-07C32.8679 -1.36907e-07 36 3.13206 36 6.99512L36 25.3555Z" fill="#283FFF" />
+                    <path d="M6.99512 32.3506C3.13206 32.3506 -1.27718e-06 29.2185 -1.10832e-06 25.3555L-3.05766e-07 6.99512C-1.36907e-07 3.13206 3.13206 -6.21254e-07 6.99512 -4.52394e-07L17.3447 0L4.07129 16.1748L17.3447 32.3506L6.99512 32.3506Z" fill="#283FFF" />
+                    <rect width="10.397" height="10.397" transform="matrix(0.634368 0.773031 -0.634368 0.773031 17.7041 8.30566)" fill="#283FFF" />
+                </svg>
+                <p>Unite eSIM</p>
             </div>
             <div className="lang" style={{ display: "flex", justifyContent: "center" }}>
                 <div className="lang-box">

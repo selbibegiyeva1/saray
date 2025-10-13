@@ -41,11 +41,11 @@
 }
 
 .nav-ul li a.active {
-    color: #0035CC;
+    color: #2D85EA;
 }
 
 .nav-ul li a.active::before {
-    background: #0035CC;
+    background: #2D85EA;
     content: "";
     position: absolute;
     bottom: -10px;

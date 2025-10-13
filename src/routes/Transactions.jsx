@@ -89,9 +89,9 @@ function Transactions() {
                         <form>
                             <button className="filter-btn blue-nav" type="button">
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M10.8334 2.5H6.16675C5.06218 2.5 4.16675 3.39543 4.16675 4.5V15.5C4.16675 16.6046 5.06218 17.5 6.16675 17.5H13.8334C14.938 17.5 15.8334 16.6046 15.8334 15.5V7.5M10.8334 2.5L15.8334 7.5M10.8334 2.5V6.5C10.8334 7.05228 11.2811 7.5 11.8334 7.5H15.8334M10.0001 10.8333V14.1667M11.6667 12.5H8.33341" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M10.8337 2.5H6.16699C5.06242 2.5 4.16699 3.39543 4.16699 4.5V8.33333M10.8337 2.5L15.8337 7.5M10.8337 2.5V6.5C10.8337 7.05228 11.2814 7.5 11.8337 7.5H15.8337M15.8337 7.5V15.5C15.8337 16.6046 14.9382 17.5 13.8337 17.5H8.33366C6.49271 17.5 5.00033 16.0076 5.00033 14.1667C5.00033 12.3257 6.49271 10.8333 8.33366 10.8333H10.8337M10.8337 10.8333L8.33366 8.33333M10.8337 10.8333L8.33366 13.3333" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                                <span>Экспорт CSV</span>
+                                <span>Экспорт XLS</span>
                             </button>
 
                             <button className="filter-btn" type="button">
@@ -134,7 +134,15 @@ function Transactions() {
 
                     <div className="transactions-container">
                         <table>
-                            <p className="tb-head">Последние транзакции</p>
+                            <div className="search-table">
+                                <p className="tb-head">Последние транзакции</p>
+                                <div className="search">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.1572 11.1572L15.833 15.833M7.91634 12.4997C10.4476 12.4997 12.4997 10.4476 12.4997 7.91634C12.4997 5.38504 10.4476 3.33301 7.91634 3.33301C5.38504 3.33301 3.33301 5.38504 3.33301 7.91634C3.33301 10.4476 5.38504 12.4997 7.91634 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                    <input type="text" placeholder='Введите ID транзакции' />
+                                </div>
+                            </div>
 
                             <tr className='row-titles' style={{ marginBottom: 16, marginTop: 14 }}>
                                 <p>Дата</p>

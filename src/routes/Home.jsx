@@ -61,7 +61,7 @@ function Home() {
     }
   };
 
-  const { labels, values, title } = getChartDataByPeriod(period);
+  const { labels, values } = getChartDataByPeriod(period);
 
   return (
     <div className='Home'>
@@ -228,13 +228,6 @@ function Home() {
                 <p>Оборот</p>
               </div>
               <p className="g-block-num">8.672,20 ТМТ</p>
-              <div>
-                <p>с Октября 17-го</p>
-                <p style={{ color: "#05A360" }}>16.0%</p>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.87504 14.1248L14.1246 5.87523M14.1246 12.9463L14.1246 5.87523L7.05355 5.87523" stroke="#05A360" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </div>
             </div>
 
             <div className="g-block">
@@ -245,22 +238,6 @@ function Home() {
                 <p>Транзакции</p>
               </div>
               <p className="g-block-num">215 шт</p>
-              <div>
-                <p>За всё время</p>
-              </div>
-            </div>
-
-            <div className="g-block">
-              <div>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5.83317 4.40822C3.4236 5.12535 1.6665 7.35747 1.6665 9.99999C1.6665 12.6425 3.4236 14.8746 5.83317 15.5918M18.3332 9.99999C18.3332 13.2217 15.7215 15.8333 12.4998 15.8333C9.27818 15.8333 6.6665 13.2217 6.6665 9.99999C6.6665 6.77833 9.27818 4.16666 12.4998 4.16666C15.7215 4.16666 18.3332 6.77833 18.3332 9.99999Z" stroke="#2D85EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <p>Возвраты</p>
-              </div>
-              <p className="g-block-num">8.672,20 ТМТ</p>
-              <div>
-                <p>За период</p>
-              </div>
             </div>
 
             <div className="g-block">
@@ -271,9 +248,6 @@ function Home() {
                 <p>Выведено</p>
               </div>
               <p className="g-block-num">8.672,20 ТМТ</p>
-              <div>
-                <p>За период</p>
-              </div>
             </div>
 
             <div className="g-block">
@@ -284,9 +258,6 @@ function Home() {
                 <p>Всего заработано</p>
               </div>
               <p className="g-block-num">8.672,20 ТМТ</p>
-              <div>
-                <p>За период</p>
-              </div>
             </div>
 
             <div className="g-block">
@@ -304,9 +275,6 @@ function Home() {
                 </div>
               </div>
               <p className="g-block-num">8.672,20 ТМТ</p>
-              <div>
-                <p>За период</p>
-              </div>
             </div>
           </div>
         )

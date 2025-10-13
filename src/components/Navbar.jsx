@@ -198,7 +198,7 @@ function Navbar() {
               </svg>
 
               {/* quick feedback */}
-              {copied && <span className='copied'>Успено скопировано!</span>}
+              {copied && <span className='copied'>Успешно скопировано!</span>}
             </div>
           </div>
         </div>

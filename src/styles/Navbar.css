@@ -150,6 +150,20 @@
     font-size: 12px;
 }
 
+.logout {
+    color: white;
+    background-color: #ED2428;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-weight: 500;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 13px;
+    width: 100%;
+    margin-top: 20px;
+}
+
 @media(max-width: 1024px) {
     .Navbar {
         gap: 32px;

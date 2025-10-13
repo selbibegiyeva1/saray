@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 
 // CSS
 import "../styles/Navbar.css";
@@ -8,6 +8,8 @@ function Navbar() {
   const TOKEN =
     "8d5b81f8-e8125-4578-b1a7-e093b318d5b81f8-e8125-4578-b1a7-e093b31";
   const initialPeriod = 'Русский';
+
+  const navigate = useNavigate();
 
   // show a shortened version in the input, keep full token elsewhere
   const displayToken = `${TOKEN.slice(0, 32)}...`;
@@ -201,6 +203,8 @@ function Navbar() {
               {copied && <span className='copied'>Успешно скопировано!</span>}
             </div>
           </div>
+
+          <button className='logout' onClick={() => navigate("/")}>Выйти</button>
         </div>
       </div>
     </div>

@@ -31,7 +31,7 @@
     background: none;
     cursor: pointer;
     gap: 9px;
-    border-radius: 6px;
+    border-radius: 8px;
     padding: 8px 10px;
     font-size: 13px;
     font-weight: 500;
@@ -43,6 +43,20 @@
 .filter-btn.blue-nav {
     background: #2D85EA;
     color: white;
+}
+
+#filter-btn {
+    margin: 0px 17px;
+}
+
+#filter-btn button {
+    justify-content: center;
+    border: none;
+    color: white;
+    background-color: #2D85EA;
+    font-size: 15px;
+    padding: 11px;
+    width: 100%;
 }
 
 .grid-blocks {
@@ -113,7 +127,7 @@
     top: calc(0% + 45px);
     width: 360px;
     border-radius: 10px;
-    padding-bottom: 7px;
+    padding-bottom: 24px;
     border: 1px solid #0000001A;
     box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.1);
 }
@@ -376,5 +390,9 @@
 
     #home-charts {
         margin: 39px 0px 246px 0px;
+    }
+
+    .filter-drop.filter-earn {
+        width: 325px;
     }
 }

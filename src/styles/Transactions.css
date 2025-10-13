@@ -81,6 +81,12 @@ table tr p {
     width: 100%;
 }
 
+.status-cell {
+    display: flex;
+    justify-content: left;
+    gap: 10px;
+}
+
 table tr div {
     display: flex;
     align-items: center;
@@ -230,5 +236,12 @@ table tr p:first-child {
         justify-content: initial;
         width: fit-content;
         gap: 14px;
+    }
+
+    .search-table.search-earn {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
     }
 }

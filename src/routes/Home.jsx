@@ -170,6 +170,10 @@ function Home() {
                   )}
                 </div>
               </div>
+
+              <div id='filter-btn'>
+                <button>Применить</button>
+              </div>
             </div>
           </div>
           <div className='nav-filter'>

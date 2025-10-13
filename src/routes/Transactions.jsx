@@ -170,7 +170,7 @@ function Transactions() {
                                                 <p>{tx.category}</p>
                                                 <p className='trans-overflow'>{tx.description}</p>
                                                 <p className='trans-overflow' id="exid">{tx.extId}</p>
-                                                <div className="status-cell" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <div className="status-cell">
                                                     <Icon />
                                                     <p className='trans-overflow'>{meta.label}</p>
                                                 </div>

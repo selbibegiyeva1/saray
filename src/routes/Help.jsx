@@ -4,28 +4,36 @@ import "../styles/Help.css";
 
 const faqData = [
     {
-        question: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dapibus libero vitae tempor vulputate.",
-        answer: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras dapibus libero vitae tempor vulputate. Nunc et nulla at nisi posuere tincidunt. Nunc ullamcorper tellus nibh."
+        question: "Как изменить пароль или контактные данные?",
+        answer: "Обратитесь к администратору вашей организации или к нашему менеджеру — они обновят данные и/или инициируют смену пароля."
     },
     {
-        question: "Nunc et nulla at nisi posuere tincidunt.",
-        answer: "Mauris egestas, justo ac facilisis tincidunt, sapien ex volutpat sapien, vitae vulputate tortor lacus in lorem."
+        question: "Что означают «Всего заработано», «Выведено» и «Доступно к выводу»?",
+        answer: "• Всего заработано — суммарное вознаграждение (кэшбэк), начисленное по вашим продажам. <br><br> • Выведено — сумма, которую вы уже получили (выплаты, выданные наличными или перечисленные на счёт/карту/USDT). <br><br> • Доступно к выводу — сумма, которую можно вывести на текущий момент."
     },
     {
-        question: "Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.",
-        answer: "Aenean ut erat in libero faucibus tincidunt ac non orci. Morbi dictum faucibus nunc nec varius."
+        question: "Есть ли минимальная сумма для вывода?",
+        answer: "Минимальной суммы нет. Выплаты производятся раз в месяц в установленную дату, независимо от накопленной суммы"
     },
     {
-        question: "Aliquam erat volutpat.",
-        answer: "Suspendisse potenti. Nulla facilisi. Quisque at ligula nec justo bibendum gravida."
+        question: "Как часто обновляется информация о заработке?",
+        answer: "Ежедневно, в 00:00 (по локальному времени кабинета). В течение дня цифры могут носить предварительный характер."
     },
     {
-        question: "Curabitur dictum, lorem ut aliquet porttitor.",
-        answer: "Donec ullamcorper leo id quam convallis, a tincidunt nunc commodo."
+        question: "Почему сумма в разделе «Доступно к выводу» меньше, чем «Всего заработано»?",
+        answer: "Потому что часть средств вы уже получили в предыдущие периоды — они учтены во «Выведено» и не входят в текущую доступную сумму."
     },
     {
-        question: "Etiam feugiat lacus ut velit tincidunt aliquam.",
-        answer: "Vivamus eget dui id orci malesuada tincidunt sit amet nec nisi."
+        question: "Что делать, если API-ключ не работает?",
+        answer: "Обратитесь в техническую поддержку и опишите проблему максимально подробно. Полезно сразу приложить: <br><br> • ваш partner ID/название компании; <br> • пример запроса (метод, заголовки, тело) и ответа сервера; <br> • скриншоты/логи."
+    },
+    {
+        question: "В какое время работает поддержка?",
+        answer: "С понедельника по пятницу: 09:00–18:00. <br>В субботу: 09:00–13:00."
+    },
+    {
+        question: "Что делать, если у клиента проблема с покупкой?",
+        answer: "Соберите максимум деталей и обратитесь в поддержку. Пожалуйста, укажите: <br><br> • ID транзакции <br> • дату и время операции; <br> • товар/категорию и сумму; <br> • краткое описание проблемы клиента и его контакт (если допустимо)."
     }
 ];
 
@@ -39,12 +47,12 @@ function Help() {
     return (
         <div className='Home'>
             <Navbar />
-            <div className="page-head" style={{ justifyContent: "center", flexDirection: "column" }}>
+            <div className="page-head trans-head" style={{ justifyContent: "center", flexDirection: "column" }}>
                 <center>
-                    <h1>Помощь</h1>
+                    <h1>Нужна помощь?</h1>
                 </center>
                 <center>
-                    <span className='help-desc'>Напишите что нибудь для дескрипшена</span>
+                    <span className='help-desc'>Проверьте ответы ниже или напишите нам — мы рядом.</span>
                 </center>
             </div>
 
@@ -54,12 +62,13 @@ function Help() {
                     <div className="f-flex-block">
                         <span>Email: roycharyyew@gmail.com</span>
                         <span>Telegram: @Huwejqwo</span>
+                        <span>Поддержка: +99365 45 87 89</span>
                     </div>
                 </div>
 
-                <p style={{ fontSize: 18, fontWeight: "bold" }}>FAQ</p>
 
                 <div className="faq">
+                    <p style={{ fontSize: 18, fontWeight: "bold", marginBottom: 31 }}>FAQ</p>
                     {faqData.map((item, index) => (
                         <div key={index} className={`quest ${openIndex === index ? 'open' : ''}`}>
                             <div
@@ -83,7 +92,7 @@ function Help() {
                                 </svg>
                             </div>
                             {openIndex === index && (
-                                <span className="quest-answer">{item.answer}</span>
+                                <span className="quest-answer" dangerouslySetInnerHTML={{ __html: item.answer }}></span>
                             )}
                         </div>
                     ))}

@@ -2,17 +2,18 @@
     color: #00000099;
     display: flex;
     margin-top: 16px;
+    max-width: 317px;
 }
 
 .faqs {
-    max-width: 672px;
-    margin: 31px auto auto auto;
+    max-width: 850px;
+    margin: 31px auto 124px auto;
 }
 
 .faq-flex {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
     margin-bottom: 45px;
 }
 
@@ -31,7 +32,8 @@
 }
 
 .faq {
-    margin-top: 31px;
+    margin: 31px auto auto auto;
+    max-width: 672px;
 }
 
 .faq svg {
@@ -61,6 +63,7 @@
     }
 
     .faq-flex {
+        align-items: initial;
         gap: 0px;
     }
 

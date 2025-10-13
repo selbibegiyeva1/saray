@@ -18,6 +18,16 @@ function EarnedReport() {
     { date: "Авг 6, 2024", time: "15:56", txId: "Нвличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
   ];
 
+  const initialCategory = 'eSIM';
+
+  const [category, setCategory] = useState(initialCategory);
+  const [openCat, setOpenCat] = useState(false);
+  const [filter, setFilter] = useState(false);
+
+  const filterFunc = () => setFilter(!filter);
+
+  const categories = ['eSIM', 'Цифровые товары', 'Всё'];
+
   return (
     <div>
       <div className="grid-blocks">
@@ -46,13 +56,69 @@ function EarnedReport() {
       <div className="transactions-container with">
         <div className="table-viewport">
           <table>
-            <div className="search-table">
+            <div className="search-table search-earn">
               <p className="tb-head">Итоги за период</p>
-              <div className="search">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.1572 11.1572L15.833 15.833M7.91634 12.4997C10.4476 12.4997 12.4997 10.4476 12.4997 7.91634C12.4997 5.38504 10.4476 3.33301 7.91634 3.33301C5.38504 3.33301 3.33301 5.38504 3.33301 7.91634C3.33301 10.4476 5.38504 12.4997 7.91634 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-                <input type="text" placeholder='Введите ID транзакции' />
+              <div className='nav-filter'>
+                <button type='button' onClick={filterFunc}>
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M3.3335 5.83337H16.6668M5.83345 10H14.1668M9.16678 14.1667H10.8334" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span>Фильтр</span>
+                </button>
+
+                <div className={filter ? "filter-drop drop filter-earn" : "filter-drop"}>
+                  <div className="prof-flex filter-flex">
+                    <span>Фильтр</span>
+                    <svg width="24" height="24" viewBox="0 0 72 75" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer" }} onClick={filterFunc}>
+                      <g id="close">
+                        <path id="Icon" d="M18 19.5L54 55.5M54 19.5L18 55.5" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                      </g>
+                    </svg>
+                  </div>
+
+                  <div className='filter-opts'>
+                    <div className='opts-head'>
+                      <span>Категория</span>
+                      {category !== initialCategory && (
+                        <span
+                          className="reset-btn"
+                          onClick={() => setCategory(initialCategory)}
+                        >
+                          Сбросить
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ position: 'relative' }}>
+                      <div
+                        className="filter-select"
+                        onClick={() => { setOpenCat(v => !v); setOpenPay(false); }}
+                        aria-expanded={openCat}
+                      >
+                        <p>{category}</p>
+                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
+                        </svg>
+                      </div>
+                      {openCat && (
+                        <div className="drop-options">
+                          {categories.map(opt => (
+                            <p
+                              key={opt}
+                              className={opt === category ? 'opt-active' : ''}
+                              onClick={() => { setCategory(opt); setOpenCat(false); }}
+                            >
+                              {opt}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  <div id='filter-btn'>
+                    <button>Применить</button>
+                  </div>
+                </div>
               </div>
             </div>
 

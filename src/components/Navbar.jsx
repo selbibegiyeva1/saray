@@ -17,6 +17,7 @@ function Navbar() {
   const [profile, setProfile] = useState(false);
   const [copied, setCopied] = useState(false);
   const [period, setPeriod] = useState(initialPeriod);
+  const [sidebar, setSidebar] = useState(false);
 
   const [openDay, setOpenDay] = useState(false);
   const periods = ['Русский', 'Туркменский'];
@@ -45,6 +46,7 @@ function Navbar() {
   };
 
   const profileFunc = () => setProfile(!profile);
+  const sidebarFunc = () => setSidebar(!sidebar);
 
   return (
     <div className='Navbar'>
@@ -132,6 +134,11 @@ function Navbar() {
             <span>Мурад</span>
           </button>
         </li>
+        <li>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={sidebarFunc} className='toggle'>
+            <path d="M4 4H20M4 12H20M4 20H20M4 8H20M4 16H20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </li>
       </ul>
 
       <div className={profile ? "profile show" : "profile"}>
@@ -206,6 +213,23 @@ function Navbar() {
 
           <button className='logout' onClick={() => navigate("/")}>Выйти</button>
         </div>
+      </div>
+
+      <div className={sidebar ? "sidebar moveleft" : "sidebar"}>
+        <ul>
+          <li>
+            <NavLink to="/home" className={({ isActive }) => (isActive ? "active" : "")} onClick={sidebarFunc}>Главная</NavLink>
+          </li>
+          <li>
+            <NavLink to="/transactions" className={({ isActive }) => (isActive ? "active" : "")} onClick={sidebarFunc}>Транзакции</NavLink>
+          </li>
+          <li>
+            <NavLink to="/reports" className={({ isActive }) => (isActive ? "active" : "")} onClick={sidebarFunc}>Отчёты</NavLink>
+          </li>
+          <li>
+            <NavLink to="/help" className={({ isActive }) => (isActive ? "active" : "")} onClick={sidebarFunc}>Помощь</NavLink>
+          </li>
+        </ul>
       </div>
     </div>
   )

@@ -41,5 +41,27 @@
         "yourToken": "Ваш токен",
         "copied": "Успешно скопировано!",
         "logout": "Выйти"
+    },
+    "transactions": {
+        "title": "Транзакции",
+        "exportXLS": "Экспорт XLS",
+        "exportCSV": "Экспорт CSV",
+        "latest": "Последние транзакции",
+        "searchPlaceholder": "Введите ID транзакции",
+        "date": "Дата",
+        "time": "Время",
+        "txId": "ID Транзакции",
+        "orderId": "ID заказа",
+        "category": "Категория",
+        "description": "Описание",
+        "externalId": "Внешний ID",
+        "statusLabel": "Статус",
+        "amount": "Сумма",
+        "status": {
+            "success": "Успешно",
+            "rejected": "Отклонено",
+            "pending": "В процессе"
+        },
+        "noData": "У вас пока нет транзакций"
     }
 }

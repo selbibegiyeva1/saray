@@ -41,5 +41,27 @@
         "yourToken": "Siziň tokeniňiz",
         "copied": "Üstünlikli göçürildi!",
         "logout": "Çykр"
+    },
+    "transactions": {
+        "title": "Tranzaksiýalar",
+        "exportXLS": "Eksport XLS",
+        "exportCSV": "Eksport CSV",
+        "latest": "Soňky tranzaksiýalar",
+        "searchPlaceholder": "Tranzaksiýanyň ID-ni giriziň",
+        "date": "Sene",
+        "time": "Wagt",
+        "txId": "Tranzaksiýa ID",
+        "orderId": "Sargyt ID",
+        "category": "Kategoriýa",
+        "description": "Düşündiriş",
+        "externalId": "Daşky ID",
+        "statusLabel": "Status",
+        "amount": "Möçberi",
+        "status": {
+            "success": "Üstünlikli",
+            "rejected": "Inkär edildi",
+            "pending": "Gaýtadan işlenýär"
+        },
+        "noData": "Geçirim ýok"
     }
 }

@@ -1,17 +1,30 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from "react-i18next";
 
 // CSS
 import "../styles/Login.css";
 
 function Login() {
+    const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
-    const initialPeriod = 'Русский';
+    const [openLang, setOpenLang] = useState(false);
+    const currentLang = i18n.language || "ru";
 
-    const [openDay, setOpenDay] = useState(false);
-    const [period, setPeriod] = useState(initialPeriod);
-    const periods = ['Русский', 'Туркменский'];
+    const languages = [
+        { code: "ru", label: { ru: "Русский", tm: "Rus dili" } },
+        { code: "tm", label: { ru: "Туркменский", tm: "Türkmen dili" } }
+    ];
+
+    const currentLabel =
+        languages.find((l) => l.code === currentLang)?.label[currentLang] || "Русский";
+
+    const changeLanguage = (langCode) => {
+        i18n.changeLanguage(langCode);
+        localStorage.setItem("lang", langCode);
+        setOpenLang(false);
+    };
 
     return (
         <div className='Login'>
@@ -27,28 +40,28 @@ function Login() {
                 <div className="lang-box">
                     <div className='nav-filter langs'>
                         <button
-                            type='button'
-                            onClick={() => { setOpenDay(v => !v); setOpenCat(false); setOpenPay(false); }}
-                            aria-expanded={openDay}
+                            type="button"
+                            onClick={() => setOpenLang((v) => !v)}
+                            aria-expanded={openLang}
                             role="button"
-                            id='log-lang'
+                            id="log-lang"
                             tabIndex={0}
                         >
-                            <p>{period}</p>
+                            <p>{currentLabel}</p>
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z" fill="black" />
                             </svg>
                         </button>
 
-                        {openDay && (
+                        {openLang && (
                             <div className="drop-options days langs langLogin">
-                                {periods.map(opt => (
+                                {languages.map((lang) => (
                                     <p
-                                        key={opt}
-                                        className={opt === period ? 'opt-active' : ''}
-                                        onClick={() => { setPeriod(opt); setOpenDay(false); }}
+                                        key={lang.code}
+                                        className={lang.code === currentLang ? "opt-active" : ""}
+                                        onClick={() => changeLanguage(lang.code)}
                                     >
-                                        {opt}
+                                        {lang.label[currentLang]}
                                     </p>
                                 ))}
                             </div>
@@ -56,25 +69,25 @@ function Login() {
                     </div>
                 </div>
             </div>
-            <center><h2 style={{ marginTop: 35.5 }}>Личный кабинет</h2></center>
-            <center><span className='log-span'>Войдите в личный кабинет чтобы начать работу.</span></center>
+            <center><h2 style={{ marginTop: 35.5 }}>{t("home.title")}</h2></center>
+            <center><span className='log-span'>{t("login.subtitle")}</span></center>
 
             <form>
                 <div>
-                    <p>Логин</p>
-                    <input type="text" placeholder='Введите логин' required />
+                    <p>{t("login.username")}</p>
+                    <input type="text" placeholder={t("login.enterUsername")} required />
                 </div>
                 <div>
-                    <p>Пароль</p>
-                    <input type="text" placeholder='Введите пароль' required />
+                    <p>{t("login.password")}</p>
+                    <input type="text" placeholder={t("login.enterPassword")} required />
                 </div>
-                <button onClick={() => navigate("/home")}>Войти</button>
+                <button onClick={() => navigate("/home")}>{t("login.button")}</button>
             </form>
 
-            <center><span className='log-span span2'>Самостоятельная регистрация недоступна. Доступ выдаёт поддержка</span></center>
-            <center><span className='log-span span3'>Поддержка:+99365 45 87 89</span></center>
+            <center><span className='log-span span2'>{t("login.noRegistration")}</span></center>
+            <center><span className='log-span span3'>{t("login.support")}</span></center>
 
-            <div className="alerts">
+            {/* <div className="alerts">
                 <div className='alt green'>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -84,7 +97,7 @@ function Login() {
                         <path d="M5 5L15 15M15 5L5 15" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     </svg>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

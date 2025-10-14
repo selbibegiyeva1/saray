@@ -1,0 +1,45 @@
+{
+    "login": {
+        "title": "Şahsy kabinet",
+        "subtitle": "Işe başlamak üçin şahsy kabinetiňize giriň.",
+        "username": "Login",
+        "password": "Parol",
+        "enterUsername": "Loginiňizi giriziň",
+        "enterPassword": "Parolyňyzy giriziň",
+        "button": "Giriş",
+        "noRegistration": "Özbaşdak hasaba alyş elýeterli däl. Giriş rugsadyny goldaw gullugy berýär.",
+        "support": "Goldaw gullugy:+99365 45 87 89",
+        "success": "Üstünlikli hasaba alyndy"
+    },
+    "home": {
+        "title": "Baş sahypa",
+        "filter": "Filtr",
+        "category": "Kategoriýa",
+        "reset": "Arassala",
+        "apply": "Amala aşyrmak",
+        "paymentMethod": "Töleg usuly",
+        "turnover": "Dolanyşyk",
+        "transactions": "Tranzaksiýalar",
+        "withdrawn": "Çykarylan",
+        "earned": "Jemi gazanylan",
+        "available": "Çykarmak üçin elýeterli",
+        "tooltip": "Kategoriýanyň göterimine görä hasaplamak",
+        "salesChart": "Satuwlaryň dolanyşygy",
+        "transactionChart": "Tranzaksiýalaryň sany"
+    },
+    "navbar": {
+        "home": "Baş sahypa",
+        "transactions": "Tranzaksiýalar",
+        "reports": "Hasabatlar",
+        "help": "Kömek",
+        "myProfile": "Meniň profilim",
+        "name": "Ady",
+        "lastname": "Familiýasy",
+        "role": "Rol",
+        "director": "Direktor",
+        "tokenManage": "Tokenleri dolandyrmak",
+        "yourToken": "Siziň tokeniňiz",
+        "copied": "Üstünlikli göçürildi!",
+        "logout": "Çykр"
+    }
+}

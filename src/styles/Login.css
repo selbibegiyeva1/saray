@@ -23,6 +23,7 @@
 .log-span {
     color: #00000099;
     display: flex;
+    justify-content: center;
     max-width: 309px;
     margin-top: 12px;
 }

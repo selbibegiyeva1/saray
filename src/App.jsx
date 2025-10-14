@@ -1,4 +1,5 @@
 import './App.css';
+import "./i18n";
 import { Routes, Route } from "react-router-dom";
 
 import Login from './routes/Login';

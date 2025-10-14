@@ -1,3 +1,1 @@
 # Saray Application
-
-Saray application docs...

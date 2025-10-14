@@ -56,18 +56,27 @@ function Home() {
           values: [5, 9, 12, 18, 24, 20, 16, 8],
           title: match("Оборот за день", "Bir günlik aýlanma"),
         };
+
       case "month":
         return {
-          labels: ["Нед. 1", "Нед. 2", "Нед. 3", "Нед. 4"],
+          labels: match(
+            ["Нед. 1", "Нед. 2", "Нед. 3", "Нед. 4"],
+            ["1-nji hepde", "2-nji hepde", "3-nji hepde", "4-nji hepde"]
+          ),
           values: [110, 140, 95, 160],
           title: match("Оборот за месяц", "Aýlyk aýlanma"),
         };
+
       case "year":
         return {
-          labels: ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+          labels: match(
+            ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
+            ["Ýan", "Few", "Mar", "Apr", "Maý", "Iýun", "Iýul", "Awg", "Sen", "Okt", "Noý", "Dek"]
+          ),
           values: [300, 280, 360, 420, 500, 480, 510, 530, 490, 550, 600, 620],
           title: match("Оборот за год", "Ýyllyk aýlanma"),
         };
+
       case "all":
       default:
         return {

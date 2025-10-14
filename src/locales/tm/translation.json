@@ -63,5 +63,45 @@
             "pending": "Gaýtadan işlenýär"
         },
         "noData": "Geçirim ýok"
+    },
+    "help": {
+        "title": "Kömek gerekmi?",
+        "subtitle": "Aşakdaky jogaplary barlaň ýa-da bize ýazyň — biz kömek etmäge hemişe taýyn.",
+        "contactsTitle": "Habarlaşmak üçin:",
+        "support": "Goldaw gullugy:",
+        "faq": [
+            {
+                "question": "Paroly ýa-da habarlaşmak üçin maglumatlary nädip üýtgetmeli?",
+                "answer": "Guramaňyzyň administratoryna ýa-da biziň menejerimize ýüz tutuň — olar maglumatlary täzelärler we/ýa-da parolyň çalşyrylmagyny başladarlar."
+            },
+            {
+                "question": "«Jemi gazanylan», «Çykarylan» we «Çykarmak üçin elýeterli» diýenler nämäni aňladýar?",
+                "answer": "• Jemi gazanylan — siziň satuwlaryňyz boýunça hasaplanan jemi sylag (keşbek)..<br><br>• Çykarylan — siziň eýýäm alan puluňyz (nagt berlen ýa-da hasaba/karta/USDT geçirilen tölegler).<br><br>• Çykarmak üçin elýeterli — häzirki wagtda çykaryp bolýan pul möçberi"
+            },
+            {
+                "question": "Pul çykarmak üçin iň az möçber barmy?",
+                "answer": "Iň az möçber ýok. Tölegler, ýygnanan möçberine garamazdan, aýda bir gezek bellenen senede amala aşyrylýar."
+            },
+            {
+                "question": "Gazanç baradaky maglumat nähili ýygylykda täzelenýär?",
+                "answer": "Her gün, 00:00-da (kabinentiň ýerli wagty boýunça). Günüň dowamynda sanlar gutarnykly bolman biler."
+            },
+            {
+                "question": "Näme üçin «Çykarmak üçin elýeterli» bölümindäki pul möçberi «Jemi gazanylan» möçberinden az?",
+                "answer": "Sebäbi serişdeleriň bir bölegini siz öňki döwürlerde eýýäm aldyňyz — olar «Çykarylan» bölüminde hasaba alnandyr we häzirki elýeterli möçbere girmeýär."
+            },
+            {
+                "question": "Eger API açary işlemese näme etmeli?",
+                "answer": "Tehniki goldaw gullugyna ýüz tutuň we meseläni mümkin boldugyça jikme-jik beýan ediň. Şulary hem goşup ibermek peýdalydyr:<br><br>• siziň partner ID-ňiz/kompaniýanyň ady;<br>• soragyň mysaly (metod, sözbaşylar, esasy bölek) we serweriň jogaby;<br>• skrinşotlar/loglar."
+            },
+            {
+                "question": "Goldaw gullugy haýsy wagt aralygynda işleýär?",
+                "answer": "Duşenbeden anna güni aralygynda: 09:00–18:00.<br> Şenbe güni: 09:00–13:00."
+            },
+            {
+                "question": "Müşderiniň satyn almakda meselesi ýüze çyksa näme etmeli?",
+                "answer": "Mümkin bolan ähli maglumatlary ýygnaň we goldaw gullugyna ýüz tutuň. Haýyş, şulary görkeziň:<br><br>• tranzaksiýanyň ID-si;<br>• operasiýanyň senesini we wagtyny;<br>• harydy/kategoriýany we summasyny;<br>• müşderiniň meselesiniň gysgaça beýanyny."
+            }
+        ]
     }
 }

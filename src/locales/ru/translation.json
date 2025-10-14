@@ -46,6 +46,7 @@
         "title": "Транзакции",
         "exportXLS": "Экспорт XLS",
         "exportCSV": "Экспорт CSV",
+        "exportPeriod": "Экспорт за период",
         "latest": "Последние транзакции",
         "searchPlaceholder": "Введите ID транзакции",
         "date": "Дата",
@@ -103,5 +104,23 @@
                 "answer": "Соберите максимум деталей и обратитесь в поддержку. Пожалуйста, укажите:<br><br>• ID транзакции;<br>• дату и время операции;<br>• товар/категорию и сумму;<br>• краткое описание проблемы клиента и его контакт (если допустимо)."
             }
         ]
+    },
+    "reports": {
+        "withdrawnTotal": "Выведено всего",
+        "lastWithdrawal": "Последний вывод",
+        "periodSummary": "Итоги за период",
+        "nextPayout": "Следующая дата вывода",
+        "columns": {
+            "dateWithdrawal": "Дата вывода",
+            "timeWithdrawal": "Время вывода",
+            "methodWithdrawal": "Способ вывода",
+            "comment": "Комментарий",
+            "amountWithdrawal": "Сумма вывода"
+        },
+        "categories": {
+            "esim": "eSIM",
+            "digitalGoods": "Цифровые товары",
+            "all": "Всё"
+        }
     }
 }

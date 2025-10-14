@@ -33,6 +33,7 @@
     /* hide the horizontal scrollbar but keep scroll ability */
     scrollbar-width: none;
     /* Firefox */
+    height: 100%;
 }
 
 .table-viewport::-webkit-scrollbar {
@@ -41,6 +42,7 @@
 
 table {
     width: 100%;
+    height: 100%;
 }
 
 .trans-head {

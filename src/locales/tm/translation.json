@@ -15,7 +15,7 @@
         "title": "Baş sahypa",
         "filter": "Filtr",
         "category": "Kategoriýa",
-        "reset": "Arassala",
+        "reset": "Arassalamak",
         "apply": "Amala aşyrmak",
         "paymentMethod": "Töleg usuly",
         "turnover": "Dolanyşyk",
@@ -46,6 +46,7 @@
         "title": "Tranzaksiýalar",
         "exportXLS": "Eksport XLS",
         "exportCSV": "Eksport CSV",
+        "exportPeriod": "Döwür boýunça eksport",
         "latest": "Soňky tranzaksiýalar",
         "searchPlaceholder": "Tranzaksiýanyň ID-ni giriziň",
         "date": "Sene",
@@ -103,5 +104,23 @@
                 "answer": "Mümkin bolan ähli maglumatlary ýygnaň we goldaw gullugyna ýüz tutuň. Haýyş, şulary görkeziň:<br><br>• tranzaksiýanyň ID-si;<br>• operasiýanyň senesini we wagtyny;<br>• harydy/kategoriýany we summasyny;<br>• müşderiniň meselesiniň gysgaça beýanyny."
             }
         ]
+    },
+    "reports": {
+        "withdrawnTotal": "Jemi çykarylan",
+        "lastWithdrawal": "Soňky çykaryş",
+        "periodSummary": "Döwrüň jemleri",
+        "nextPayout": "Indiki çykaryş senesi",
+        "columns": {
+            "dateWithdrawal": "Çykarylan sene",
+            "timeWithdrawal": "Çykarylan wagt",
+            "methodWithdrawal": "Çykaryş usuly",
+            "comment": "Teswir",
+            "amountWithdrawal": "Çykaryş möçberi"
+        },
+        "categories": {
+            "esim": "eSIM",
+            "digitalGoods": "Sanly harytlar",
+            "all": "Hemmesi"
+        }
     }
 }

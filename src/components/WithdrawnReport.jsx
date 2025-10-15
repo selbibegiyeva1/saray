@@ -41,12 +41,6 @@ function WithdrawnReport() {
           <table>
             <div className="search-table">
               <p className="tb-head">{t("reports.periodSummary")}</p>
-              <div className="search">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.1572 11.1572L15.833 15.833M7.91634 12.4997C10.4476 12.4997 12.4997 10.4476 12.4997 7.91634C12.4997 5.38504 10.4476 3.33301 7.91634 3.33301C5.38504 3.33301 3.33301 5.38504 3.33301 7.91634C3.33301 10.4476 5.38504 12.4997 7.91634 12.4997Z" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                <input type="text" placeholder={t("transactions.searchPlaceholder")} />
-              </div>
             </div>
 
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>

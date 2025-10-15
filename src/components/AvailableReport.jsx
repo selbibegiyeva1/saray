@@ -30,7 +30,7 @@ function AvailableReport() {
           </svg>
           <p>{t("reports.nextPayout")}</p>
         </div>
-        <p className="g-block-num">8.672,20 ТМТ</p>
+        <p className="g-block-num">03.11.2025</p>
       </div>
     </div>
   );

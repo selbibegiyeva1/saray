@@ -40,7 +40,7 @@
         "tokenManage": "Tokenleri dolandyrmak",
         "yourToken": "Siziň tokeniňiz",
         "copied": "Üstünlikli göçürildi!",
-        "logout": "Çykр"
+        "logout": "Çyk"
     },
     "transactions": {
         "title": "Tranzaksiýalar",
@@ -121,6 +121,11 @@
             "esim": "eSIM",
             "digitalGoods": "Sanly harytlar",
             "all": "Hemmesi"
-        }
+        },
+        "period": "Çykarylan sene",
+        "category": "Çykarylan wagt",
+        "turnoverReports": "Çykaryş usuly",
+        "transactionsReports": "Teswir",
+        "reward": "Çykaryş möçberi"
     }
 }

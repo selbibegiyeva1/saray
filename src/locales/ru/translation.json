@@ -121,6 +121,11 @@
             "esim": "eSIM",
             "digitalGoods": "Цифровые товары",
             "all": "Всё"
-        }
+        },
+        "period": "Период",
+        "category": "Категория",
+        "turnoverReports": "Сумма оборота",
+        "transactionsReports": "Транзакций, шт",
+        "reward": "Сумма вознаграждение"
     }
 }

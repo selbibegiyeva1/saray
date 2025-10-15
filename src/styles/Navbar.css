@@ -45,8 +45,11 @@
 }
 
 .nav-ul li a.active,
-.sidebar li a.active {
+.sidebar li a.active,
+.nav-ul li a.activeHelp,
+.nav-ul li a.activeHelp svg path {
     color: #2D85EA;
+    stroke: #2D85EA;
 }
 
 .nav-ul li a.active::before,

@@ -8,9 +8,8 @@ function EarnedReport() {
   // === DATA (demo) ===
   const [hasTransactions] = useState(true);
   const transactions = [
-    { date: "Авг 8, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    // … add more as needed
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
   ];
 
   // === OPTIONS (mirror Home) ===
@@ -144,11 +143,11 @@ function EarnedReport() {
             </div>
 
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
-              <p>{t("reports.columns.dateWithdrawal")}</p>
-              <p>{t("reports.columns.timeWithdrawal")}</p>
-              <p>{t("reports.columns.methodWithdrawal")}</p>
-              <p>{t("reports.columns.comment")}</p>
-              <p>{t("reports.columns.amountWithdrawal")}</p>
+              <p>{t("reports.period")}</p>
+              <p>{t("reports.category")}</p>
+              <p>{t("reports.turnoverReports")}</p>
+              <p>{t("reports.transactionsReports")}</p>
+              <p>{t("reports.reward")}</p>
             </tr>
 
             {hasTransactions ? (

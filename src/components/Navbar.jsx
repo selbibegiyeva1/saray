@@ -149,7 +149,7 @@ function Navbar() {
 
         {/* Help link */}
         <li>
-          <Link to="/help">
+          <NavLink to="/help" className={({ isActive }) => (isActive ? "activeHelp" : "")}>
             <svg
               width="24"
               height="24"
@@ -166,7 +166,7 @@ function Navbar() {
               />
             </svg>
             <span>{t("navbar.help")}</span>
-          </Link>
+          </NavLink>
         </li>
 
         {/* Profile */}

@@ -25,15 +25,42 @@ function Login() {
         setOpenLang(false);
     };
 
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState({ username: false, password: false });
+
     const handleLogin = (e) => {
         e.preventDefault();
-        setLoading(true); // show spinner
 
-        // Fake loading for 2 seconds
+        const newErrors = {
+            username: username.trim() === "",
+            password: password.trim() === "",
+        };
+        setErrors(newErrors);
+
+        if (newErrors.username || newErrors.password) return;
+
+        setLoading(true);
+
         setTimeout(() => {
             setLoading(false);
             navigate("/home");
         }, 2000);
+    };
+
+    // handle input changes with live error reset
+    const handleUsernameChange = (e) => {
+        setUsername(e.target.value);
+        if (errors.username && e.target.value.trim() !== "") {
+            setErrors((prev) => ({ ...prev, username: false }));
+        }
+    };
+
+    const handlePasswordChange = (e) => {
+        setPassword(e.target.value);
+        if (errors.password && e.target.value.trim() !== "") {
+            setErrors((prev) => ({ ...prev, password: false }));
+        }
     };
 
     return (
@@ -87,11 +114,26 @@ function Login() {
             <form onSubmit={handleLogin}>
                 <div style={{ marginBottom: 16 }}>
                     <p>{t("login.username")}</p>
-                    <input type="text" placeholder={t("login.enterUsername")} required />
+                    <input
+                        type="text"
+                        placeholder={t("login.enterUsername")}
+                        value={username}
+                        onChange={handleUsernameChange}
+                        className={errors.username ? "error" : ""}
+                    />
+                    {errors.username && <span>Заполните поле</span>}
                 </div>
+
                 <div style={{ marginBottom: 16 }}>
                     <p>{t("login.password")}</p>
-                    <input type="password" placeholder={t("login.enterPassword")} required />
+                    <input
+                        type="password"
+                        placeholder={t("login.enterPassword")}
+                        value={password}
+                        onChange={handlePasswordChange}
+                        className={errors.password ? "error" : ""}
+                    />
+                    {errors.password && <span>Заполните поле</span>}
                 </div>
 
                 <button type="submit" disabled={loading}>
@@ -101,6 +143,38 @@ function Login() {
 
             <center><span className='log-span span2'>{t("login.noRegistration")}</span></center>
             <center><span className='log-span span3'>{t("login.support")}</span></center>
+
+            {/* <div className="alerts">
+                <div className="alt green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Успешно зарегистрировано</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className='alt-close'>
+                        <path d="M5 5L15 15M15 5L5 15" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <div className="alt yellow">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 17H12.01M12 14C12.8906 12.0938 15 12.2344 15 10C15 8.5 14 7 12 7C10.4521 7 9.50325 7.89844 9.15332 9M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#FFB01D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Аккаунт заблокирован</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className='alt-close'>
+                        <path d="M5 5L15 15M15 5L5 15" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+
+                <div className="alt red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                    <span>Неверный логин или пароль</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className='alt-close'>
+                        <path d="M5 5L15 15M15 5L5 15" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
+            </div> */}
         </div>
     );
 }

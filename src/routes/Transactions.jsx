@@ -265,9 +265,11 @@ function Transactions() {
                                                 <p className="trans-overflow" id="exid">
                                                     {tx.extId}
                                                 </p>
-                                                <div className="status-cell">
-                                                    <Icon />
-                                                    <p className="trans-overflow">{meta.label}</p>
+                                                <div style={{ display: "flex", justifyContent: "center" }}>
+                                                    <div className="status-cell">
+                                                        <Icon />
+                                                        <p className="trans-overflow">{meta.label}</p>
+                                                    </div>
                                                 </div>
                                                 <p>{tx.amount}</p>
                                             </tr>

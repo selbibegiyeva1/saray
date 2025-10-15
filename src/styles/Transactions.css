@@ -84,16 +84,10 @@ table tr p {
     width: 100%;
 }
 
-.status-cell {
-    display: flex;
-    justify-content: left;
-    gap: 10px;
-}
-
-table tr div {
+table .status-cell {
     display: flex;
     align-items: center;
-    justify-content: center;
+    width: 150px;
     gap: 8px;
 }
 
@@ -196,6 +190,12 @@ table tr p:first-child {
     background-color: none;
     font-size: 14px;
     font-weight: 500;
+}
+
+@media(max-width: 768px) {
+    table .status-cell {
+        width: initial;
+    }
 }
 
 @media(max-width: 768px) {

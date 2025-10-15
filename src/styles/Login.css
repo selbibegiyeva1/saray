@@ -75,7 +75,7 @@
 
 .Login form button {
     color: white;
-    background: #0035CC;
+    background: #2D85EA;
     border: none;
     outline: none;
     cursor: pointer;
@@ -88,7 +88,7 @@
     transition: 0.3s;
 
     &:hover {
-        background-color: #2D85EA;
+        background-color: #2d85ead2;
     }
 }
 
@@ -98,7 +98,7 @@
 }
 
 .log-span.span3 {
-    color: #0035CC;
+    color: #2D85EA;
     max-width: fit-content;
     margin-top: 32px;
 }
@@ -146,7 +146,7 @@
 
 .spinner {
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #283FFF;
+    border-top: 3px solid #2D85EA;
     border-radius: 50%;
     width: 18px;
     height: 18px;

@@ -26,7 +26,8 @@
         "available": "Доступно к выводу",
         "tooltip": "Расчёт по проценту категории",
         "salesChart": "Оборот продаж",
-        "transactionChart": "Количество транзакций"
+        "transactionChart": "Количество транзакций",
+        "amountHome": "шт"
     },
     "navbar": {
         "home": "Главная",

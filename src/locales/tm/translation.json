@@ -26,7 +26,8 @@
         "available": "Çykarmak üçin elýeterli",
         "tooltip": "Kategoriýanyň göterimine görä hasaplamak",
         "salesChart": "Satuwlaryň dolanyşygy",
-        "transactionChart": "Tranzaksiýalaryň sany"
+        "transactionChart": "Tranzaksiýalaryň sany",
+        "amountHome": "san"
     },
     "navbar": {
         "home": "Baş sahypa",

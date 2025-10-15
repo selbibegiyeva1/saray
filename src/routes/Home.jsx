@@ -282,7 +282,7 @@ function Home() {
                 </svg>
                 <p>{t("home.transactions")}</p>
               </div>
-              <p className="g-block-num">215</p>
+              <p className="g-block-num">215 <span>{t("home.amountHome")}</span></p>
             </div>
 
             <div className="g-block">

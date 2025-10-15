@@ -103,6 +103,7 @@
 .prof-block input,
 .token {
     outline: none;
+    cursor: auto;
     border: 1px solid #00000026;
     font-size: 16px;
     width: 100%;
@@ -110,10 +111,6 @@
     font-weight: 400;
     border-radius: 8px;
     transition: 0.3s;
-
-    &:focus {
-        border-color: #0035CC;
-    }
 }
 
 .token {

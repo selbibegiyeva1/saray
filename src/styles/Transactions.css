@@ -193,30 +193,14 @@ table tr p:first-child {
 }
 
 @media(max-width: 768px) {
-    table .status-cell {
-        width: initial;
-    }
-}
-
-@media(max-width: 768px) {
     .row-titles.row-data {
         font-size: 12px;
-    }
-
-    #exid {
-        display: none;
-    }
-
-    .row-titles {
-        grid-template-columns: repeat(8, 1fr);
     }
 
     .status-cell p {
         display: none;
     }
-}
 
-@media(max-width: 425px) {
     .transactions-container {
         max-width: 100%;
     }
@@ -225,6 +209,12 @@ table tr p:first-child {
         width: 900px;
     }
 
+    table .status-cell {
+        width: initial;
+    }
+}
+
+@media(max-width: 425px) {
     .page-head.trans-head {
         display: flex;
     }

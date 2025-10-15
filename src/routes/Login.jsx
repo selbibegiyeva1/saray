@@ -121,7 +121,7 @@ function Login() {
                         onChange={handleUsernameChange}
                         className={errors.username ? "error" : ""}
                     />
-                    {errors.username && <span>Заполните поле</span>}
+                    {errors.username && <span>{t("login.empty")}</span>}
                 </div>
 
                 <div style={{ marginBottom: 16 }}>
@@ -133,7 +133,7 @@ function Login() {
                         onChange={handlePasswordChange}
                         className={errors.password ? "error" : ""}
                     />
-                    {errors.password && <span>Заполните поле</span>}
+                    {errors.password && <span>{t("login.empty")}</span>}
                 </div>
 
                 <button type="submit" disabled={loading}>

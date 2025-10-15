@@ -64,6 +64,7 @@
 
 .Login form div span {
     color: #ED2428;
+    display: flex;
     margin-top: 8px;
     font-size: 15px;
 }

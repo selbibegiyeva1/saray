@@ -44,6 +44,10 @@
     margin-left: auto;
 }
 
+.nav-ul.ul2 li:last-child {
+    display: none;
+}
+
 .nav-ul li a.active,
 .sidebar li a.active,
 .nav-ul li a.activeHelp,
@@ -200,10 +204,6 @@
     font-weight: 600;
 }
 
-.toggle {
-    display: none;
-}
-
 @media(max-width: 1024px) {
     .Navbar {
         gap: 32px;
@@ -238,7 +238,7 @@
         display: none;
     }
 
-    .toggle {
-        display: initial;
+    .nav-ul.ul2 li:last-child {
+        display: flex;
     }
 }

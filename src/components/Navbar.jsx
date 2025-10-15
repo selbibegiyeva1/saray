@@ -192,24 +192,42 @@ function Navbar() {
         </li>
 
         {/* Sidebar toggle */}
-        <li>
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            onClick={sidebarFunc}
-            className="toggle"
-          >
-            <path
-              d="M4 4H20M4 12H20M4 20H20M4 8H20M4 16H20"
-              stroke="black"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+        <li onClick={sidebarFunc} className="toggle">
+          {sidebar ? (
+            // X icon when active
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M6 6L18 18M18 6L6 18"
+                stroke="black"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          ) : (
+            // Hamburger icon when inactive
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4 4H20M4 12H20M4 20H20M4 8H20M4 16H20"
+                stroke="black"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          )}
         </li>
       </ul>
 

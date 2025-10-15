@@ -193,6 +193,7 @@
 
 .drop-options.days.langs {
     width: 180px;
+    z-index: 2;
 }
 
 .drop-options.days.langs.langLogin {

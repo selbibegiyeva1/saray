@@ -38,10 +38,6 @@
     max-width: 393px;
 }
 
-.Login form div {
-    margin-bottom: 16px;
-}
-
 .Login form div input {
     outline: none;
     border: 1px solid #00000026;
@@ -120,6 +116,26 @@
 .alt-close {
     margin-left: auto;
     cursor: pointer;
+}
+
+.spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #283FFF;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 @media(max-width: 425px) {

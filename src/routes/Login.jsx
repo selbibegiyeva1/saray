@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
-
-// CSS
 import "../styles/Login.css";
 
 function Login() {
@@ -10,6 +8,7 @@ function Login() {
     const navigate = useNavigate();
 
     const [openLang, setOpenLang] = useState(false);
+    const [loading, setLoading] = useState(false); // <-- new state
     const currentLang = i18n.language || "ru";
 
     const languages = [
@@ -26,6 +25,17 @@ function Login() {
         setOpenLang(false);
     };
 
+    const handleLogin = (e) => {
+        e.preventDefault();
+        setLoading(true); // show spinner
+
+        // Fake loading for 2 seconds
+        setTimeout(() => {
+            setLoading(false);
+            navigate("/home");
+        }, 2000);
+    };
+
     return (
         <div className='Login'>
             <div className="logo" style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 23.5, gap: 12 }}>
@@ -36,6 +46,7 @@ function Login() {
                 </svg>
                 <p>Unite eSIM</p>
             </div>
+
             <div className="lang" style={{ display: "flex", justifyContent: "center" }}>
                 <div className="lang-box">
                     <div className='nav-filter langs'>
@@ -69,37 +80,29 @@ function Login() {
                     </div>
                 </div>
             </div>
+
             <center><h2 style={{ marginTop: 35.5 }}>{t("home.title")}</h2></center>
             <center><span className='log-span'>{t("login.subtitle")}</span></center>
 
-            <form>
-                <div>
+            <form onSubmit={handleLogin}>
+                <div style={{ marginBottom: 16 }}>
                     <p>{t("login.username")}</p>
                     <input type="text" placeholder={t("login.enterUsername")} required />
                 </div>
-                <div>
+                <div style={{ marginBottom: 16 }}>
                     <p>{t("login.password")}</p>
-                    <input type="text" placeholder={t("login.enterPassword")} required />
+                    <input type="password" placeholder={t("login.enterPassword")} required />
                 </div>
-                <button onClick={() => navigate("/home")}>{t("login.button")}</button>
+
+                <button type="submit" disabled={loading}>
+                    {loading ? <div className="spinner"></div> : t("login.button")}
+                </button>
             </form>
 
             <center><span className='log-span span2'>{t("login.noRegistration")}</span></center>
             <center><span className='log-span span3'>{t("login.support")}</span></center>
-
-            {/* <div className="alerts">
-                <div className='alt green'>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                    <span>Успешно зарегистрировано</span>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" className='alt-close'>
-                        <path d="M5 5L15 15M15 5L5 15" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </div>
-            </div> */}
         </div>
-    )
+    );
 }
 
-export default Login
+export default Login;

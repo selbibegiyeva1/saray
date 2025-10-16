@@ -10,6 +10,17 @@ function EarnedReport() {
   const transactions = [
     { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
     { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+
   ];
 
   // === OPTIONS (mirror Home) ===
@@ -61,86 +72,86 @@ function EarnedReport() {
       </div>
 
       <div className="transactions-container with">
-        <div className="table-viewport">
-          <table>
-            <div className="search-table search-earn">
-              <p className="tb-head">{t("reports.periodSummary")}</p>
+        <div className="search-table search-earn">
+          <p className="tb-head">{t("reports.periodSummary")}</p>
 
-              {/* === FILTER (same as Home) === */}
-              <div className="nav-filter">
-                <button type="button" onClick={filterFunc} aria-expanded={filter}>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3.3335 5.83337H16.6668M5.83345 10H14.1668M9.16678 14.1667H10.8334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <span>{t("home.filter")}</span>
-                </button>
+          {/* === FILTER (same as Home) === */}
+          <div className="nav-filter">
+            <button type="button" onClick={filterFunc} aria-expanded={filter}>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3.3335 5.83337H16.6668M5.83345 10H14.1668M9.16678 14.1667H10.8334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>{t("home.filter")}</span>
+            </button>
 
-                <div className={filter ? "filter-drop drop filter-earn" : "filter-drop"}>
-                  <div className="prof-flex filter-flex">
-                    <span>{t("home.filter")}</span>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 72 75"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{ cursor: "pointer" }}
-                      onClick={filterFunc}
-                    >
-                      <g id="close">
-                        <path id="Icon" d="M18 19.5L54 55.5M54 19.5L18 55.5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </g>
+            <div className={filter ? "filter-drop drop filter-earn" : "filter-drop"}>
+              <div className="prof-flex filter-flex">
+                <span>{t("home.filter")}</span>
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 72 75"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ cursor: "pointer" }}
+                  onClick={filterFunc}
+                >
+                  <g id="close">
+                    <path id="Icon" d="M18 19.5L54 55.5M54 19.5L18 55.5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                </svg>
+              </div>
+
+              {/* Category */}
+              <div className="filter-opts">
+                <div className="opts-head">
+                  <span>{t("home.category")}</span>
+                  {category !== "eSIM" && (
+                    <span className="reset-btn" onClick={() => setCategory("eSIM")}>
+                      {t("home.reset")}
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ position: "relative" }}>
+                  <div
+                    className="filter-select"
+                    onClick={() => { setOpenCat((v) => !v); setOpenPay(false); }}
+                    aria-expanded={openCat}
+                  >
+                    <p>{categoryOptions.find((o) => o.value === category)?.label[currentLang]}</p>
+                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
                     </svg>
                   </div>
 
-                  {/* Category */}
-                  <div className="filter-opts">
-                    <div className="opts-head">
-                      <span>{t("home.category")}</span>
-                      {category !== "eSIM" && (
-                        <span className="reset-btn" onClick={() => setCategory("eSIM")}>
-                          {t("home.reset")}
-                        </span>
-                      )}
+                  {openCat && (
+                    <div className="drop-options">
+                      {categoryOptions.map((opt) => (
+                        <p
+                          key={opt.value}
+                          className={opt.value === category ? "opt-active" : ""}
+                          onClick={() => {
+                            setCategory(opt.value);
+                            setOpenCat(false);
+                          }}
+                        >
+                          {opt.label[currentLang]}
+                        </p>
+                      ))}
                     </div>
-
-                    <div style={{ position: "relative" }}>
-                      <div
-                        className="filter-select"
-                        onClick={() => { setOpenCat((v) => !v); setOpenPay(false); }}
-                        aria-expanded={openCat}
-                      >
-                        <p>{categoryOptions.find((o) => o.value === category)?.label[currentLang]}</p>
-                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
-                        </svg>
-                      </div>
-
-                      {openCat && (
-                        <div className="drop-options">
-                          {categoryOptions.map((opt) => (
-                            <p
-                              key={opt.value}
-                              className={opt.value === category ? "opt-active" : ""}
-                              onClick={() => {
-                                setCategory(opt.value);
-                                setOpenCat(false);
-                              }}
-                            >
-                              {opt.label[currentLang]}
-                            </p>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-
-                  <div id="filter-btn">
-                    <button>{t("home.apply")}</button>
-                  </div>
+                  )}
                 </div>
               </div>
+
+              <div id="filter-btn">
+                <button>{t("home.apply")}</button>
+              </div>
             </div>
+          </div>
+        </div>
+        <div className="table-viewport">
+          <table>
 
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
               <p>{t("reports.period")}</p>

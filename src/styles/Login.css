@@ -165,8 +165,6 @@
 }
 
 @media(max-width: 425px) {
-
-    .Login,
     .alerts {
         padding: 0px 24px;
     }
@@ -177,5 +175,9 @@
 
     .logo {
         padding-top: 80px;
+    }
+
+    .Login {
+        padding: 0px 24px 80px 24px;
     }
 }

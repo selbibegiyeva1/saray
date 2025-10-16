@@ -48,11 +48,11 @@ function WithdrawnReport() {
       </div>
 
       <div className="transactions-container with">
+        <div className="search-table">
+          <p className="tb-head">{t("reports.periodSummary")}</p>
+        </div>
         <div className="table-viewport">
           <table>
-            <div className="search-table">
-              <p className="tb-head">{t("reports.periodSummary")}</p>
-            </div>
 
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
               <p>{t("reports.columns.dateWithdrawal")}</p>

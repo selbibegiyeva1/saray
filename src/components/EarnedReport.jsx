@@ -1,50 +1,60 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 function EarnedReport() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || "ru";
 
-  // === DATA (demo) ===
-  const [hasTransactions] = useState(true);
-  const transactions = [
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: "eSIM", txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-
-  ];
-
-  // === OPTIONS (mirror Home) ===
+  // === CATEGORY OPTIONS ===
   const categoryOptions = [
     { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
-    { value: "digital", label: { ru: "Цифровые товары", tm: "Sanly harytlar" } },
-    { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+    { value: "digitalGoods", label: { ru: "Цифровые товары", tm: "Sanly harytlar" } },
+    { value: "all", label: { ru: "Всё", tm: "Hemmesi" } },
   ];
 
-  const paymentOptions = [
-    { value: "card", label: { ru: "Карта", tm: "Bank kart" } },
-    { value: "cash", label: { ru: "Наличные", tm: "Nagt pul" } },
-    { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+  // helper to get localized label by key
+  const catLabel = (key) => {
+    const opt = categoryOptions.find((o) => o.value === key);
+    return opt ? opt.label[currentLang] : key;
+  };
+
+  // === DATA (demo) ===
+  // NOTE: per your rule, time === localized category label
+  const [hasTransactions] = useState(true);
+  const transactions = [
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "12.300,00 ТМТ", orderId: "10 шт", category: "12.300,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "8.000,00 ТМТ", orderId: "7 шт", category: "8.000,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "21.110,50 ТМТ", orderId: "18 шт", category: "21.110,50 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "3.950,00 ТМТ", orderId: "4 шт", category: "3.950,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "17.250,00 ТМТ", orderId: "13 шт", category: "17.250,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "9.999,99 ТМТ", orderId: "9 шт", category: "9.999,99 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "44.000,00 ТМТ", orderId: "30 шт", category: "44.000,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "2.100,00 ТМТ", orderId: "3 шт", category: "2.100,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "6.400,00 ТМТ", orderId: "6 шт", category: "6.400,00 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "27.777,77 ТМТ", orderId: "22 шт", category: "27.777,77 ТМТ" },
+    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "11.000,00 ТМТ", orderId: "8 шт", category: "11.000,00 ТМТ" },
   ];
 
-  // === STATE (mirror Home) ===
-  const [filter, setFilter] = useState(false);
+  // === STATE ===
+  const [filterOpen, setFilterOpen] = useState(false);
   const [openCat, setOpenCat] = useState(false);
-  const [openPay, setOpenPay] = useState(false);
-
   const [category, setCategory] = useState("eSIM");
-  const [payment, setPayment] = useState("card");
 
-  const filterFunc = () => setFilter((v) => !v);
+  const toggleFilter = () => setFilterOpen((v) => !v);
+
+  // === FILTER LOGIC ===
+  // 'all' (dropdown) shows every row; otherwise match the localized label in tx.time
+  const selectedLabel = catLabel(category);
+  const filteredTransactions = useMemo(() => {
+    if (category === "all") return transactions;
+    return transactions.filter(
+      (tx) => String(tx.time).toLowerCase() === String(selectedLabel).toLowerCase()
+    );
+  }, [category, selectedLabel, transactions]);
+
+  const currentCategoryLabel =
+    categoryOptions.find((o) => o.value === category)?.label[currentLang] ?? category;
 
   return (
     <div>
@@ -75,16 +85,16 @@ function EarnedReport() {
         <div className="search-table search-earn">
           <p className="tb-head">{t("reports.periodSummary")}</p>
 
-          {/* === FILTER (same as Home) === */}
+          {/* FILTER */}
           <div className="nav-filter">
-            <button type="button" onClick={filterFunc} aria-expanded={filter}>
+            <button type="button" onClick={toggleFilter} aria-expanded={filterOpen}>
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M3.3335 5.83337H16.6668M5.83345 10H14.1668M9.16678 14.1667H10.8334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>{t("home.filter")}</span>
             </button>
 
-            <div className={filter ? "filter-drop drop filter-earn" : "filter-drop"}>
+            <div className={filterOpen ? "filter-drop drop filter-earn" : "filter-drop"}>
               <div className="prof-flex filter-flex">
                 <span>{t("home.filter")}</span>
                 <svg
@@ -94,7 +104,7 @@ function EarnedReport() {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   style={{ cursor: "pointer" }}
-                  onClick={filterFunc}
+                  onClick={toggleFilter}
                 >
                   <g id="close">
                     <path id="Icon" d="M18 19.5L54 55.5M54 19.5L18 55.5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -116,10 +126,10 @@ function EarnedReport() {
                 <div style={{ position: "relative" }}>
                   <div
                     className="filter-select"
-                    onClick={() => { setOpenCat((v) => !v); setOpenPay(false); }}
+                    onClick={() => setOpenCat((v) => !v)}
                     aria-expanded={openCat}
                   >
-                    <p>{categoryOptions.find((o) => o.value === category)?.label[currentLang]}</p>
+                    <p>{currentCategoryLabel}</p>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
                     </svg>
@@ -132,7 +142,7 @@ function EarnedReport() {
                           key={opt.value}
                           className={opt.value === category ? "opt-active" : ""}
                           onClick={() => {
-                            setCategory(opt.value);
+                            setCategory(opt.value); // apply immediately
                             setOpenCat(false);
                           }}
                         >
@@ -145,14 +155,15 @@ function EarnedReport() {
               </div>
 
               <div id="filter-btn">
-                <button>{t("home.apply")}</button>
+                {/* Optional: just closes the panel */}
+                <button onClick={() => setFilterOpen(false)}>{t("home.apply")}</button>
               </div>
             </div>
           </div>
         </div>
+
         <div className="table-viewport">
           <table>
-
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
               <p>{t("reports.period")}</p>
               <p>{t("reports.category")}</p>
@@ -162,7 +173,7 @@ function EarnedReport() {
             </tr>
 
             {hasTransactions ? (
-              transactions.map((tx, i) => (
+              (filteredTransactions.length > 0 ? filteredTransactions : []).map((tx, i) => (
                 <tr key={i} className="row-titles row-data withdrawn">
                   <p>{tx.date}</p>
                   <p>{tx.time}</p>

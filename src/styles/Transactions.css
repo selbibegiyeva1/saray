@@ -90,10 +90,15 @@ table tr p {
     width: 100%;
 }
 
+.status-block {
+    display: flex;
+    justify-content: right;
+}
+
 table .status-cell {
     display: flex;
     align-items: center;
-    width: 150px;
+    width: 145px;
     gap: 8px;
 }
 
@@ -198,7 +203,7 @@ table tr p:first-child {
     font-weight: 500;
 }
 
-@media(max-width: 768px) {
+@media(max-width: 1024px) {
     .row-titles.row-data {
         font-size: 12px;
     }
@@ -207,16 +212,26 @@ table tr p:first-child {
         display: none;
     }
 
+    .status-block {
+        justify-content: center;
+    }
+
     .transactions-container {
         max-width: 100%;
     }
 
     table {
-        width: 900px;
+        width: 1300px;
     }
 
     table .status-cell {
         width: initial;
+    }
+}
+
+@media(max-width: 768px) {
+    table {
+        width: 1000px;
     }
 }
 

@@ -12,49 +12,64 @@ function EarnedReport() {
     { value: "all", label: { ru: "Всё", tm: "Hemmesi" } },
   ];
 
-  // helper to get localized label by key
   const catLabel = (key) => {
     const opt = categoryOptions.find((o) => o.value === key);
     return opt ? opt.label[currentLang] : key;
   };
 
-  // === DATA (demo) ===
-  // NOTE: per your rule, time === localized category label
-  const [hasTransactions] = useState(true);
-  const transactions = [
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "12.300,00 ТМТ", orderId: "10 шт", category: "12.300,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "8.000,00 ТМТ", orderId: "7 шт", category: "8.000,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "21.110,50 ТМТ", orderId: "18 шт", category: "21.110,50 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "3.950,00 ТМТ", orderId: "4 шт", category: "3.950,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "17.250,00 ТМТ", orderId: "13 шт", category: "17.250,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "9.999,99 ТМТ", orderId: "9 шт", category: "9.999,99 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "44.000,00 ТМТ", orderId: "30 шт", category: "44.000,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "2.100,00 ТМТ", orderId: "3 шт", category: "2.100,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "6.400,00 ТМТ", orderId: "6 шт", category: "6.400,00 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "27.777,77 ТМТ", orderId: "22 шт", category: "27.777,77 ТМТ" },
-    { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "11.000,00 ТМТ", orderId: "8 шт", category: "11.000,00 ТМТ" },
-  ];
+  // === MOCK DATA ===
+  // time === localized category label
+  const transactions = useMemo(
+    () => [
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "58.451,32 ТМТ", orderId: "25 шт", category: "58.451,32 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "12.300,00 ТМТ", orderId: "10 шт", category: "12.300,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("all"), txId: "8.000,00 ТМТ", orderId: "7 шт", category: "8.000,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "21.110,50 ТМТ", orderId: "18 шт", category: "21.110,50 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "3.950,00 ТМТ", orderId: "4 шт", category: "3.950,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("all"), txId: "17.250,00 ТМТ", orderId: "13 шт", category: "17.250,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "9.999,99 ТМТ", orderId: "9 шт", category: "9.999,99 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "44.000,00 ТМТ", orderId: "30 шт", category: "44.000,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("all"), txId: "2.100,00 ТМТ", orderId: "3 шт", category: "2.100,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("eSIM"), txId: "6.400,00 ТМТ", orderId: "6 шт", category: "6.400,00 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("digitalGoods"), txId: "27.777,77 ТМТ", orderId: "22 шт", category: "27.777,77 ТМТ" },
+      { date: "01.11.2025  - 30.11.2025", time: catLabel("all"), txId: "11.000,00 ТМТ", orderId: "8 шт", category: "11.000,00 ТМТ" },
+    ],
+    [currentLang] // re-localize when language switches
+  );
 
   // === STATE ===
+  const [hasTransactions] = useState(true);
+
+  // Draft value (UI) vs Applied value (affects table)
+  const DEFAULT_CAT = "eSIM";
+  const [categoryDraft, setCategoryDraft] = useState(DEFAULT_CAT);
+  const [categoryApplied, setCategoryApplied] = useState(DEFAULT_CAT);
+
   const [filterOpen, setFilterOpen] = useState(false);
   const [openCat, setOpenCat] = useState(false);
-  const [category, setCategory] = useState("eSIM");
 
   const toggleFilter = () => setFilterOpen((v) => !v);
 
-  // === FILTER LOGIC ===
-  // 'all' (dropdown) shows every row; otherwise match the localized label in tx.time
-  const selectedLabel = catLabel(category);
-  const filteredTransactions = useMemo(() => {
-    if (category === "all") return transactions;
-    return transactions.filter(
-      (tx) => String(tx.time).toLowerCase() === String(selectedLabel).toLowerCase()
-    );
-  }, [category, selectedLabel, transactions]);
+  // === APPLY / RESET ===
+  const onApply = () => {
+    setCategoryApplied(categoryDraft);
+    setFilterOpen(false);
+    setOpenCat(false);
+  };
 
-  const currentCategoryLabel =
-    categoryOptions.find((o) => o.value === category)?.label[currentLang] ?? category;
+  const onReset = () => setCategoryDraft(DEFAULT_CAT);
+
+  // === FILTER LOGIC (uses APPLIED value only) ===
+  const selectedAppliedLabel = catLabel(categoryApplied);
+  const filteredTransactions = useMemo(() => {
+    if (categoryApplied === "all") return transactions;
+    return transactions.filter(
+      (tx) => String(tx.time).toLowerCase() === String(selectedAppliedLabel).toLowerCase()
+    );
+  }, [categoryApplied, selectedAppliedLabel, transactions]);
+
+  const currentDraftLabel =
+    categoryOptions.find((o) => o.value === categoryDraft)?.label[currentLang] ?? categoryDraft;
 
   return (
     <div>
@@ -112,12 +127,12 @@ function EarnedReport() {
                 </svg>
               </div>
 
-              {/* Category */}
+              {/* Category (DRAFT) */}
               <div className="filter-opts">
                 <div className="opts-head">
                   <span>{t("home.category")}</span>
-                  {category !== "eSIM" && (
-                    <span className="reset-btn" onClick={() => setCategory("eSIM")}>
+                  {categoryDraft !== DEFAULT_CAT && (
+                    <span className="reset-btn" onClick={onReset}>
                       {t("home.reset")}
                     </span>
                   )}
@@ -129,7 +144,7 @@ function EarnedReport() {
                     onClick={() => setOpenCat((v) => !v)}
                     aria-expanded={openCat}
                   >
-                    <p>{currentCategoryLabel}</p>
+                    <p>{currentDraftLabel}</p>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
                     </svg>
@@ -140,9 +155,9 @@ function EarnedReport() {
                       {categoryOptions.map((opt) => (
                         <p
                           key={opt.value}
-                          className={opt.value === category ? "opt-active" : ""}
+                          className={opt.value === categoryDraft ? "opt-active" : ""}
                           onClick={() => {
-                            setCategory(opt.value); // apply immediately
+                            setCategoryDraft(opt.value); // only draft is updated
                             setOpenCat(false);
                           }}
                         >
@@ -155,8 +170,7 @@ function EarnedReport() {
               </div>
 
               <div id="filter-btn">
-                {/* Optional: just closes the panel */}
-                <button onClick={() => setFilterOpen(false)}>{t("home.apply")}</button>
+                <button onClick={onApply}>{t("home.apply")}</button>
               </div>
             </div>
           </div>

@@ -205,6 +205,13 @@
     font-weight: 600;
 }
 
+@media(min-width: 1740px) {
+    .Navbar {
+        width: 1440px;
+        margin: auto;
+    }
+}
+
 @media(max-width: 1024px) {
     .Navbar {
         gap: 32px;

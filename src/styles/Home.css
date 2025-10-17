@@ -6,16 +6,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: 24px;
 }
 
 .page-head form {
     display: flex;
     align-items: center;
     gap: 12px;
-}
-
-.page-head {
-    margin-top: 24px;
 }
 
 .page-head h1 {
@@ -295,7 +292,19 @@
     font-size: 14px;
 }
 
-@media(max-width: 1440px) {
+@media(min-width: 1740px) {
+    .page-head, #home-charts {
+        width: 1440px;
+        margin: 24px auto auto auto;
+    }
+
+    .grid-blocks {
+        width: 1440px;
+        margin: 18px auto auto auto;
+    }
+}
+
+@media(max-width: 1740px) {
     .Home {
         padding: 0px 80px;
     }

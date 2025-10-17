@@ -203,6 +203,13 @@ table tr p:first-child {
     font-weight: 500;
 }
 
+@media(min-width: 1740px) {
+    .transactions-container {
+        width: 1440px;
+        margin: auto;
+    }
+}
+
 @media(max-width: 1024px) {
     .row-titles.row-data {
         font-size: 12px;

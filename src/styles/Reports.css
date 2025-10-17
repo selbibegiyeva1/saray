@@ -43,3 +43,10 @@
 .row-titles.withdrawn {
     grid-template-columns: repeat(5, 1fr);
 }
+
+@media(min-width: 1740px) {
+    .report-links {
+        width: 1440px;
+        margin: 7.5px auto 27.5px auto;
+    }
+}

@@ -1,8 +1,12 @@
 .Navbar {
+    background-color: white;
+    position: sticky;
+    top: 0;
     display: flex;
     align-items: center;
     gap: 51px;
     padding: 17px 0px;
+    z-index: 1;
 }
 
 .nav-ul {
@@ -185,6 +189,7 @@
     height: calc(100% - 60px);
     z-index: 1;
     padding: 0px 16px;
+    z-index: 2;
 }
 
 .sidebar.moveleft {

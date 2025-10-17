@@ -3,6 +3,8 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../styles/Navbar.css";
 
+import Sidebar from "./Sidebar";
+
 function Navbar() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || "ru";
@@ -314,30 +316,7 @@ function Navbar() {
       </div>
 
       {/* Sidebar menu (mobile) */}
-      <div className={sidebar ? "sidebar moveleft" : "sidebar"}>
-        <ul>
-          <li>
-            <NavLink to="/home" onClick={sidebarFunc}>
-              {t("navbar.home")}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/transactions" onClick={sidebarFunc}>
-              {t("navbar.transactions")}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/reports" onClick={sidebarFunc}>
-              {t("navbar.reports")}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/help" onClick={sidebarFunc}>
-              {t("navbar.help")}
-            </NavLink>
-          </li>
-        </ul>
-      </div>
+      <Sidebar sidebar={sidebar} sidebarFunc={sidebarFunc} />
     </div>
   );
 }

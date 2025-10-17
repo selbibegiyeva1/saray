@@ -203,6 +203,12 @@ table tr p:first-child {
     font-weight: 500;
 }
 
+.page-head .hide-xls {
+    background-color: #7ebaff;
+    border-color: #7ebaff;
+    cursor: not-allowed;
+}
+
 @media(min-width: 1740px) {
     .transactions-container {
         width: 1440px;

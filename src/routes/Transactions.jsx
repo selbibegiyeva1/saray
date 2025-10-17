@@ -427,7 +427,7 @@ function Transactions() {
                     <div className="page-head trans-head">
                         <h1>{t("transactions.title")}</h1>
                         <form>
-                            <button className="filter-btn blue-nav" type="button">
+                            <button className={`filter-btn blue-nav ${!hasTransactions ? "hide-xls" : ""}`} type="button" disabled={!hasTransactions ? true : false}>
                                 <svg
                                     width="20"
                                     height="20"

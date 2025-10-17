@@ -57,7 +57,12 @@ function EarnedReport() {
     setOpenCat(false);
   };
 
-  const onReset = () => setCategoryDraft(DEFAULT_CAT);
+  const onReset = () => {
+    setCategoryDraft(DEFAULT_CAT);
+    setCategoryApplied(DEFAULT_CAT);
+    setFilterOpen(false);
+    setOpenCat(false);
+  };
 
   // === FILTER LOGIC (uses APPLIED value only) ===
   const selectedAppliedLabel = catLabel(categoryApplied);

@@ -72,6 +72,7 @@ table {
     border-radius: 6px;
     font-size: 12px;
     padding: 0px 13px;
+    margin-bottom: 20px;
 }
 
 .row-titles.row-data {
@@ -79,10 +80,6 @@ table {
     background: none;
     font-size: 13px;
     font-weight: 500;
-}
-
-.row-titles.row-data:not(:last-child) {
-    margin-bottom: 20px;
 }
 
 table tr p {

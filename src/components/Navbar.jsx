@@ -174,21 +174,10 @@ function Navbar() {
         {/* Profile */}
         <li>
           <button onClick={profileFunc}>
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 32 32"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M24 24.9444C23.311 21.8333 20.7142 20 16.0002 20C11.2861 20 8.68901 21.8333 8 24.9444M16 28C22.6274 28 28 22.6274 28 16C28 9.37258 22.6274 4 16 4C9.37258 4 4 9.37258 4 16C4 22.6274 9.37258 28 16 28ZM16 16C17.7778 16 18.6667 15.0476 18.6667 12.6667C18.6667 10.2857 17.7778 9.33333 16 9.33333C14.2222 9.33333 13.3333 10.2857 13.3333 12.6667C13.3333 15.0476 14.2222 16 16 16Z"
-                stroke="black"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 18.7083C17.4832 16.375 15.5357 15 12.0001 15C8.46459 15 6.51676 16.375 6 18.7083M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21ZM12 12C13.3333 12 14 11.2857 14 9.5C14 7.71429 13.3333 7 12 7C10.6667 7 10 7.71429 10 9.5C10 11.2857 10.6667 12 12 12Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
+
             <span>Мурад</span>
           </button>
         </li>

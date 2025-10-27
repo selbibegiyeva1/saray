@@ -3,12 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import "../styles/Login.css";
 
+import api, { setAccessToken } from "../lib/api";
+
 function Login() {
     const { t, i18n } = useTranslation();
     const navigate = useNavigate();
 
     const [openLang, setOpenLang] = useState(false);
-    const [loading, setLoading] = useState(false); // <-- new state
+    const [loading, setLoading] = useState(false);
+    const [serverError, setServerError] = useState("");
+
     const currentLang = i18n.language || "ru";
 
     const languages = [
@@ -29,23 +33,36 @@ function Login() {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState({ username: false, password: false });
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-
+        setServerError("");
         const newErrors = {
             username: username.trim() === "",
             password: password.trim() === "",
         };
         setErrors(newErrors);
-
         if (newErrors.username || newErrors.password) return;
 
         setLoading(true);
-
-        setTimeout(() => {
+        try {
+            // Choose endpoint. For “client” area we use partner login by default.
+            // Switch to /v1/auth/admin/login if this screen is for admins.
+            const { data } = await api.post(`/v1/auth/partner/login`, {
+                username,
+                password,
+            });
+            // Backend returns { message: "Success", accessToken: "..." }
+            setAccessToken(data?.accessToken);
+            navigate("/home", { replace: true });
+        } catch (err) {
+            const msg =
+                err?.response?.data?.message ||
+                t("login.invalidCredentials") ||
+                "Login failed";
+            setServerError(msg);
+        } finally {
             setLoading(false);
-            navigate("/home");
-        }, 2000);
+        }
     };
 
     // handle input changes with live error reset

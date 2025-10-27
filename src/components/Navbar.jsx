@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../styles/Navbar.css";
 
 import Sidebar from "./Sidebar";
+import { logout } from "../lib/logout";
+import { clearAccessToken } from "../lib/api";
 
 function Navbar() {
   const { t, i18n } = useTranslation();
@@ -11,9 +13,8 @@ function Navbar() {
 
   const navigate = useNavigate();
 
-  const TOKEN =
-    "8d5b81f8-e8125-4578-b1a7-e093b318d5b81f8-e8125-4578-b1a7-e093b31";
-  const displayToken = `${TOKEN.slice(0, 32)}...`;
+  const TOKEN = localStorage.getItem("accessToken") || "";
+  const displayToken = TOKEN ? `${TOKEN.slice(0, 32)}...` : "—";
 
   const [profile, setProfile] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -58,7 +59,14 @@ function Navbar() {
     }
   };
 
-  const profileFunc = () => setProfile(!profile);
+  const profileFunc = () => {
+    const newState = !profile;
+    setProfile(newState);
+    if (newState && TOKEN) {
+      console.log("Current access token:", TOKEN);
+    }
+  };
+
   const sidebarFunc = () => setSidebar(!sidebar);
 
   return (
@@ -298,7 +306,19 @@ function Navbar() {
             </div>
           </div>
 
-          <button className="logout" onClick={() => navigate("/")}>
+          <button
+            className="logout"
+            onClick={async () => {
+              try {
+                await logout();
+              } catch (e) {
+                console.error("Logout failed", e);
+                clearAccessToken(); // fallback
+              } finally {
+                navigate("/", { replace: true });
+              }
+            }}
+          >
             {t("navbar.logout")}
           </button>
         </div>

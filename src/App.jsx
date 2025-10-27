@@ -9,12 +9,20 @@ import Help from './routes/Help';
 import Reports from './routes/Reports';
 
 import ProtectedRoute from './auth/ProtectedRoute';
+import PublicOnlyRoute from "./auth/PublicOnlyRoute";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route
+          path="/"
+          element={
+            <PublicOnlyRoute>
+              <Login />
+            </PublicOnlyRoute>
+          }
+        />
         <Route
           path="/home"
           element={

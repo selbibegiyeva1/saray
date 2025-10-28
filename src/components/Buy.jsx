@@ -31,31 +31,57 @@ const PendingIcon = () => (
 );
 
 export default function Buy() {
-    const { t } = useTranslation();
-    const [transactions, setTransactions] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language || "ru";
 
     const STATUS = {
+        success: { label: t("transactions.status.success"), Icon: SuccessIcon },
+        rejected: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
+        pending: { label: t("transactions.status.pending"), Icon: PendingIcon },
         SUCCESS: { label: t("transactions.status.success"), Icon: SuccessIcon },
         CANCELED: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
         PENDING: { label: t("transactions.status.pending"), Icon: PendingIcon },
     };
 
+    const perPage = 10;
+    const [page, setPage] = useState(1);
+    const [rows, setRows] = useState([]);
+    const [totalPages, setTotalPages] = useState(null); // use if backend provides
+    const [isLastPage, setIsLastPage] = useState(false); // fallback when totalPages unknown
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState("");
+
     useEffect(() => {
+        let cancel = false;
         (async () => {
             setLoading(true);
-            setError("");
+            setErr("");
             try {
-                const { data } = await api.get("/v1/partner/info/orders");
-                setTransactions(data?.orders_history || []);
+                const { data } = await api.get(`/v1/partner/info/orders?page=${page}&per_page=${perPage}`);
+                const list = Array.isArray(data?.orders_history) ? data.orders_history : [];
+
+                if (cancel) return;
+                setRows(list);
+
+                // If API returns total/total_pages, compute; else, fallback by length
+                const apiTotalPages =
+                    (typeof data?.total_pages === "number" && data.total_pages > 0)
+                        ? data.total_pages
+                        : (typeof data?.total === "number" && data.total >= 0)
+                            ? Math.ceil(data.total / perPage)
+                            : (typeof data?.count === "number" && data.count >= 0)
+                                ? Math.ceil(data.count / perPage)
+                                : null;
+                setTotalPages(apiTotalPages || null);
+                setIsLastPage(apiTotalPages ? page >= apiTotalPages : list.length < perPage);
             } catch (e) {
-                setError(e?.response?.data?.message || "Failed to load transactions");
+                if (!cancel) setErr(e?.response?.data?.message || "Failed to load transactions");
             } finally {
-                setLoading(false);
+                if (!cancel) setLoading(false);
             }
         })();
-    }, []);
+        return () => { cancel = true; };
+    }, [page]);
 
     const formatDateTime = (dt) => {
         const d = new Date(dt);
@@ -85,19 +111,19 @@ export default function Buy() {
                         </tr>
 
                         {loading && <div className="no-data"><p>{t("common.loading") || "Loading..."}</p></div>}
-                        {error && <div className="no-data"><p>{error}</p></div>}
+                        {err && <div className="no-data"><p>{err}</p></div>}
 
-                        {!loading && !error && transactions.length > 0 ? (
-                            transactions.map((tx, i) => {
+                        {!loading && !err && rows.length > 0 ? (
+                            rows.map((tx, i) => {
                                 const { date, time } = formatDateTime(tx.datetime);
-                                const meta = STATUS[tx.status] || STATUS.PENDING;
+                                const meta = STATUS[tx.status] || STATUS.pending;
                                 const Icon = meta.Icon;
                                 return (
-                                    <tr key={i} className="row-titles row-data">
+                                    <tr key={tx.transaction_id || i} className="row-titles row-data">
                                         <p>{date}</p>
                                         <p>{time}</p>
                                         <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.transaction_id}</p>
-                                        <p className="trans-overflow">{tx.operator}</p>
+                                        <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
                                         <p>{tx.category}</p>
                                         <p className="trans-overflow">{tx.description}</p>
                                         <div className="status-block">
@@ -111,7 +137,7 @@ export default function Buy() {
                                 );
                             })
                         ) : (
-                            !loading && !error && (
+                            !loading && !err && (
                                 <div className="no-data">
                                     <p>{t("transactions.noData")}</p>
                                 </div>
@@ -121,15 +147,21 @@ export default function Buy() {
                 </div>
             </div>
 
-            <div className="pags">
-                <button className="active-btn">1</button>
-                <button className="inactive-btn">2</button>
-                <button className="inactive-btn">3</button>
-                <button className="inactive-btn">4</button>
-                <button className="inactive-btn">5</button>
-                <button className="inactive-btn">...</button>
-                <button className="inactive-btn">24</button>
-            </div>
+            {/* Real pagination (numbered), preserving original styles */}
+            {totalPages && totalPages > 1 && (
+                <div className="pags">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                        <button
+                            key={p}
+                            className={p === page ? "active-btn" : "inactive-btn"}
+                            disabled={loading}
+                            onClick={() => setPage(p)}
+                        >
+                            {p}
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 }

@@ -48,6 +48,17 @@ function Home() {
   const [chartValues, setChartValues] = useState([]);
   const [loadErr, setLoadErr] = useState("");
 
+  const [totals, setTotals] = useState({
+    revenue_total: 0,
+    transactions_count: 0,
+    withdrawn: 0,
+    earn_total: 0,
+    available_withdrawal: 0,
+  });
+
+  const money = (n) =>
+    typeof n === "number" ? `${n.toLocaleString("ru-RU")} TMT` : "0 TMT";
+
   const filterFunc = () => setFilter(!filter);
 
   useEffect(() => {
@@ -61,6 +72,13 @@ function Home() {
         if (!cancelled) {
           setChartLabels(series.map(d => d.label));
           setChartValues(series.map(d => d.transaction_count)); // <-- transactions, not revenue
+          setTotals({
+            revenue_total: data?.revenue_total ?? 0,
+            transactions_count: data?.transactions_count ?? 0,
+            withdrawn: data?.withdrawn ?? 0,
+            earn_total: data?.earn_total ?? 0,
+            available_withdrawal: data?.available_withdrawal ?? 0,
+          });
         }
       } catch (e) {
         if (!cancelled) setLoadErr(e?.response?.data?.message || "Failed to load transactions chart");
@@ -233,7 +251,7 @@ function Home() {
         isLoading ? (
           <div className="grid-blocks" >
             {
-              Array.from({ length: 6 }).map((_, index) => (
+              Array.from({ length: 5 }).map((_, index) => (
                 <div key={index} className="g-block">
                   <Skeleton height={24} width={138} />
                   <div style={{ display: "flex", gap: "10px", margin: "10px 0px" }}>
@@ -252,9 +270,10 @@ function Home() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M3.74984 4.16667H14.9433C15.7111 4.16667 16.1925 4.99615 15.8116 5.66281L13.909 8.99228C13.5529 9.61543 12.8902 10 12.1725 10H6.6665M6.6665 10L5.53942 11.8033C5.12314 12.4694 5.60198 13.3333 6.38742 13.3333H14.9998M6.6665 10L3.46929 3.60557C3.13051 2.928 2.43798 2.5 1.68044 2.5H1.6665M6.6665 16.6667C6.6665 17.1269 6.29341 17.5 5.83317 17.5C5.37293 17.5 4.99984 17.1269 4.99984 16.6667C4.99984 16.2064 5.37293 15.8333 5.83317 15.8333C6.29341 15.8333 6.6665 16.2064 6.6665 16.6667ZM14.9998 16.6667C14.9998 17.1269 14.6267 17.5 14.1665 17.5C13.7063 17.5 13.3332 17.1269 13.3332 16.6667C13.3332 16.2064 13.7063 15.8333 14.1665 15.8333C14.6267 15.8333 14.9998 16.2064 14.9998 16.6667Z" stroke="#5682FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+                {/* Оборот */}
                 <p>{t("home.turnover")}</p>
               </div>
-              <p className="g-block-num">8.672,20 ТМТ</p>
+              <p className="g-block-num">{money(totals.revenue_total)}</p>
             </div>
 
             <div className="g-block">
@@ -262,9 +281,12 @@ function Home() {
                 <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M17.5 10V11.6667M10 4.16668H4.5C3.39543 4.16668 2.5 5.06211 2.5 6.16668V11.6667M2.5 11.6667V13.8333C2.5 14.9379 3.39543 15.8333 4.5 15.8333H15.5C16.6046 15.8333 17.5 14.9379 17.5 13.8333V11.6667M2.5 11.6667H17.5M19.1667 3.33334L15 7.50001L13.3333 5.83334" stroke="#2D85EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+                {/* Транзакции */}
                 <p>{t("home.transactions")}</p>
               </div>
-              <p className="g-block-num">215 <span>{t("home.amountHome")}</span></p>
+              <p className="g-block-num">
+                {totals.transactions_count} <span>{t("home.amountHome")}</span>
+              </p>
             </div>
 
             <div className="g-block">
@@ -272,9 +294,10 @@ function Home() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M15.8333 6.66668V5.33334C15.8333 4.22877 14.9379 3.33334 13.8333 3.33334H5.5C3.84315 3.33334 2.5 4.67649 2.5 6.33334V13.6667C2.5 15.3235 3.84315 16.6667 5.5 16.6667H15.5C16.6046 16.6667 17.5 15.7712 17.5 14.6667V8.33334C17.5 7.41287 16.7538 6.66668 15.8333 6.66668ZM15.8333 6.66668H5.83333M14.1667 11.6667H13.3333" stroke="#2D85EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+                {/* Выведено */}
                 <p>{t("home.withdrawn")}</p>
               </div>
-              <p className="g-block-num">8.672,20 ТМТ</p>
+              <p className="g-block-num">{money(totals.withdrawn)}</p>
             </div>
 
             <div className="g-block">
@@ -282,9 +305,10 @@ function Home() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2.5 15.8333H17.5M10 10V15.8333M15 10V15.8333M5 10V15.8333M10.4472 2.72361L16.59 5.79502C17.4395 6.21973 17.1372 7.5 16.1875 7.5H3.81246C2.86276 7.5 2.56053 6.21973 3.40997 5.79501L9.55279 2.72361C9.83431 2.58284 10.1657 2.58284 10.4472 2.72361Z" stroke="#2D85EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+                {/* Всего заработано */}
                 <p>{t("home.earned")}</p>
               </div>
-              <p className="g-block-num">8.672,20 ТМТ</p>
+              <p className="g-block-num">{money(totals.earn_total)}</p>
             </div>
 
             <div className="g-block">
@@ -292,6 +316,7 @@ function Home() {
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M10 4.16666H4.5C3.39543 4.16666 2.5 5.06209 2.5 6.16666V11.6667M17.5 2.5L13.3333 7.5M12.5 2.5L12.5 3.33333M18.3333 6.66666L18.3333 7.5M2.5 11.6667V13.8333C2.5 14.9379 3.39543 15.8333 4.5 15.8333H15.5C16.6046 15.8333 17.5 14.9379 17.5 13.8333V11.6667H2.5Z" stroke="#2D85EA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
+                {/* Доступно к выводу */}
                 <p>{t("home.available")}</p>
                 <div className="tooltip">
                   <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className='quest-i'>
@@ -301,7 +326,7 @@ function Home() {
                   <span>{t("home.tooltip")}</span>
                 </div>
               </div>
-              <p className="g-block-num">8.672,20 ТМТ</p>
+              <p className="g-block-num">{money(totals.available_withdrawal)}</p>
             </div>
           </div>
         )

@@ -66,13 +66,17 @@ table {
     color: #00000099;
     display: grid;
     align-items: center;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(8, 1fr);
     font-weight: 400;
     height: 36px;
     border-radius: 6px;
     font-size: 12px;
     padding: 0px 13px;
     margin-bottom: 20px;
+}
+
+.row-titles.topup {
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .row-titles.row-data {
@@ -164,7 +168,7 @@ table tr p:first-child {
 .grid-load {
     display: grid;
     gap: 9px;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(8, 1fr);
 }
 
 .grid-load div {

@@ -59,9 +59,10 @@
         "orderId": "Sargyt ID",
         "category": "Kategoriýa",
         "description": "Düşündiriş",
-        "externalId": "Daşky ID",
         "statusLabel": "Status",
         "amount": "Möçberi",
+        "balance_b": "Doldurmazdan öňki balans",
+        "balance_a": "Soňraky balans",
         "status": {
             "success": "Üstünlikli",
             "rejected": "Inkär edildi",

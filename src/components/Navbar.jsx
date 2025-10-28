@@ -281,44 +281,9 @@ function Navbar() {
             <p>{t("navbar.fullname")}</p>
             <input type="text" value={user?.full_name || "—"} readOnly />
           </div>
-          <div style={{ marginBottom: 20 }}>
+          <div>
             <p>{t("navbar.role")}</p>
             <input type="text" value={user?.role || "—"} readOnly />
-          </div>
-
-          <div>
-            <span className="tkn-spn">{t("navbar.tokenManage")}</span>
-            <p>{t("navbar.yourToken")}</p>
-            <div
-              className="token"
-              style={{ display: "flex", alignItems: "center", gap: 8 }}
-            >
-              <input
-                type="text"
-                className="token-inp"
-                value={displayToken}
-                readOnly
-                title={TOKEN}
-              />
-              <svg
-                width="24"
-                height="25"
-                viewBox="0 0 24 25"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ cursor: "pointer" }}
-                onClick={copyToken}
-              >
-                <path
-                  d="M9 15.5H5C3.89543 15.5 3 14.6046 3 13.5V5.5C3 4.39543 3.89543 3.5 5 3.5H13C14.1046 3.5 15 4.39543 15 5.5V9.5M11 21.5H19C20.1046 21.5 21 20.6046 21 19.5V11.5C21 10.3954 20.1046 9.5 19 9.5H11C9.89543 9.5 9 10.3954 9 11.5V19.5C9 20.6046 9.89543 21.5 11 21.5Z"
-                  stroke="black"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {copied && <span className="copied">{t("navbar.copied")}</span>}
-            </div>
           </div>
 
           <button

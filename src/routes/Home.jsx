@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useTranslation } from "react-i18next";
+
+import api from "../lib/api";
 
 import Navbar from "../components/Navbar";
 import BarChart from "../components/BarChart";
@@ -15,9 +17,9 @@ function Home() {
   // Translatable option arrays
   const periodOptions = [
     { value: "day", label: { ru: "День", tm: "Gün" } },
+    { value: "week", label: { ru: "Неделя", tm: "Hepde" } },
     { value: "month", label: { ru: "Месяц", tm: "Aý" } },
-    { value: "year", label: { ru: "Год", tm: "Ýyl" } },
-    { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+    { value: "all_time", label: { ru: "Всё", tm: "Ählisi" } },
   ];
 
   const categoryOptions = [
@@ -42,52 +44,32 @@ function Home() {
   const [category, setCategory] = useState("eSIM");
   const [payment, setPayment] = useState("card");
   const [period, setPeriod] = useState("day");
+  const [chartLabels, setChartLabels] = useState([]);
+  const [chartValues, setChartValues] = useState([]);
+  const [loadErr, setLoadErr] = useState("");
 
   const filterFunc = () => setFilter(!filter);
 
-  // Chart data logic
-  const getChartDataByPeriod = (p) => {
-    const match = (ru, tm) => (currentLang === "ru" ? ru : tm);
-
-    switch (p) {
-      case "day":
-        return {
-          labels: ["00:00", "03:00", "06:00", "09:00", "12:00", "15:00", "18:00", "21:00"],
-          values: [5, 9, 12, 18, 24, 20, 16, 8],
-          title: match("Оборот за день", "Bir günlik aýlanma"),
-        };
-
-      case "month":
-        return {
-          labels: match(
-            ["Нед. 1", "Нед. 2", "Нед. 3", "Нед. 4"],
-            ["1-nji hepde", "2-nji hepde", "3-nji hepde", "4-nji hepde"]
-          ),
-          values: [110, 140, 95, 160],
-          title: match("Оборот за месяц", "Aýlyk aýlanma"),
-        };
-
-      case "year":
-        return {
-          labels: match(
-            ["Янв", "Фев", "Мар", "Апр", "Май", "Июн", "Июл", "Авг", "Сен", "Окт", "Ноя", "Дек"],
-            ["Ýan", "Few", "Mar", "Apr", "Maý", "Iýun", "Iýul", "Awg", "Sen", "Okt", "Noý", "Dek"]
-          ),
-          values: [300, 280, 360, 420, 500, 480, 510, 530, 490, 550, 600, 620],
-          title: match("Оборот за год", "Ýyllyk aýlanma"),
-        };
-
-      case "all":
-      default:
-        return {
-          labels: ["2021", "2022", "2023", "2024", "2025"],
-          values: [2500, 3100, 4000, 5200, 6100],
-          title: match("Оборот за всё время", "Ähli döwür boýunça aýlanma"),
-        };
-    }
-  };
-
-  const { labels, values } = getChartDataByPeriod(period);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      setIsLoading(true);
+      setLoadErr("");
+      try {
+        const { data } = await api.get(`/v1/partner/info/main?category=ALL&period=${period}`);
+        const series = Array.isArray(data?.dashboard_info) ? data.dashboard_info : [];
+        if (!cancelled) {
+          setChartLabels(series.map(d => d.label));
+          setChartValues(series.map(d => d.transaction_count)); // <-- transactions, not revenue
+        }
+      } catch (e) {
+        if (!cancelled) setLoadErr(e?.response?.data?.message || "Failed to load transactions chart");
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [period]);
 
   return (
     <div className='Home'>
@@ -328,11 +310,11 @@ function Home() {
       <div className="chart-grid" id='home-charts'>
         <div className='chart-block'>
           <p className='chart-head'>{t("home.salesChart")}</p>
-          <BarChart labels={labels} dataValues={values} />
+          <BarChart labels={chartLabels} dataValues={chartValues} unit="" />
         </div>
         <div className='chart-block'>
           <p className='chart-head'>{t("home.transactionChart")}</p>
-          <BarChart labels={labels} dataValues={values} />
+          <BarChart labels={chartLabels} dataValues={chartValues} unit="" />
         </div>
       </div>
     </div >

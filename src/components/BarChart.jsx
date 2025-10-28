@@ -13,7 +13,7 @@ import {
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const BarChart = ({ labels, dataValues }) => {
+const BarChart = ({ labels, dataValues, unit = "" }) => {
     const data = {
         labels,
         datasets: [
@@ -63,7 +63,7 @@ const BarChart = ({ labels, dataValues }) => {
                             <div id="tool-cont">
                                 <span id="t-span1">${label}</span><br/>
                                 <div id="t-flex">
-                                    <span id="t-span2">${value} ТМТ</span>
+                                    <span id="t-span2">${value}${unit ? " " + unit : ""}</span>
                                     <span id="t-span3">16.0%</span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M5.87504 14.1248L14.1246 5.87521M14.1246 12.9463L14.1246 5.87521L7.05355 5.87521" stroke="#05A360" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>

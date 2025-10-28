@@ -2,6 +2,24 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
+// Compact pagination with smart ellipses
+function buildPageItems(page, totalPages) {
+    if (!totalPages || totalPages < 1) return [];
+
+    // Small sets: show everything
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+
+    // Early pages: show 1..6 then …
+    if (page <= 5) return [1, 2, 3, 4, 5, 6, "…", totalPages];
+
+    // Late pages: show … then last 5 pages
+    if (page >= totalPages - 4)
+        return [1, "…", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+
+    // Middle window: … (p-1) p (p+1) …
+    return [1, "…", page - 1, page, page + 1, "…", totalPages];
+}
+
 // === Status SVGs ===
 const SuccessIcon = () => (
     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,21 +165,28 @@ export default function Buy() {
                 </div>
             </div>
 
-            {/* Real pagination (numbered), preserving original styles */}
+            {/* Numbered pagination with ellipses (keeps original classes) */}
             {totalPages && totalPages > 1 && (
                 <div className="pags">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                        <button
-                            key={p}
-                            className={p === page ? "active-btn" : "inactive-btn"}
-                            disabled={loading}
-                            onClick={() => setPage(p)}
-                        >
-                            {p}
-                        </button>
-                    ))}
+                    {buildPageItems(page, totalPages).map((item, idx) =>
+                        item === "…" ? (
+                            <button key={`ellipsis-${idx}`} className="inactive-btn" disabled>
+                                …
+                            </button>
+                        ) : (
+                            <button
+                                key={item}
+                                className={item === page ? "active-btn" : "inactive-btn"}
+                                disabled={loading}
+                                onClick={() => setPage(item)}
+                            >
+                                {item}
+                            </button>
+                        )
+                    )}
                 </div>
             )}
+
         </div>
     );
 }

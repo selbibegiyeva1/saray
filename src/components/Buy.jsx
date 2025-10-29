@@ -174,7 +174,6 @@ export default function Buy() {
             <div className="transactions-container">
                 <div className="search-table" style={{ marginBottom: 14 }}>
                     <p className="tb-head">{t("transactions.latest")}</p>
-// 2) Make the SVG clickable + accessible; fix SVG props
                     <svg
                         width="40"
                         height="40"

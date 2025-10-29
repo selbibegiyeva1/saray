@@ -119,7 +119,6 @@ function TopUp() {
             <div className="transactions-container">
                 <div className="search-table" style={{ marginBottom: 14 }}>
                     <p className="tb-head">{t("transactions.latest")}</p>
-// clickable + accessible refresh SVG with fixed props
                     <svg
                         width="40"
                         height="40"

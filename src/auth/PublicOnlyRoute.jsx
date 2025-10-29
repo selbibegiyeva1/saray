@@ -1,24 +1,22 @@
 // src/auth/PublicOnlyRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import api, { setAccessToken } from "../lib/api";
+import { setAccessToken, doRefresh, isTokenExpired } from "../lib/api";
 
 export default function PublicOnlyRoute({ children }) {
     const [state, setState] = useState("checking"); // checking | authed | anon
 
     useEffect(() => {
-        const token = localStorage.getItem("accessToken");
-        if (token) { setState("authed"); return; }
-
         (async () => {
+            const token = localStorage.getItem("accessToken");
+            if (token && !isTokenExpired(token)) {
+                setState("authed");
+                return;
+            }
             try {
-                const { data } = await api.post("/v1/auth/refresh", {});
-                if (data?.accessToken) {
-                    setAccessToken(data.accessToken);
-                    setState("authed");
-                } else {
-                    setState("anon");
-                }
+                const newToken = await doRefresh();
+                setAccessToken(newToken);
+                setState("authed");
             } catch {
                 setState("anon");
             }

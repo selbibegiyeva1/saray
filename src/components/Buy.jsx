@@ -242,7 +242,7 @@ export default function Buy() {
 
                                         <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
                                         <p>{tx.category}</p>
-                                        <p className="trans-overflow">{tx.description}</p>
+                                        <p>{tx.description}</p>
 
                                         <div className="status-block">
                                             <div className="status-cell" style={{ display: "flex", alignItems: "center", gap: 6 }}>

@@ -7,6 +7,7 @@ import api from "../lib/api";
 
 import Navbar from "../components/Navbar";
 import BarChart from "../components/BarChart";
+import BarChart2 from "../components/BarChart2";
 
 import "../styles/Home.css";
 
@@ -46,6 +47,7 @@ function Home() {
   const [period, setPeriod] = useState("day");
   const [chartLabels, setChartLabels] = useState([]);
   const [chartValues, setChartValues] = useState([]);
+  const [revenueValues, setRevenueValues] = useState([]);
   const [loadErr, setLoadErr] = useState("");
 
   const [totals, setTotals] = useState({
@@ -72,6 +74,7 @@ function Home() {
         if (!cancelled) {
           setChartLabels(series.map(d => d.label));
           setChartValues(series.map(d => d.transaction_count)); // <-- transactions, not revenue
+          setRevenueValues(series.map(d => d.revenue));
           setTotals({
             revenue_total: data?.revenue_total ?? 0,
             transactions_count: data?.transactions_count ?? 0,
@@ -335,7 +338,7 @@ function Home() {
       <div className="chart-grid" id='home-charts'>
         <div className='chart-block'>
           <p className='chart-head'>{t("home.salesChart")}</p>
-          <BarChart labels={chartLabels} dataValues={chartValues} unit="" />
+          <BarChart2 labels={chartLabels} dataValues={revenueValues} currency="TMT" />
         </div>
         <div className='chart-block'>
           <p className='chart-head'>{t("home.transactionChart")}</p>

@@ -42,7 +42,7 @@ api.interceptors.response.use(
 
         // if 401 and not already retried, and not the refresh endpoint itself
         const isRefreshCall = original?.url?.includes("/v1/auth/refresh");
-        if (status === 401 && !original?._retry && !isRefreshCall) {
+        if (status === 403 && !original?._retry && !isRefreshCall) {
             original._retry = true;
             try {
                 const newToken = await refreshAccessToken();

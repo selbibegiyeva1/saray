@@ -159,55 +159,6 @@ function Home() {
                 </div>
               </div>
 
-
-              {/* Метод оплаты */}
-              <div className='filter-opts'>
-                <div className='opts-head'>
-                  <span>{t("home.paymentMethod")}</span>
-                  {payment !== "card" && (
-                    <span className="reset-btn" onClick={() => setPayment("card")}>
-                      {t("home.reset")}
-                    </span>
-                  )}
-                </div>
-
-                <div style={{ position: "relative" }}>
-                  <div
-                    className="filter-select"
-                    onClick={() => { setOpenPay(v => !v); setOpenCat(false); setOpenDay(false); }}
-                    aria-expanded={openPay}
-                    role="button"
-                    tabIndex={0}
-                  >
-                    <p>
-                      {
-                        paymentOptions.find((opt) => opt.value === payment)?.label[currentLang]
-                      }
-                    </p>
-                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
-                    </svg>
-                  </div>
-
-                  {openPay && (
-                    <div className="drop-options">
-                      {paymentOptions.map((opt) => (
-                        <p
-                          key={opt.value}
-                          className={opt.value === payment ? "opt-active" : ""}
-                          onClick={() => {
-                            setPayment(opt.value);
-                            setOpenPay(false);
-                          }}
-                        >
-                          {opt.label[currentLang]}
-                        </p>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
               <div id='filter-btn'>
                 <button>{t("home.apply")}</button>
               </div>

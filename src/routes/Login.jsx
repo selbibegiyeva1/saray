@@ -13,6 +13,9 @@ function Login() {
     const [loading, setLoading] = useState(false);
     const [serverError, setServerError] = useState("");
 
+    const [appAlert, setAppAlert] = useState({ type: null, message: "" });
+    const closeAlert = () => setAppAlert({ type: null, message: "" });
+
     const currentLang = i18n.language || "ru";
 
     const languages = [
@@ -36,6 +39,8 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setServerError("");
+        setAppAlert({ type: null, message: "" });
+
         const newErrors = {
             username: username.trim() === "",
             password: password.trim() === "",
@@ -45,21 +50,26 @@ function Login() {
 
         setLoading(true);
         try {
-            // Choose endpoint. For “client” area we use partner login by default.
-            // Switch to /v1/auth/admin/login if this screen is for admins.
-            const { data } = await api.post(`/v1/auth/partner/login`, {
-                username,
-                password,
-            });
-            // Backend returns { message: "Success", accessToken: "..." }
+            const { data } = await api.post(`/v1/auth/partner/login`, { username, password });
+
+            // ✅ Success alert (green)
+            setAppAlert({ type: "green", message: data?.message || "Login successful" });
             setAccessToken(data?.accessToken);
-            navigate("/home", { replace: true });
+
+            // wait before redirect to show success message
+            setTimeout(() => {
+                navigate("/home", { replace: true });
+            }, 1500); // 1.5 seconds feels natural
         } catch (err) {
             const msg =
                 err?.response?.data?.message ||
                 t("login.invalidCredentials") ||
                 "Login failed";
+
             setServerError(msg);
+
+            // ❌ Error alert (red) – stays until user closes it
+            setAppAlert({ type: "red", message: msg });
         } finally {
             setLoading(false);
         }
@@ -160,6 +170,37 @@ function Login() {
 
             <center><span className='log-span span2'>{t("login.noRegistration")}</span></center>
             <center><span className='log-span span3'>{t("login.support")}</span></center>
+
+            {/* Alerts */}
+            {appAlert.type && (
+                <div className="alerts">
+                    {appAlert.type === "green" && (
+                        <div className="alt green" role="alert">
+                            {/* ✅ your success icon */}
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span>{appAlert.message}</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                    )}
+
+                    {appAlert.type === "red" && (
+                        <div className="alt red" role="alert">
+                            {/* ❌ your error icon */}
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span>{appAlert.message}</span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                        </div>
+                    )}
+                </div>
+            )}
 
             {/* <div className="alerts">
                 <div className="alt green">

@@ -43,34 +43,11 @@ function Navbar() {
     setOpenLang(false);
   };
 
-  // Copy token
-  const copyToken = async () => {
-    try {
-      await navigator.clipboard.writeText(TOKEN);
-      setCopied(true);
-    } catch {
-      const ta = document.createElement("textarea");
-      ta.value = TOKEN;
-      ta.style.position = "fixed";
-      ta.style.left = "-9999px";
-      document.body.appendChild(ta);
-      ta.select();
-      try {
-        document.execCommand("copy");
-        setCopied(true);
-      } finally {
-        document.body.removeChild(ta);
-      }
-    } finally {
-      setTimeout(() => setCopied(false), 3000);
-    }
-  };
-
   const profileFunc = () => {
     const newState = !profile;
     setProfile(newState);
     if (newState && TOKEN) {
-      console.log("Current access token:", TOKEN);
+      console.log("Done");
     }
   };
 

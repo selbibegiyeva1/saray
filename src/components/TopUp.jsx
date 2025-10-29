@@ -1,5 +1,5 @@
 // routes/TopUp.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react"; // + useRef
 import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
@@ -34,6 +34,9 @@ function TopUp() {
     const [isLastPage, setIsLastPage] = useState(false);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState("");
+
+    const [copyToast, setCopyToast] = useState({ show: false, message: "" });
+    const copyTimerRef = useRef(null);
 
     const splitDateTime = (iso) => {
         const d = new Date(iso);
@@ -76,11 +79,49 @@ function TopUp() {
         return () => { cancel = true; };
     }, [page]);
 
+    const copyTxId = async (value) => {
+        if (!value) return;
+
+        try {
+            if (navigator?.clipboard?.writeText) {
+                await navigator.clipboard.writeText(value);
+            } else {
+                const ta = document.createElement("textarea");
+                ta.value = value;
+                ta.style.position = "fixed";
+                ta.style.opacity = "0";
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand("copy");
+                document.body.removeChild(ta);
+            }
+        } catch (_) {
+            // ignore copy errors; still show toast
+        }
+
+        setCopyToast({ show: true, message: "Transaction ID copied" });
+
+        if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        copyTimerRef.current = setTimeout(() => {
+            setCopyToast({ show: false, message: "" });
+        }, 2500);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        };
+    }, []);
+
     return (
         <div>
             <div className="transactions-container">
                 <div className="search-table" style={{ marginBottom: 14 }}>
                     <p className="tb-head">{t("transactions.latest")}</p>
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#2D85EA" />
+                        <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
                 </div>
 
                 <div className="table-viewport">
@@ -118,9 +159,37 @@ function TopUp() {
                                 <tr key={tx.transaction_id || i} className="row-titles row-data topup">
                                     <p>{date}</p>
                                     <p>{time}</p>
-                                    <p className="trans-overflow" style={{ color: "#2D85EA" }}>
+                                    <p
+                                        className="trans-overflow"
+                                        style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }}
+                                        title="Click to copy"
+                                        onClick={() => copyTxId(tx.transaction_id)}
+                                    >
                                         {tx.transaction_id}
                                     </p>
+
+                                    {copyToast.show && (
+                                        <div
+                                            role="alert"
+                                            aria-live="polite"
+                                            style={{
+                                                position: "fixed",
+                                                left: "50%",
+                                                bottom: "28px",
+                                                transform: "translateX(-50%)",
+                                                zIndex: 9999,
+                                                padding: "15px 30px",
+                                                background: "#FFFFFF",
+                                                border: "1px solid #00000026",
+                                                color: "black",
+                                                borderRadius: "10px",
+                                                fontSize: 14,
+                                            }}
+                                        >
+                                            <center><span style={{ fontWeight: 500 }}>{copyToast.message}</span></center>
+                                        </div>
+                                    )}
+
                                     <p className="trans-overflow">{fmtMoney(tx.balance_before)}</p>
                                     <p>{fmtMoney(tx.balance_after)}</p>
                                     <p className="trans-overflow">{fmtMoney(tx.amount)}</p>

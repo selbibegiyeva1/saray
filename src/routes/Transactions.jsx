@@ -33,8 +33,9 @@ function Transactions() {
 
     const categoryOptions = [
         { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
-        { value: "digital", label: { ru: "Цифровые товары", tm: "Sanly harytlar" } },
-        { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+        { value: "TopUp", label: { ru: "Topup", tm: "Topup" } },
+        { value: "Steam", label: { ru: "Steam", tm: "Steam" } },
+        { value: "Voucher", label: { ru: "Voucher", tm: "Voucher" } }
     ];
 
     const [activeButton, setActiveButton] = useState("topup");

@@ -39,8 +39,6 @@ function Login() {
     const handleLogin = async (e) => {
         e.preventDefault();
         setServerError("");
-        setAppAlert({ type: null, message: "" });
-
         const newErrors = {
             username: username.trim() === "",
             password: password.trim() === "",
@@ -52,14 +50,17 @@ function Login() {
         try {
             const { data } = await api.post(`/v1/auth/partner/login`, { username, password });
 
-            // ✅ Success alert (green)
-            setAppAlert({ type: "green", message: data?.message || "Login successful" });
+            // success UI alert (green)
+            setAppAlert({ type: "green", message: data?.message || t("login.success") || "Success" });
+
+            // set token
             setAccessToken(data?.accessToken);
 
-            // wait before redirect to show success message
+            // delay before redirect
             setTimeout(() => {
                 navigate("/home", { replace: true });
-            }, 1500); // 1.5 seconds feels natural
+            }, 1200);
+
         } catch (err) {
             const msg =
                 err?.response?.data?.message ||
@@ -68,7 +69,7 @@ function Login() {
 
             setServerError(msg);
 
-            // ❌ Error alert (red) – stays until user closes it
+            // error UI alert (red)
             setAppAlert({ type: "red", message: msg });
         } finally {
             setLoading(false);

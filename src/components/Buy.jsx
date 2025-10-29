@@ -2,22 +2,25 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
-// Compact pagination with smart ellipses
+// Compact pagination with smart, symmetric ellipses
 function buildPageItems(page, totalPages) {
     if (!totalPages || totalPages < 1) return [];
 
     // Small sets: show everything
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
 
-    // Early pages: show 1..6 then …
-    if (page <= 5) return [1, 2, 3, 4, 5, 6, "…", totalPages];
+    const WINDOW = 5;          // how many inner pages to show between the ends
+    const HALF = Math.floor(WINDOW / 2); // 2
+    // Clamp the start so the [start..end] block stays within 2..totalPages-1
+    const start = Math.max(2, Math.min(page - HALF, totalPages - WINDOW));
+    const end = start + WINDOW - 1; // inclusive
 
-    // Late pages: show … then last 5 pages
-    if (page >= totalPages - 4)
-        return [1, "…", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-
-    // Middle window: … (p-1) p (p+1) …
-    return [1, "…", page - 1, page, page + 1, "…", totalPages];
+    const items = [1];
+    if (start > 2) items.push("…");
+    for (let i = start; i <= end; i++) items.push(i);
+    if (end < totalPages - 1) items.push("…");
+    items.push(totalPages);
+    return items;
 }
 
 // === Status SVGs ===
@@ -56,7 +59,9 @@ export default function Buy() {
         success: { label: t("transactions.status.success"), Icon: SuccessIcon },
         rejected: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
         pending: { label: t("transactions.status.pending"), Icon: PendingIcon },
+
         SUCCESS: { label: t("transactions.status.success"), Icon: SuccessIcon },
+        PAID: { label: t("transactions.status.success"), Icon: SuccessIcon }, // <-- add this
         CANCELED: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
         PENDING: { label: t("transactions.status.pending"), Icon: PendingIcon },
     };
@@ -108,6 +113,22 @@ export default function Buy() {
         return { date, time };
     };
 
+    // put this above rows.map(...)
+    const normalizeStatus = (s) => {
+        const v = (s || "").toString().trim().toUpperCase();
+
+        // Normalize common synonyms/variants from backend or legacy data
+        if (["PAID", "SUCCESS", "SUCCEEDED"].includes(v)) return "SUCCESS";
+        if (["PENDING", "IN_PROGRESS", "PROCESSING"].includes(v)) return "PENDING";
+        if (["CANCELED", "CANCELLED", "REJECTED", "FAILED"].includes(v)) return "CANCELED";
+
+        // very defensive: handle already-localized Russian strings seen in data
+        if (["В ПРОЦЕССЕ"].includes(v)) return "PENDING";
+        if (["ОТКЛОНЕНО"].includes(v)) return "CANCELED";
+
+        return v; // fall through to whatever it is
+    };
+
     return (
         <div>
             <div className="transactions-container">
@@ -134,8 +155,11 @@ export default function Buy() {
                         {!loading && !err && rows.length > 0 ? (
                             rows.map((tx, i) => {
                                 const { date, time } = formatDateTime(tx.datetime);
-                                const meta = STATUS[tx.status] || STATUS.pending;
-                                const Icon = meta.Icon;
+                                const key = normalizeStatus(tx.status);
+                                const StatusDef = STATUS[key];
+                                const Icon = StatusDef?.Icon;
+                                const label = StatusDef?.label || tx.status; // i18n label if mapped
+
                                 return (
                                     <tr key={tx.transaction_id || i} className="row-titles row-data">
                                         <p>{date}</p>
@@ -144,12 +168,14 @@ export default function Buy() {
                                         <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
                                         <p>{tx.category}</p>
                                         <p className="trans-overflow">{tx.description}</p>
+
                                         <div className="status-block">
-                                            <div className="status-cell">
-                                                <Icon />
-                                                <p className="trans-overflow">{meta.label}</p>
+                                            <div className="status-cell" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                                {Icon && <Icon />}
+                                                <p className="trans-overflow">{label}</p>
                                             </div>
                                         </div>
+
                                         <p>{tx.amount} TMT</p>
                                     </tr>
                                 );

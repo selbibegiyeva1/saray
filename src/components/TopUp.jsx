@@ -3,22 +3,25 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
-// Compact pagination with smart ellipses
+// Compact pagination with smart, symmetric ellipses
 function buildPageItems(page, totalPages) {
     if (!totalPages || totalPages < 1) return [];
 
     // Small sets: show everything
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
 
-    // Early pages: show 1..6 then …
-    if (page <= 5) return [1, 2, 3, 4, 5, 6, "…", totalPages];
+    const WINDOW = 5;          // how many inner pages to show between the ends
+    const HALF = Math.floor(WINDOW / 2); // 2
+    // Clamp the start so the [start..end] block stays within 2..totalPages-1
+    const start = Math.max(2, Math.min(page - HALF, totalPages - WINDOW));
+    const end = start + WINDOW - 1; // inclusive
 
-    // Late pages: show … then last 5 pages
-    if (page >= totalPages - 4)
-        return [1, "…", totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
-
-    // Middle window: … (p-1) p (p+1) …
-    return [1, "…", page - 1, page, page + 1, "…", totalPages];
+    const items = [1];
+    if (start > 2) items.push("…");
+    for (let i = start; i <= end; i++) items.push(i);
+    if (end < totalPages - 1) items.push("…");
+    items.push(totalPages);
+    return items;
 }
 
 function TopUp() {

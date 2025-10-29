@@ -34,6 +34,7 @@ function TopUp() {
     const [isLastPage, setIsLastPage] = useState(false);
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState("");
+    const [refreshTick, setRefreshTick] = useState(0);
 
     const [copyToast, setCopyToast] = useState({ show: false, message: "" });
     const copyTimerRef = useRef(null);
@@ -77,7 +78,7 @@ function TopUp() {
             }
         })();
         return () => { cancel = true; };
-    }, [page]);
+    }, [page, refreshTick]);
 
     const copyTxId = async (value) => {
         if (!value) return;
@@ -118,9 +119,32 @@ function TopUp() {
             <div className="transactions-container">
                 <div className="search-table" style={{ marginBottom: 14 }}>
                     <p className="tb-head">{t("transactions.latest")}</p>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+// clickable + accessible refresh SVG with fixed props
+                    <svg
+                        width="40"
+                        height="40"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`refresh-table ${loading ? "spinning" : ""}`}
+                        role="button"
+                        aria-label={t("common.refresh") || "Refresh"}
+                        tabIndex={0}
+                        title={t("common.refresh") || "Refresh"}
+                        onClick={() => { if (!loading) setRefreshTick((v) => v + 1); }}
+                        onKeyDown={(e) => {
+                            if ((e.key === "Enter" || e.key === " ") && !loading) setRefreshTick((v) => v + 1);
+                        }}
+                        style={{ cursor: loading ? "not-allowed" : "pointer", outline: "none" }}
+                    >
                         <rect width="40" height="40" rx="8" fill="#2D85EA" />
-                        <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
                     </svg>
                 </div>
 

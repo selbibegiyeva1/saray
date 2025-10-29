@@ -72,11 +72,13 @@ export default function Buy() {
     const [totalPages, setTotalPages] = useState(null); // use if backend provides
     const [isLastPage, setIsLastPage] = useState(false); // fallback when totalPages unknown
     const [loading, setLoading] = useState(false);
+    const [refreshTick, setRefreshTick] = useState(0);
     const [err, setErr] = useState("");
 
     const [copyToast, setCopyToast] = useState({ show: false, message: "" });
     const copyTimerRef = useRef(null);
 
+    // 1) useEffect deps: add refreshTick
     useEffect(() => {
         let cancel = false;
         (async () => {
@@ -85,11 +87,9 @@ export default function Buy() {
             try {
                 const { data } = await api.get(`/v1/partner/info/orders?page=${page}&per_page=${perPage}`);
                 const list = Array.isArray(data?.orders_history) ? data.orders_history : [];
-
                 if (cancel) return;
                 setRows(list);
 
-                // If API returns total/total_pages, compute; else, fallback by length
                 const apiTotalPages =
                     (typeof data?.total_pages === "number" && data.total_pages > 0)
                         ? data.total_pages
@@ -107,7 +107,7 @@ export default function Buy() {
             }
         })();
         return () => { cancel = true; };
-    }, [page]);
+    }, [page, refreshTick]); // <-- added refreshTick
 
     const formatDateTime = (dt) => {
         const d = new Date(dt);
@@ -174,9 +174,32 @@ export default function Buy() {
             <div className="transactions-container">
                 <div className="search-table" style={{ marginBottom: 14 }}>
                     <p className="tb-head">{t("transactions.latest")}</p>
-                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+// 2) Make the SVG clickable + accessible; fix SVG props
+                    <svg
+                        width="40"
+                        height="40"
+                        viewBox="0 0 40 40"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`refresh-table ${loading ? "spinning" : ""}`}
+                        role="button"
+                        aria-label={t("common.refresh") || "Refresh"}
+                        tabIndex={0}
+                        title={t("common.refresh") || "Refresh"}
+                        onClick={() => { if (!loading) setRefreshTick((v) => v + 1); }}
+                        onKeyDown={(e) => {
+                            if ((e.key === "Enter" || e.key === " ") && !loading) setRefreshTick((v) => v + 1);
+                        }}
+                        style={{ cursor: loading ? "not-allowed" : "pointer", outline: "none" }}
+                    >
                         <rect width="40" height="40" rx="8" fill="#2D85EA" />
-                        <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <path
+                            d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23"
+                            stroke="white"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
                     </svg>
                 </div>
 

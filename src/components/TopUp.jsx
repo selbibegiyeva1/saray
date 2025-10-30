@@ -1,5 +1,5 @@
 // routes/TopUp.jsx
-import { useEffect, useState, useRef } from "react"; // + useRef
+import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import api from "../lib/api";
 
@@ -9,16 +9,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 // Compact pagination with smart, symmetric ellipses
 function buildPageItems(page, totalPages) {
     if (!totalPages || totalPages < 1) return [];
-
-    // Small sets: show everything
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
-
-    const WINDOW = 5;          // how many inner pages to show between the ends
-    const HALF = Math.floor(WINDOW / 2); // 2
-    // Clamp the start so the [start..end] block stays within 2..totalPages-1
+    const WINDOW = 5;
+    const HALF = Math.floor(WINDOW / 2);
     const start = Math.max(2, Math.min(page - HALF, totalPages - WINDOW));
-    const end = start + WINDOW - 1; // inclusive
-
+    const end = start + WINDOW - 1;
     const items = [1];
     if (start > 2) items.push("…");
     for (let i = start; i <= end; i++) items.push(i);
@@ -27,8 +22,38 @@ function buildPageItems(page, totalPages) {
     return items;
 }
 
-function TopUp({ period = "day" }) {
-    const { t } = useTranslation();
+function TopUp({
+    period = "day",          // legacy prop (mapped value for API like "all_time"); still accepted
+    active = "topup",
+    onSwitch,                // (optional) parent tab switch
+    sharedPeriod,            // (optional) UI period from parent ("day" | "week" | "month" | "year" | "all")
+    onChangePeriod,          // (optional) setter in parent
+}) {
+    const { t, i18n } = useTranslation();
+    const currentLang = i18n.language || "ru";
+
+    // ======= Header state (no category filter on TopUp) =======
+    const [openDay, setOpenDay] = useState(false);
+    const [uiPeriod, setUiPeriod] = useState(sharedPeriod || "day");
+
+    useEffect(() => {
+        if (sharedPeriod) setUiPeriod(sharedPeriod);
+    }, [sharedPeriod]);
+
+    const periodOptions = [
+        { value: "day", label: { ru: "День", tm: "Gün" } },
+        { value: "week", label: { ru: "Неделя", tm: "Hepde" } },
+        { value: "month", label: { ru: "Месяц", tm: "Aý" } },
+        { value: "year", label: { ru: "Год", tm: "Ýyl" } },
+        { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+    ];
+    const apiPeriod = {
+        day: "day",
+        week: "week",
+        month: "month",
+        year: "year",
+        all: "all_time",
+    }[uiPeriod];
 
     const perPage = 10;
     const [page, setPage] = useState(1);
@@ -49,8 +74,7 @@ function TopUp({ period = "day" }) {
         return { date, time };
     };
 
-    const fmtMoney = (n) =>
-        typeof n === "number" ? `${n.toLocaleString("ru-RU")} TMT` : n;
+    const fmtMoney = (n) => typeof n === "number" ? `${n.toLocaleString("ru-RU")} TMT` : n;
 
     useEffect(() => {
         let cancel = false;
@@ -59,7 +83,7 @@ function TopUp({ period = "day" }) {
             setErr("");
             try {
                 const { data } = await api.get(
-                    `/v1/partner/info/topup_history?page=${page}&per_page=${perPage}&period=${period}`
+                    `/v1/partner/info/topup_history?page=${page}&per_page=${perPage}&period=${apiPeriod}`
                 );
                 const list = Array.isArray(data?.topup_history) ? data.topup_history : [];
 
@@ -83,13 +107,12 @@ function TopUp({ period = "day" }) {
             }
         })();
         return () => { cancel = true; };
-    }, [page, period, refreshTick]);
+    }, [page, apiPeriod, refreshTick]);
 
-    useEffect(() => { setPage(1); }, [period]);
+    useEffect(() => { setPage(1); }, [apiPeriod]);
 
     const copyTxId = async (value) => {
         if (!value) return;
-
         try {
             if (navigator?.clipboard?.writeText) {
                 await navigator.clipboard.writeText(value);
@@ -103,12 +126,8 @@ function TopUp({ period = "day" }) {
                 document.execCommand("copy");
                 document.body.removeChild(ta);
             }
-        } catch (_) {
-            // ignore copy errors; still show toast
-        }
-
+        } catch (_) { }
         setCopyToast({ show: true, message: "Transaction ID copied" });
-
         if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
         copyTimerRef.current = setTimeout(() => {
             setCopyToast({ show: false, message: "" });
@@ -123,6 +142,64 @@ function TopUp({ period = "day" }) {
 
     return (
         <div>
+            {/* ===== page-head (TopUp: only day filter) ===== */}
+            <div className="page-head trans-head">
+                <h1>{t("transactions.title")}</h1>
+                <form>
+                    {/* Day filter only */}
+                    <div className='nav-filter'>
+                        <button
+                            type='button'
+                            onClick={() => { setOpenDay(v => !v); }}
+                            aria-expanded={openDay}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            <p>{periodOptions.find((opt) => opt.value === uiPeriod)?.label[currentLang]}</p>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z" fill="black" />
+                            </svg>
+                        </button>
+
+                        {openDay && (
+                            <div className="drop-options days">
+                                {periodOptions.map((opt) => (
+                                    <p
+                                        key={opt.value}
+                                        className={opt.value === uiPeriod ? "opt-active" : ""}
+                                        onClick={() => {
+                                            setUiPeriod(opt.value);
+                                            onChangePeriod?.(opt.value);
+                                            setOpenDay(false);
+                                        }}
+                                    >
+                                        {opt.label[currentLang]}
+                                    </p>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </form>
+            </div>
+
+            {/* ===== report-links ===== */}
+            <div className="report-links">
+                <button
+                    className={active === "topup" ? "report-btn active" : "report-btn"}
+                    onClick={() => onSwitch?.("topup")}
+                >
+                    {t("home.withdrawn2")}
+                </button>
+
+                <button
+                    className={active === "buy" ? "report-btn active" : "report-btn"}
+                    onClick={() => onSwitch?.("buy")}
+                >
+                    {t("home.earned2")}
+                </button>
+            </div>
+
+            {/* ===== existing table/content ===== */}
             <div className="transactions-container">
                 {loading ? (
                     <div className="loading-overlay">

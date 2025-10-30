@@ -8,16 +8,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 // Compact pagination with smart, symmetric ellipses
 function buildPageItems(page, totalPages) {
     if (!totalPages || totalPages < 1) return [];
-
-    // Small sets: show everything
     if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
-
-    const WINDOW = 5;          // how many inner pages to show between the ends
-    const HALF = Math.floor(WINDOW / 2); // 2
-    // Clamp the start so the [start..end] block stays within 2..totalPages-1
+    const WINDOW = 5;
+    const HALF = Math.floor(WINDOW / 2);
     const start = Math.max(2, Math.min(page - HALF, totalPages - WINDOW));
-    const end = start + WINDOW - 1; // inclusive
-
+    const end = start + WINDOW - 1;
     const items = [1];
     if (start > 2) items.push("…");
     for (let i = start; i <= end; i++) items.push(i);
@@ -29,42 +24,67 @@ function buildPageItems(page, totalPages) {
 // === Status SVGs ===
 const SuccessIcon = () => (
     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M14.2083 3.2796C13.2042 2.78059 12.0724 2.5 10.875 2.5C6.73286 2.5 3.375 5.85786 3.375 10C3.375 14.1421 6.73286 17.5 10.875 17.5C15.0171 17.5 18.375 14.1421 18.375 10C18.375 9.71833 18.3595 9.44028 18.3292 9.16667M18.375 4.16667L10.875 11.6667L8.375 9.16667"
-            stroke="#14C57A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-        />
+        <path d="M14.2083 3.2796C13.2042 2.78059 12.0724 2.5 10.875 2.5C6.73286 2.5 3.375 5.85786 3.375 10C3.375 14.1421 6.73286 17.5 10.875 17.5C15.0171 17.5 18.375 14.1421 18.375 10C18.375 9.71833 18.3595 9.44028 18.3292 9.16667M18.375 4.16667L10.875 11.6667L8.375 9.16667" stroke="#14C57A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const RejectedIcon = () => (
     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M13.375 7.50003L8.375 12.5M13.375 12.5L8.375 7.50003M10.875 17.5C15.0171 17.5 18.375 14.1421 18.375 10C18.375 5.85786 15.0171 2.5 10.875 2.5C6.73286 2.5 3.375 5.85786 3.375 10C3.375 14.1421 6.73286 17.5 10.875 17.5Z"
-            stroke="#ED2428" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-        />
+        <path d="M13.375 7.50003L8.375 12.5M13.375 12.5L8.375 7.50003M10.875 17.5C15.0171 17.5 18.375 14.1421 18.375 10C18.375 5.85786 15.0171 2.5 10.875 2.5C6.73286 2.5 3.375 5.85786 3.375 10C3.375 14.1421 6.73286 17.5 10.875 17.5Z" stroke="#ED2428" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
 const PendingIcon = () => (
     <svg width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path
-            d="M17.8619 8.33325H14.5416M17.8619 8.33325V4.99992M17.8619 8.33325L15.089 5.28587C12.4855 2.68238 8.26437 2.68238 5.66087 5.28587C3.05738 7.88937 3.05738 12.1105 5.66087 14.714C8.26437 17.3175 12.4855 17.3175 15.089 14.714C15.7422 14.0607 16.2315 13.3057 16.5569 12.4999M10.3749 7.49992V10.8333L12.8749 12.0833"
-            stroke="#FFB01D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-        />
+        <path d="M17.8619 8.33325H14.5416M17.8619 8.33325V4.99992M17.8619 8.33325L15.089 5.28587C12.4855 2.68238 8.26437 2.68238 5.66087 5.28587C3.05738 7.88937 3.05738 12.1105 5.66087 14.714C8.26437 17.3175 12.4855 17.3175 15.089 14.714C15.7422 14.0607 16.2315 13.3057 16.5569 12.4999M10.3749 7.49992V10.8333L12.8749 12.0833" stroke="#FFB01D" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 
-export default function Buy() {
+export default function Buy({
+    active = "buy",
+    onSwitch,                // (optional) parent callback to flip between tabs
+    sharedPeriod,            // (optional) parent period value for visual sync
+    onChangePeriod,          // (optional) parent setter if you want single source of truth
+}) {
     const { t, i18n } = useTranslation();
     const currentLang = i18n.language || "ru";
 
+    // ======= Header (page-head) local state =======
+    const [filter, setFilter] = useState(false);
+    const [openCat, setOpenCat] = useState(false);
+    const [openDay, setOpenDay] = useState(false);
+
+    const [category, setCategory] = useState("eSIM");
+    const [period, setPeriod] = useState(sharedPeriod || "day");
+
+    useEffect(() => {
+        if (sharedPeriod) setPeriod(sharedPeriod);
+    }, [sharedPeriod]);
+
+    const filterFunc = () => setFilter(v => !v);
+
+    const periodOptions = [
+        { value: "day", label: { ru: "День", tm: "Gün" } },
+        { value: "week", label: { ru: "Неделя", tm: "Hepde" } },
+        { value: "month", label: { ru: "Месяц", tm: "Aý" } },
+        { value: "year", label: { ru: "Год", tm: "Ýyl" } },
+        { value: "all", label: { ru: "Всё", tm: "Ählisi" } }, // maps to all_time
+    ];
+    const categoryOptions = [
+        { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
+        { value: "TopUp", label: { ru: "Topup", tm: "Topup" } },
+        { value: "Steam", label: { ru: "Steam", tm: "Steam" } },
+        { value: "Voucher", label: { ru: "Voucher", tm: "Voucher" } }
+    ];
+
+    // ======= Existing Buy logic =======
     const STATUS = {
         success: { label: t("transactions.status.success"), Icon: SuccessIcon },
         rejected: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
         pending: { label: t("transactions.status.pending"), Icon: PendingIcon },
 
         SUCCESS: { label: t("transactions.status.success"), Icon: SuccessIcon },
-        PAID: { label: t("transactions.status.success"), Icon: SuccessIcon }, // <-- add this
+        PAID: { label: t("transactions.status.success"), Icon: SuccessIcon },
         CANCELED: { label: t("transactions.status.rejected"), Icon: RejectedIcon },
         PENDING: { label: t("transactions.status.pending"), Icon: PendingIcon },
     };
@@ -72,8 +92,8 @@ export default function Buy() {
     const perPage = 10;
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState([]);
-    const [totalPages, setTotalPages] = useState(null); // use if backend provides
-    const [isLastPage, setIsLastPage] = useState(false); // fallback when totalPages unknown
+    const [totalPages, setTotalPages] = useState(null);
+    const [isLastPage, setIsLastPage] = useState(false);
     const [loading, setLoading] = useState(false);
     const [refreshTick, setRefreshTick] = useState(0);
     const [err, setErr] = useState("");
@@ -81,7 +101,6 @@ export default function Buy() {
     const [copyToast, setCopyToast] = useState({ show: false, message: "" });
     const copyTimerRef = useRef(null);
 
-    // 1) useEffect deps: add refreshTick
     useEffect(() => {
         let cancel = false;
         (async () => {
@@ -110,7 +129,7 @@ export default function Buy() {
             }
         })();
         return () => { cancel = true; };
-    }, [page, refreshTick]); // <-- added refreshTick
+    }, [page, refreshTick]);
 
     const formatDateTime = (dt) => {
         const d = new Date(dt);
@@ -119,26 +138,18 @@ export default function Buy() {
         return { date, time };
     };
 
-    // put this above rows.map(...)
     const normalizeStatus = (s) => {
         const v = (s || "").toString().trim().toUpperCase();
-
-        // Normalize common synonyms/variants from backend or legacy data
         if (["PAID", "SUCCESS", "SUCCEEDED"].includes(v)) return "SUCCESS";
         if (["PENDING", "IN_PROGRESS", "PROCESSING"].includes(v)) return "PENDING";
         if (["CANCELED", "CANCELLED", "REJECTED", "FAILED"].includes(v)) return "CANCELED";
-
-        // very defensive: handle already-localized Russian strings seen in data
         if (["В ПРОЦЕССЕ"].includes(v)) return "PENDING";
         if (["ОТКЛОНЕНО"].includes(v)) return "CANCELED";
-
-        return v; // fall through to whatever it is
+        return v;
     };
 
     const copyTxId = async (value) => {
         if (!value) return;
-
-        // Clipboard with fallback
         try {
             if (navigator?.clipboard?.writeText) {
                 await navigator.clipboard.writeText(value);
@@ -152,14 +163,8 @@ export default function Buy() {
                 document.execCommand("copy");
                 document.body.removeChild(ta);
             }
-        } catch (_) {
-            // if copy fails, still show something
-        }
-
-        // Show toast
+        } catch (_) { }
         setCopyToast({ show: true, message: "Transaction ID copied" });
-
-        // Reset any existing timer
         if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
         copyTimerRef.current = setTimeout(() => {
             setCopyToast({ show: false, message: "" });
@@ -174,28 +179,139 @@ export default function Buy() {
 
     return (
         <div>
+            {/* ===== page-head (with category + day filters) ===== */}
+            <div className="page-head trans-head">
+                <h1>{t("transactions.title")}</h1>
+                <form>
+                    {/* Category filter — visible on Buy */}
+                    <div className='nav-filter'>
+                        <button type='button' onClick={filterFunc}>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3.3335 5.83337H16.6668M5.83345 10H14.1668M9.16678 14.1667H10.8334" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            <span>{t("home.filter")}</span>
+                        </button>
+
+                        <div className={filter ? "filter-drop drop" : "filter-drop"}>
+                            <div className="prof-flex filter-flex">
+                                <span>{t("home.filter")}</span>
+                                <svg width="24" height="24" viewBox="0 0 72 75" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ cursor: "pointer" }} onClick={filterFunc}>
+                                    <g id="close">
+                                        <path id="Icon" d="M18 19.5L54 55.5M54 19.5L18 55.5" stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </g>
+                                </svg>
+                            </div>
+
+                            <div className='filter-opts'>
+                                <div className='opts-head'>
+                                    <span>{t("home.category")}</span>
+                                    {category !== "eSIM" && (
+                                        <span className="reset-btn" onClick={() => setCategory("eSIM")}>
+                                            {t("home.reset")}
+                                        </span>
+                                    )}
+                                </div>
+                                <div style={{ position: 'relative' }}>
+                                    <div
+                                        className="filter-select"
+                                        onClick={() => { setOpenCat(v => !v); }}
+                                        aria-expanded={openCat}
+                                    >
+                                        <p>{categoryOptions.find((opt) => opt.value === category)?.label[currentLang]}</p>
+                                        <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
+                                        </svg>
+                                    </div>
+                                    {openCat && (
+                                        <div className="drop-options">
+                                            {categoryOptions.map((opt) => (
+                                                <p
+                                                    key={opt.value}
+                                                    className={opt.value === category ? "opt-active" : ""}
+                                                    onClick={() => {
+                                                        setCategory(opt.value);
+                                                        setOpenCat(false);
+                                                    }}
+                                                >
+                                                    {opt.label[currentLang]}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+
+                            <div id='filter-btn'>
+                                <button type="button">{t("home.apply")}</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Day filter */}
+                    <div className='nav-filter'>
+                        <button
+                            type='button'
+                            onClick={() => { setOpenDay(v => !v); setOpenCat(false); }}
+                            aria-expanded={openDay}
+                            role="button"
+                            tabIndex={0}
+                        >
+                            <p>{periodOptions.find((opt) => opt.value === period)?.label[currentLang]}</p>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z" fill="black" />
+                            </svg>
+                        </button>
+
+                        {openDay && (
+                            <div className="drop-options days">
+                                {periodOptions.map((opt) => (
+                                    <p
+                                        key={opt.value}
+                                        className={opt.value === period ? "opt-active" : ""}
+                                        onClick={() => {
+                                            setPeriod(opt.value);
+                                            onChangePeriod?.(opt.value);
+                                            setOpenDay(false);
+                                        }}
+                                    >
+                                        {opt.label[currentLang]}
+                                    </p>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </form>
+            </div>
+
+            {/* ===== report-links ===== */}
+            <div className="report-links">
+                <button
+                    className={active === "topup" ? "report-btn active" : "report-btn"}
+                    onClick={() => onSwitch?.("topup")}
+                >
+                    {t("home.withdrawn2")}
+                </button>
+
+                <button
+                    className={active === "buy" ? "report-btn active" : "report-btn"}
+                    onClick={() => onSwitch?.("buy")}
+                >
+                    {t("home.earned2")}
+                </button>
+            </div>
+
+            {/* ===== existing table/content ===== */}
             <div className="transactions-container">
                 {loading ? (
                     <div className="loading-overlay" aria-busy="true" aria-live="polite">
-                        {/* section title skeleton */}
                         <Skeleton height={24} width={204} />
-
-                        {/* refresh/search bar skeleton */}
                         <div style={{ margin: "14px 0px" }}>
                             <Skeleton height={32} />
                         </div>
-
-                        {/* 10 skeleton rows, 8 columns each */}
                         {[...Array(10)].map((_, i) => (
                             <div key={i} className="loading-grid buyload" style={{ marginBottom: 16 }}>
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
-                                <Skeleton height={30} />
+                                <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
+                                <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
                             </div>
                         ))}
                     </div>
@@ -204,10 +320,7 @@ export default function Buy() {
                         <div className="search-table" style={{ marginBottom: 14 }}>
                             <p className="tb-head">{t("transactions.latest")}</p>
                             <svg
-                                width="40"
-                                height="40"
-                                viewBox="0 0 40 40"
-                                fill="none"
+                                width="40" height="40" viewBox="0 0 40 40" fill="none"
                                 xmlns="http://www.w3.org/2000/svg"
                                 className={`refresh-table ${loading ? "spinning" : ""}`}
                                 role="button"
@@ -221,10 +334,7 @@ export default function Buy() {
                                 style={{ cursor: loading ? "not-allowed" : "pointer", outline: "none" }}
                             >
                                 <rect width="40" height="40" rx="8" fill="#2D85EA" />
-                                <path
-                                    d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23"
-                                    stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                />
+                                <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </div>
 
@@ -331,7 +441,6 @@ export default function Buy() {
                     )}
                 </div>
             )}
-
         </div>
     );
 }

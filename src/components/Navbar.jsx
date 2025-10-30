@@ -28,6 +28,9 @@ function Navbar() {
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [profileErr, setProfileErr] = useState("");
 
+  const [balance, setBalance] = useState(null);
+  const [balanceErr, setBalanceErr] = useState("");
+
   // Language options
   const languages = [
     { code: "ru", label: { ru: "Русский", tm: "Rus dili" } },
@@ -75,6 +78,27 @@ function Navbar() {
     return () => { cancelled = true; };
   }, [TOKEN]);
 
+  useEffect(() => {
+    const fetchBalance = async () => {
+      try {
+        const { data } = await api.get("/v1/partner/info/main?category=ALL&period=all_time");
+        if (data && typeof data.balance === "number") {
+          setBalance(data.balance);
+        } else {
+          setBalance(null);
+        }
+      } catch (e) {
+        console.error("Failed to fetch balance:", e);
+        setBalanceErr("—");
+      }
+    };
+
+    // Only for DIRECTOR role
+    if (user?.role === "DIRECTOR") {
+      fetchBalance();
+    }
+  }, [user]);
+
   return (
     <div className="Navbar">
       {/* Logo */}
@@ -105,6 +129,14 @@ function Navbar() {
 
       {/* Right section */}
       <ul className="nav-ul ul2">
+        <li className="balance">
+          {balanceErr
+            ? balanceErr
+            : balance != null
+              ? `${Number(balance).toLocaleString("ru-RU")} TMT`
+              : "—"}
+        </li>
+
         {/* Language selector */}
         <li>
           <div className="nav-filter langs">

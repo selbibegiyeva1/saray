@@ -472,6 +472,31 @@ export default function Buy({
                                         );
                                     })}
                             </table>
+
+                            {copyToast.show && (
+                                <div
+                                    role="status"
+                                    aria-live="polite"
+                                    style={{
+                                        position: "fixed",
+                                        left: "50%",
+                                        bottom: 16,
+                                        transform: "translateX(-50%)",
+                                        padding: "15px 40px",
+                                        background: "white",
+                                        color: "black",
+                                        fontSize: 12,
+                                        borderRadius: 10,
+                                        border: "1px solid #00000026",
+                                        boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+                                        zIndex: 9999,
+                                        pointerEvents: "none",
+                                        transition: "opacity 150ms ease",
+                                    }}
+                                >
+                                    {t("navbar.copied")}
+                                </div>
+                            )}
                         </div>
                     </>
                 )}

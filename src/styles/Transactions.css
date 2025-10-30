@@ -210,6 +210,16 @@ table tr p:first-child {
     cursor: not-allowed;
 }
 
+.loading-grid {
+    display: grid;
+    gap: 9px;
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.loading-grid.buyload {
+    grid-template-columns: repeat(8, 1fr);
+}
+
 @media(min-width: 1740px) {
     .transactions-container {
         width: 1440px;

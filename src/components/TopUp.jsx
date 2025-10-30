@@ -34,10 +34,14 @@ function TopUp({
 
     // ======= Header state (no category filter on TopUp) =======
     const [openDay, setOpenDay] = useState(false);
-    const [uiPeriod, setUiPeriod] = useState(sharedPeriod || "day");
+    const [uiPeriod, setUiPeriod] = useState(
+        (sharedPeriod === "all_time" ? "all" : sharedPeriod) || "all"
+    );
 
     useEffect(() => {
-        if (sharedPeriod) setUiPeriod(sharedPeriod);
+        if (sharedPeriod) {
+            setUiPeriod(sharedPeriod === "all_time" ? "all" : sharedPeriod);
+        }
     }, [sharedPeriod]);
 
     const periodOptions = [
@@ -47,6 +51,7 @@ function TopUp({
         { value: "year", label: { ru: "Год", tm: "Ýyl" } },
         { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
     ];
+
     const apiPeriod = {
         day: "day",
         week: "week",

@@ -54,11 +54,17 @@ export default function Buy({
     const [openCat, setOpenCat] = useState(false);
     const [openDay, setOpenDay] = useState(false);
 
-    const [category, setCategory] = useState("eSIM");
-    const [period, setPeriod] = useState(sharedPeriod || "day");
+    const [appliedCategory, setAppliedCategory] = useState("All");   // drives API
+    const [pendingCategory, setPendingCategory] = useState("All");   // UI selection only
+    // UI state must be one of: "day" | "week" | "month" | "year" | "all"
+    const [period, setPeriod] = useState(
+        (sharedPeriod === "all_time" ? "all" : sharedPeriod) || "all"
+    );
 
     useEffect(() => {
-        if (sharedPeriod) setPeriod(sharedPeriod);
+        if (sharedPeriod) {
+            setPeriod(sharedPeriod === "all_time" ? "all" : sharedPeriod);
+        }
     }, [sharedPeriod]);
 
     const filterFunc = () => setFilter(v => !v);
@@ -71,13 +77,13 @@ export default function Buy({
         { value: "all", label: { ru: "Всё", tm: "Ählisi" } }, // maps to all_time
     ];
     const categoryOptions = [
+        { value: "All", label: { ru: "Всё", tm: "Ählisi" } },
         { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
         { value: "TopUp", label: { ru: "Topup", tm: "Topup" } },
         { value: "Steam", label: { ru: "Steam", tm: "Steam" } },
         { value: "Voucher", label: { ru: "Voucher", tm: "Voucher" } }
     ];
 
-    // UI "period" -> API query value
     const apiPeriod = {
         day: "day",
         week: "week",
@@ -85,6 +91,14 @@ export default function Buy({
         year: "year",
         all: "all_time",
     }[period];
+
+    // UI "category" -> API query value (backend expects uppercase)
+    const apiCategory = ({
+        eSIM: 'ESIM',
+        TopUp: 'TOPUP',
+        Steam: 'STEAM',
+        Voucher: 'VOUCHER',
+    }[appliedCategory]) || null;   // null => no category param (All)
 
     // ======= Existing Buy logic =======
     const STATUS = {
@@ -116,9 +130,14 @@ export default function Buy({
             setLoading(true);
             setErr("");
             try {
-                const { data } = await api.get(
-                    `/v1/partner/info/orders?page=${page}&per_page=${perPage}&period=${apiPeriod}`
-                );
+                const params = new URLSearchParams({
+                    page: String(page),
+                    per_page: String(perPage),
+                    period: apiPeriod,
+                });
+                if (apiCategory) params.append("category", apiCategory);
+                const { data } = await api.get(`/v1/partner/info/orders?${params.toString()}`);
+
                 const list = Array.isArray(data?.orders_history) ? data.orders_history : [];
                 if (cancel) return;
                 setRows(list);
@@ -140,10 +159,10 @@ export default function Buy({
             }
         })();
         return () => { cancel = true; };
-    }, [page, apiPeriod, refreshTick]);
+    }, [page, apiPeriod, appliedCategory, refreshTick]);
 
     // whenever period changes, go back to first page
-    useEffect(() => { setPage(1); }, [apiPeriod]);
+    useEffect(() => { setPage(1); }, [apiPeriod, appliedCategory]);
 
     const formatDateTime = (dt) => {
         const d = new Date(dt);
@@ -219,8 +238,16 @@ export default function Buy({
                             <div className='filter-opts'>
                                 <div className='opts-head'>
                                     <span>{t("home.category")}</span>
-                                    {category !== "eSIM" && (
-                                        <span className="reset-btn" onClick={() => setCategory("eSIM")}>
+                                    {pendingCategory !== "All" && (
+                                        <span
+                                            className="reset-btn"
+                                            onClick={() => {
+                                                setPendingCategory("All");
+                                                setAppliedCategory("All");   // actually apply immediately
+                                                setFilter(false);            // close filter panel
+                                                setPage(1);                  // reset to first page
+                                            }}
+                                        >
                                             {t("home.reset")}
                                         </span>
                                     )}
@@ -231,7 +258,7 @@ export default function Buy({
                                         onClick={() => { setOpenCat(v => !v); }}
                                         aria-expanded={openCat}
                                     >
-                                        <p>{categoryOptions.find((opt) => opt.value === category)?.label[currentLang]}</p>
+                                        <p>{categoryOptions.find((opt) => opt.value === pendingCategory)?.label[currentLang]}</p>
                                         <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M4.29289 5.29289L0.707107 1.70711C0.0771419 1.07714 0.523309 0 1.41421 0H8.58579C9.47669 0 9.92286 1.07714 9.29289 1.70711L5.70711 5.29289C5.31658 5.68342 4.68342 5.68342 4.29289 5.29289Z" fill="black" />
                                         </svg>
@@ -241,9 +268,9 @@ export default function Buy({
                                             {categoryOptions.map((opt) => (
                                                 <p
                                                     key={opt.value}
-                                                    className={opt.value === category ? "opt-active" : ""}
+                                                    className={opt.value === pendingCategory ? "opt-active" : ""}
                                                     onClick={() => {
-                                                        setCategory(opt.value);
+                                                        setPendingCategory(opt.value); // only change pending
                                                         setOpenCat(false);
                                                     }}
                                                 >
@@ -256,7 +283,16 @@ export default function Buy({
                             </div>
 
                             <div id='filter-btn'>
-                                <button type="button">{t("home.apply")}</button>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setAppliedCategory(pendingCategory); // commit selection
+                                        setFilter(false);                     // close panel
+                                        setPage(1);                           // show from first page
+                                    }}
+                                >
+                                    {t("home.apply")}
+                                </button>
                             </div>
                         </div>
                     </div>

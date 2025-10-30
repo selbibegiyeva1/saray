@@ -77,6 +77,15 @@ export default function Buy({
         { value: "Voucher", label: { ru: "Voucher", tm: "Voucher" } }
     ];
 
+    // UI "period" -> API query value
+    const apiPeriod = {
+        day: "day",
+        week: "week",
+        month: "month",
+        year: "year",
+        all: "all_time",
+    }[period];
+
     // ======= Existing Buy logic =======
     const STATUS = {
         success: { label: t("transactions.status.success"), Icon: SuccessIcon },
@@ -107,7 +116,9 @@ export default function Buy({
             setLoading(true);
             setErr("");
             try {
-                const { data } = await api.get(`/v1/partner/info/orders?page=${page}&per_page=${perPage}`);
+                const { data } = await api.get(
+                    `/v1/partner/info/orders?page=${page}&per_page=${perPage}&period=${apiPeriod}`
+                );
                 const list = Array.isArray(data?.orders_history) ? data.orders_history : [];
                 if (cancel) return;
                 setRows(list);
@@ -129,7 +140,10 @@ export default function Buy({
             }
         })();
         return () => { cancel = true; };
-    }, [page, refreshTick]);
+    }, [page, apiPeriod, refreshTick]);
+
+    // whenever period changes, go back to first page
+    useEffect(() => { setPage(1); }, [apiPeriod]);
 
     const formatDateTime = (dt) => {
         const d = new Date(dt);

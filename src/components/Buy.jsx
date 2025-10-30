@@ -164,11 +164,22 @@ export default function Buy({
     // whenever period changes, go back to first page
     useEffect(() => { setPage(1); }, [apiPeriod, appliedCategory]);
 
-    const formatDateTime = (dt) => {
-        const d = new Date(dt);
-        const date = d.toLocaleDateString("ru-RU", { year: "numeric", month: "short", day: "numeric" });
-        const time = d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
-        return { date, time };
+    const formatDateTime = (iso) => {
+        if (!iso) return { invalid: true };
+
+        const d = new Date(iso);
+        if (Number.isNaN(d.getTime())) return { invalid: true };
+
+        const date = d.toLocaleDateString("ru-RU", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+        const time = d.toLocaleTimeString("ru-RU", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        return { date, time, invalid: false };
     };
 
     const normalizeStatus = (s) => {
@@ -388,8 +399,14 @@ export default function Buy({
                             </svg>
                         </div>
 
-                        <div className="table-viewport">
-                            <table>
+                        <div className="table-viewport" style={{ position: "relative" }}>
+                            {(err || (!err && rows.length === 0)) && (
+                                <div className="table-message">
+                                    <p>{err || t("transactions.noData")}</p>
+                                </div>
+                            )}
+
+                            <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles" style={{ marginBottom: 16, marginTop: 14 }}>
                                     <p>{t("transactions.date")}</p>
                                     <p>{t("transactions.time")}</p>
@@ -401,11 +418,18 @@ export default function Buy({
                                     <p>{t("transactions.amount")}</p>
                                 </tr>
 
-                                {err && <div className="no-data"><p>{err}</p></div>}
-
-                                {!err && rows.length > 0 ? (
+                                {!err &&
                                     rows.map((tx, i) => {
-                                        const { date, time } = formatDateTime(tx.datetime);
+                                        const { date, time, invalid } = formatDateTime(tx.datetime);
+
+                                        if (invalid) {
+                                            return (
+                                                <div key={`invalid-${i}`} className="table-message">
+                                                    <p>{t("transactions.empty")}</p>
+                                                </div>
+                                            );
+                                        }
+
                                         const key = normalizeStatus(tx.status);
                                         const StatusDef = STATUS[key];
                                         const Icon = StatusDef?.Icon;
@@ -417,41 +441,27 @@ export default function Buy({
                                                 <p>{time}</p>
                                                 <p
                                                     className="trans-overflow"
-                                                    style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }}
-                                                    title="Click to copy"
+                                                    style={{
+                                                        color: "#2D85EA",
+                                                        cursor: "pointer",
+                                                        textDecoration: "underline",
+                                                    }}
                                                     onClick={() => copyTxId(tx.transaction_id)}
                                                 >
                                                     {tx.transaction_id}
                                                 </p>
 
-                                                {copyToast.show && (
-                                                    <div
-                                                        role="alert"
-                                                        aria-live="polite"
-                                                        style={{
-                                                            position: "fixed",
-                                                            left: "50%",
-                                                            bottom: "28px",
-                                                            transform: "translateX(-50%)",
-                                                            zIndex: 9999,
-                                                            padding: "15px 30px",
-                                                            background: "#FFFFFF",
-                                                            border: "1px solid #00000026",
-                                                            color: "black",
-                                                            borderRadius: "10px",
-                                                            fontSize: 14,
-                                                        }}
-                                                    >
-                                                        <center><span style={{ fontWeight: 500 }}>{copyToast.message}</span></center>
-                                                    </div>
-                                                )}
-
-                                                <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
+                                                <p className="trans-overflow" style={{ color: "#2D85EA" }}>
+                                                    {tx.operator}
+                                                </p>
                                                 <p>{tx.category}</p>
                                                 <p>{tx.description}</p>
 
                                                 <div className="status-block">
-                                                    <div className="status-cell" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                                    <div
+                                                        className="status-cell"
+                                                        style={{ display: "flex", alignItems: "center", gap: 6 }}
+                                                    >
                                                         {Icon && <Icon />}
                                                         <p className="trans-overflow">{label}</p>
                                                     </div>
@@ -460,10 +470,7 @@ export default function Buy({
                                                 <p>{tx.amount} TMT</p>
                                             </tr>
                                         );
-                                    })
-                                ) : (
-                                    !err && <div className="no-data"><p>{t("transactions.noData")}</p></div>
-                                )}
+                                    })}
                             </table>
                         </div>
                     </>

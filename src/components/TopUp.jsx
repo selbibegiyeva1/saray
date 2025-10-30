@@ -73,10 +73,21 @@ function TopUp({
     const copyTimerRef = useRef(null);
 
     const splitDateTime = (iso) => {
+        if (!iso) return { invalid: true };
+
         const d = new Date(iso);
-        const date = d.toLocaleDateString("ru-RU", { year: "numeric", month: "short", day: "numeric" });
-        const time = d.toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
-        return { date, time };
+        if (Number.isNaN(d.getTime())) return { invalid: true };
+
+        const date = d.toLocaleDateString("ru-RU", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+        });
+        const time = d.toLocaleTimeString("ru-RU", {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+        return { date, time, invalid: false };
     };
 
     const fmtMoney = (n) => typeof n === "number" ? `${n.toLocaleString("ru-RU")} TMT` : n;
@@ -256,8 +267,14 @@ function TopUp({
                             </svg>
                         </div>
 
-                        <div className="table-viewport">
-                            <table>
+                        <div className="table-viewport" style={{ position: "relative" }}>
+                            {(err || (!err && rows.length === 0)) && (
+                                <div className="table-message">
+                                    <p>{err || t("transactions.noData")}</p>
+                                </div>
+                            )}
+
+                            <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles topup">
                                     <p>{t("transactions.date")}</p>
                                     <p>{t("transactions.time")}</p>
@@ -267,33 +284,39 @@ function TopUp({
                                     <p>{t("transactions.amount")}</p>
                                 </tr>
 
-                                {err && (
-                                    <div className="no-data"><p>{t("transactions.noData")}</p></div>
-                                )}
+                                {!err &&
+                                    rows.map((tx, i) => {
+                                        const { date, time, invalid } = splitDateTime(tx.datetime);
 
-                                {!err && rows.length === 0 && (
-                                    <div className="no-data"><p>{t("transactions.noData")}</p></div>
-                                )}
+                                        if (invalid) {
+                                            return (
+                                                <div key={`invalid-${i}`} className="table-message">
+                                                    <p>{t("transactions.empty")}</p>
+                                                </div>
+                                            );
+                                        }
 
-                                {!err && rows.map((tx, i) => {
-                                    const { date, time } = splitDateTime(tx.datetime);
-                                    return (
-                                        <tr key={tx.transaction_id || i} className="row-titles row-data topup">
-                                            <p>{date}</p>
-                                            <p>{time}</p>
-                                            <p
-                                                className="trans-overflow"
-                                                style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }}
-                                                onClick={() => copyTxId(tx.transaction_id)}
-                                            >
-                                                {tx.transaction_id}
-                                            </p>
-                                            <p className="trans-overflow">{fmtMoney(tx.balance_before)}</p>
-                                            <p>{fmtMoney(tx.balance_after)}</p>
-                                            <p className="trans-overflow">{fmtMoney(tx.amount)}</p>
-                                        </tr>
-                                    );
-                                })}
+                                        return (
+                                            <tr key={tx.transaction_id || i} className="row-titles row-data topup">
+                                                <p>{date}</p>
+                                                <p>{time}</p>
+                                                <p
+                                                    className="trans-overflow"
+                                                    style={{
+                                                        color: "#2D85EA",
+                                                        cursor: "pointer",
+                                                        textDecoration: "underline",
+                                                    }}
+                                                    onClick={() => copyTxId(tx.transaction_id)}
+                                                >
+                                                    {tx.transaction_id}
+                                                </p>
+                                                <p className="trans-overflow">{fmtMoney(tx.balance_before)}</p>
+                                                <p>{fmtMoney(tx.balance_after)}</p>
+                                                <p className="trans-overflow">{fmtMoney(tx.amount)}</p>
+                                            </tr>
+                                        );
+                                    })}
                             </table>
                         </div>
                     </>

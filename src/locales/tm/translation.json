@@ -68,7 +68,8 @@
             "rejected": "Inkär edildi",
             "pending": "Gaýtadan işlenýär"
         },
-        "noData": "Geçirim ýok"
+        "noData": "Geçirim ýok",
+        "empty": "Heniz hiç hili goşmaça tölegiňiz ýok."
     },
     "help": {
         "title": "Kömek gerekmi?",

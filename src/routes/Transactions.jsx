@@ -24,10 +24,20 @@ function Transactions() {
 
     const periodOptions = [
         { value: "day", label: { ru: "День", tm: "Gün" } },
+        { value: "week", label: { ru: "Неделя", tm: "Hepde" } },
         { value: "month", label: { ru: "Месяц", tm: "Aý" } },
         { value: "year", label: { ru: "Год", tm: "Ýyl" } },
-        { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
+        { value: "all", label: { ru: "Всё", tm: "Ählisi" } }, // maps to all_time
     ];
+
+    // Map UI values to backend's period query values
+    const apiPeriod = {
+        day: "day",
+        week: "week",
+        month: "month",
+        year: "year",
+        all: "all_time",
+    }[period];
 
     const categoryOptions = [
         { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
@@ -42,7 +52,7 @@ function Transactions() {
             case "buy":
                 return <Buy />
             default:
-                return <TopUp />
+                return <TopUp period={apiPeriod} />
         }
     }
 

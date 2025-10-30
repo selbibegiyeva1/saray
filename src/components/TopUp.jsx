@@ -27,7 +27,7 @@ function buildPageItems(page, totalPages) {
     return items;
 }
 
-function TopUp() {
+function TopUp({ period = "day" }) {
     const { t } = useTranslation();
 
     const perPage = 10;
@@ -58,7 +58,9 @@ function TopUp() {
             setLoading(true);
             setErr("");
             try {
-                const { data } = await api.get(`/v1/partner/info/topup_history?page=${page}&per_page=${perPage}`);
+                const { data } = await api.get(
+                    `/v1/partner/info/topup_history?page=${page}&per_page=${perPage}&period=${period}`
+                );
                 const list = Array.isArray(data?.topup_history) ? data.topup_history : [];
 
                 if (cancel) return;
@@ -81,7 +83,9 @@ function TopUp() {
             }
         })();
         return () => { cancel = true; };
-    }, [page, refreshTick]);
+    }, [page, period, refreshTick]);
+
+    useEffect(() => { setPage(1); }, [period]);
 
     const copyTxId = async (value) => {
         if (!value) return;
@@ -182,7 +186,7 @@ function TopUp() {
                                 </tr>
 
                                 {err && (
-                                    <div className="no-data"><p>{err}</p></div>
+                                    <div className="no-data"><p>{t("transactions.noData")}</p></div>
                                 )}
 
                                 {!err && rows.length === 0 && (

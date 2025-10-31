@@ -229,6 +229,7 @@
 @media(max-width: 1024px) {
     .Navbar {
         gap: 32px;
+        padding: 17px 60px;
     }
 
     .nav-ul {
@@ -242,7 +243,7 @@
 
 @media(max-width: 768px) {
     .Navbar {
-        padding: 12px 0px;
+        padding: 12px 32px;
     }
 }
 

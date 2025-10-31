@@ -24,6 +24,7 @@ function Home() {
   ];
 
   const categoryOptions = [
+    { value: "all", label: { ru: "Все", tm: "Ählisi" } },
     { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
     { value: "steam", label: { ru: "Steam", tm: "Steam" } },
     { value: "digital", label: { ru: "Цифровые товары", tm: "Sanly harytlar" } },
@@ -36,8 +37,8 @@ function Home() {
   const [openPay, setOpenPay] = useState(false);
   const [openDay, setOpenDay] = useState(false);
 
-  const [category, setCategory] = useState("eSIM"); // used for API calls
-  const [tempCategory, setTempCategory] = useState("eSIM"); // used for UI changes before Apply
+  const [category, setCategory] = useState("all");
+  const [tempCategory, setTempCategory] = useState("all");
 
   const [payment, setPayment] = useState("card");
   const [period, setPeriod] = useState("day");
@@ -61,6 +62,7 @@ function Home() {
 
   // Add this near the top of the component:
   const CATEGORY_TO_API = {
+    all: "ALL",
     eSIM: "ESIM",
     steam: "STEAM",
     digital: "DIGITAL",
@@ -129,8 +131,8 @@ function Home() {
               <div className='filter-opts'>
                 <div className='opts-head'>
                   <span>{t("home.category")}</span>
-                  {category !== "eSIM" && (
-                    <span className="reset-btn" onClick={() => setTempCategory("eSIM")}>
+                  {category !== "all" && (
+                    <span className="reset-btn" onClick={() => setTempCategory("all")}>
                       {t("home.reset")}
                     </span>
                   )}

@@ -56,7 +56,7 @@
         "date": "Sene",
         "time": "Wagt",
         "txId": "Tranzaksiýa ID",
-        "orderId": "Sargyt ID",
+        "operator": "Operator",
         "category": "Kategoriýa",
         "description": "Düşündiriş",
         "statusLabel": "Status",

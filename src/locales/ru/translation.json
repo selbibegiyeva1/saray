@@ -56,7 +56,7 @@
         "date": "Дата",
         "time": "Время",
         "txId": "ID Транзакции",
-        "orderId": "Оператор",
+        "operator": "Оператор",
         "category": "Категория",
         "description": "Описание",
         "statusLabel": "Статус",

@@ -25,14 +25,8 @@ function Home() {
 
   const categoryOptions = [
     { value: "eSIM", label: { ru: "eSIM", tm: "eSIM" } },
+    { value: "steam", label: { ru: "Steam", tm: "Steam" } },
     { value: "digital", label: { ru: "Цифровые товары", tm: "Sanly harytlar" } },
-    { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
-  ];
-
-  const paymentOptions = [
-    { value: "card", label: { ru: "Карта", tm: "Bank kart" } },
-    { value: "cash", label: { ru: "Наличные", tm: "Nagt pul" } },
-    { value: "all", label: { ru: "Всё", tm: "Ählisi" } },
   ];
 
   // Initials
@@ -42,7 +36,9 @@ function Home() {
   const [openPay, setOpenPay] = useState(false);
   const [openDay, setOpenDay] = useState(false);
 
-  const [category, setCategory] = useState("eSIM");
+  const [category, setCategory] = useState("eSIM"); // used for API calls
+  const [tempCategory, setTempCategory] = useState("eSIM"); // used for UI changes before Apply
+
   const [payment, setPayment] = useState("card");
   const [period, setPeriod] = useState("day");
   const [chartLabels, setChartLabels] = useState([]);
@@ -63,17 +59,30 @@ function Home() {
 
   const filterFunc = () => setFilter(!filter);
 
+  // Add this near the top of the component:
+  const CATEGORY_TO_API = {
+    eSIM: "ESIM",
+    steam: "STEAM",
+    digital: "DIGITAL",
+  };
+
+  // Replace your useEffect with this:
   useEffect(() => {
     let cancelled = false;
     (async () => {
       setIsLoading(true);
       setLoadErr("");
+
       try {
-        const { data } = await api.get(`/v1/partner/info/main?category=ALL&period=${period}`);
+        const apiCategory = CATEGORY_TO_API[category] ?? "ALL"; // fallback just in case
+        const { data } = await api.get("/v1/partner/info/main", {
+          params: { category: apiCategory, period },
+        });
+
         const series = Array.isArray(data?.dashboard_info) ? data.dashboard_info : [];
         if (!cancelled) {
           setChartLabels(series.map(d => d.label));
-          setChartValues(series.map(d => d.transaction_count)); // <-- transactions, not revenue
+          setChartValues(series.map(d => d.transaction_count)); // keep transactions for BarChart
           setRevenueValues(series.map(d => d.revenue));
           setTotals({
             revenue_total: data?.revenue_total ?? 0,
@@ -89,8 +98,9 @@ function Home() {
         if (!cancelled) setIsLoading(false);
       }
     })();
+
     return () => { cancelled = true; };
-  }, [period]);
+  }, [period, category]); // <-- add category here
 
   return (
     <div className='Home'>
@@ -120,7 +130,7 @@ function Home() {
                 <div className='opts-head'>
                   <span>{t("home.category")}</span>
                   {category !== "eSIM" && (
-                    <span className="reset-btn" onClick={() => setCategory("eSIM")}>
+                    <span className="reset-btn" onClick={() => setTempCategory("eSIM")}>
                       {t("home.reset")}
                     </span>
                   )}
@@ -133,7 +143,7 @@ function Home() {
                   >
                     <p>
                       {
-                        categoryOptions.find((opt) => opt.value === category)?.label[currentLang]
+                        categoryOptions.find(opt => opt.value === tempCategory)?.label[currentLang]
                       }
                     </p>
                     <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +157,7 @@ function Home() {
                           key={opt.value}
                           className={opt.value === category ? "opt-active" : ""}
                           onClick={() => {
-                            setCategory(opt.value);
+                            setTempCategory(opt.value);
                             setOpenCat(false);
                           }}
                         >
@@ -160,7 +170,15 @@ function Home() {
               </div>
 
               <div id='filter-btn'>
-                <button>{t("home.apply")}</button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCategory(tempCategory); // apply pending selection
+                    setFilter(false);
+                  }}
+                >
+                  {t("home.apply")}
+                </button>
               </div>
             </div>
           </div>

@@ -1,4 +1,3 @@
-import Navbar from '../components/Navbar';
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 
@@ -26,7 +25,6 @@ function Reports() {
 
     return (
         <div className='Home'>
-            <Navbar />
             <div className="page-head trans-head">
                 <h1>{t("navbar.reports")}</h1>
                 {activeButton === "earned" && (

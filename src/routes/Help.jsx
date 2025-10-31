@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
 import "../styles/Help.css";
 import { useTranslation } from "react-i18next";
 
@@ -16,8 +15,6 @@ function Help() {
 
     return (
         <div className="Home">
-            <Navbar />
-
             <div
                 className="page-head trans-head"
                 style={{ justifyContent: "center", flexDirection: "column" }}

@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import api from "../lib/api";
 
-import Navbar from "../components/Navbar";
 import BarChart from "../components/BarChart";
 import BarChart2 from "../components/BarChart2";
 
@@ -106,7 +105,6 @@ function Home() {
 
   return (
     <div className='Home'>
-      <Navbar />
       <div className="page-head">
         <h1>{t("home.title")}</h1>
         <form>

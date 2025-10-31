@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "../components/Navbar";
 import "../styles/Transactions.css";
 import { useTranslation } from "react-i18next";
 
@@ -47,7 +46,6 @@ function Transactions() {
 
     return (
         <div className="Home">
-            <Navbar />
             <div className="report-display">
                 {renderTrans()}
             </div>

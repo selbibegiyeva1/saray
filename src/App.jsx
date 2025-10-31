@@ -1,6 +1,6 @@
 import './App.css';
 import "./i18n";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
 
 import Login from './routes/Login';
 import Home from './routes/Home';
@@ -11,10 +11,23 @@ import Reports from './routes/Reports';
 import ProtectedRoute from './auth/ProtectedRoute';
 import PublicOnlyRoute from "./auth/PublicOnlyRoute";
 
+import Navbar from "./components/Navbar";
+
+// Shell with Navbar shown on ALL protected pages
+function ProtectedLayout() {
+  return (
+    <div className="App">
+      <Navbar />
+      <Outlet />
+    </div>
+  );
+}
+
 function App() {
   return (
     <div className="App">
       <Routes>
+        {/* Public: NO Navbar */}
         <Route
           path="/"
           element={
@@ -23,41 +36,23 @@ function App() {
             </PublicOnlyRoute>
           }
         />
+
+        {/* Protected: Navbar visible on every child route */}
         <Route
-          path="/home"
           element={
             <ProtectedRoute>
-              <Home />
+              <ProtectedLayout />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/transactions"
-          element={
-            <ProtectedRoute>
-              <Transactions />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/help"
-          element={
-            <ProtectedRoute>
-              <Help />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route path="/home" element={<Home />} />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/reports" element={<Reports />} />
+        </Route>
       </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

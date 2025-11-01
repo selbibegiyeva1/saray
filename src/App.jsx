@@ -13,6 +13,9 @@ import PublicOnlyRoute from "./auth/PublicOnlyRoute";
 
 import Navbar from "./components/Navbar";
 
+import Home2 from './routes2/Home2';
+import Digital from './routes2/Digital';
+
 // Shell with Navbar shown on ALL protected pages
 function ProtectedLayout() {
   return (
@@ -49,6 +52,9 @@ function App() {
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/help" element={<Help />} />
           <Route path="/reports" element={<Reports />} />
+
+          <Route path="/operator" element={<Home2 />} />
+          <Route path="/digital" element={<Digital />} />
         </Route>
       </Routes>
     </div>

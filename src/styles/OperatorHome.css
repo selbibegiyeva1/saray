@@ -1,0 +1,58 @@
+.operator-top {
+    max-width: 1680px;
+    margin: 24px auto auto auto;
+}
+
+.operator-top h1 {
+    font-size: 26px;
+    margin-bottom: 16px;
+}
+
+.operator-flex {
+    display: flex;
+    gap: 24px;
+}
+
+.operator-flex div {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+}
+
+.operator-flex div img {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.table-oper, 
+#oper-trans {
+    max-width: 1680px;
+}
+
+.row-titles.oper-row {
+    grid-template-columns: repeat(9, 1fr);
+}
+
+.oper-head {
+    margin-top: 39px;
+    padding: 32px;
+    border-radius: 24px;
+    max-width: 552px;
+    border: 1.5px solid #00000026;
+}
+
+.oper-head h1 {
+    font-size: 24px;
+}
+
+.oper-flex-block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.oper-balance {
+    padding: 32px;
+    width: 566px;
+    border-radius: 16px;
+    border: 1.5px solid #00000026;
+}

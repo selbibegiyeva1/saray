@@ -1,0 +1,111 @@
+.Digital {
+    max-width: 1680px;
+    margin: 24px auto auto auto;
+}
+
+.Digital h1 {
+    font-size: 36px;
+}
+
+.digital-search {
+    padding: 32px 20px;
+    border-radius: 16px;
+    margin-top: 20px;
+    border: 1.5px solid #00000026;
+}
+
+.digital-search-h {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.digital-search-h.s2 {
+    font-size: 24px;
+}
+
+.search-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1.5px solid #00000026;
+}
+
+.search-input input {
+    border: none;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+    font-weight: 500;
+}
+
+.dig-search-btn {
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: #2D85EA;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 11px 37px;
+}
+
+.dig-flex2 {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.dig-flex2 div {
+    background: #F2F3F5;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 9px;
+    padding: 10px 15px;
+    border-radius: 8px;
+}
+
+.digital-btns {
+    display: flex;
+    gap: 8px;
+    margin-top: 32px;
+}
+
+.digital-btns button {
+    display: flex;
+    align-items: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    border-radius: 8px;
+    gap: 6px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.digital-btns button:nth-child(1) {
+    border: 1.5px solid #00000026;
+    background: none;
+}
+
+.digital-btns button:nth-child(2) {
+    background: #2D85EA;
+    color: white;
+}
+
+.digital-grid {
+    display: grid;
+    margin-top: 24px;
+    gap: 40px;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.digital-grid div img {
+    width: 100%;
+    margin-bottom: 12px;
+}

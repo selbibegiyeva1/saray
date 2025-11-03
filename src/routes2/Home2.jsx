@@ -16,15 +16,15 @@ function Home2() {
                             <center><b>Steam</b></center>
                         </div>
                         <div>
-                            <img src="/arena.png" alt="box" />
+                            <img src="/games.png" alt="box" />
                             <center><b>Игры</b></center>
                         </div>
                         <div>
-                            <img src="/strike.png" alt="box" />
+                            <img src="/services.png" alt="box" />
                             <center><b>Сервисы</b></center>
                         </div>
                         <div>
-                            <img src="/apex.png" alt="box" />
+                            <img src="/esim.png" alt="box" />
                             <center><b>eSIM</b></center>
                         </div>
                     </div>

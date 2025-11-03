@@ -53,6 +53,13 @@ function Home2() {
             </div>
 
             <div className="transactions-container" style={{ width: "100%", marginTop: 24 }}>
+                <div className="search-table">
+                    <p className="tb-head">История транзакции</p>
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="40" height="40" rx="8" fill="#2D85EA" />
+                        <path d="M12 18H15.7535M12 18V14M12 18L15.1347 14.3431C18.0778 11.219 22.8495 11.219 25.7927 14.3431C28.7358 17.4673 28.7358 22.5327 25.7927 25.6569C22.8495 28.781 18.0778 28.781 15.1347 25.6569C14.3963 24.873 13.8431 23.9669 13.4752 23" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </div>
                 <div className="table-viewport table-oper" style={{ position: "relative" }}>
                     <table>
                         <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>

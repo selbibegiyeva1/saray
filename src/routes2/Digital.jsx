@@ -1,8 +1,45 @@
-import React from 'react';
+import { useEffect, useMemo, useState } from "react";
+import api from "../lib/api"; // uses axios instance with auth + refresh
 
 import "../styles/Digital.css";
 
+const CATEGORIES = [
+    { key: "business", label: "Сервисы" },
+    { key: "games", label: "Игры" },
+];
+
 function Digital() {
+    const [category, setCategory] = useState("business");
+    const [query, setQuery] = useState("");
+    const [groups, setGroups] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [err, setErr] = useState(null);
+
+    useEffect(() => {
+        let cancel = false;
+        (async () => {
+            setLoading(true);
+            setErr(null);
+            try {
+                const { data } = await api.get("/v1/partner/catalog/product/groups", {
+                    params: category === "ALL" ? {} : { category },
+                });
+                if (!cancel) setGroups(Array.isArray(data) ? data : []);
+            } catch (e) {
+                if (!cancel) setErr(e?.response?.data?.message || "Ошибка загрузки");
+            } finally {
+                if (!cancel) setLoading(false);
+            }
+        })();
+        return () => { cancel = true; };
+    }, [category]);
+
+    const filtered = useMemo(() => {
+        const q = query.trim().toLowerCase();
+        if (!q) return groups;
+        return groups.filter(g => (g.group_name || "").toLowerCase().includes(q));
+    }, [groups, query]);
+
     return (
         <div className='Digital'>
             <h1>Цифровые товары</h1>
@@ -47,65 +84,54 @@ function Digital() {
             </div>
 
             <div style={{ marginTop: 24 }}>
-                <p className='digital-search-h s2'>Игры</p>
+                <p className="digital-search-h s2" style={{ marginTop: 16 }}>
+                    {CATEGORIES.find(c => c.key === category)?.label}
+                </p>
 
-                <div className='digital-btns'>
-                    <button>
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15.375 13.625V17.125M17.125 15.375H13.625M14.75 9.25H16C17.1046 9.25 18 8.35457 18 7.25V6C18 4.89543 17.1046 4 16 4H14.75C13.6454 4 12.75 4.89543 12.75 6V7.25C12.75 8.35457 13.6454 9.25 14.75 9.25ZM6 18H7.25C8.35457 18 9.25 17.1046 9.25 16V14.75C9.25 13.6454 8.35457 12.75 7.25 12.75H6C4.89543 12.75 4 13.6454 4 14.75V16C4 17.1046 4.89543 18 6 18ZM6 9.25H7.25C8.35457 9.25 9.25 8.35457 9.25 7.25V6C9.25 4.89543 8.35457 4 7.25 4H6C4.89543 4 4 4.89543 4 6V7.25C4 8.35457 4.89543 9.25 6 9.25Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <p>Сервисы</p>
-                    </button>
-                    <button>
-                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M8.08333 18.583H10.75M13.4167 18.583H10.75M10.75 18.583V15.958M10.75 15.958H16.75C17.8546 15.958 18.75 15.0626 18.75 13.958V6.58301C18.75 5.47844 17.8546 4.58301 16.75 4.58301H4.75C3.64543 4.58301 2.75 5.47844 2.75 6.58301V13.958C2.75 15.0626 3.64543 15.958 4.75 15.958H10.75Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <p>Игры</p>
-                    </button>
+                <div className="digital-btns">
+                    {CATEGORIES.map(c => (
+                        <button
+                            key={c.key}
+                            className={category === c.key ? "active" : ""}
+                            onClick={() => setCategory(c.key)}
+                            aria-pressed={category === c.key}
+                            title={c.label}
+                        >
+                            {/* simple icon placeholders; keep your existing svgs if needed */}
+                            {c.key === "games" ? (
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8.08333 18.583H10.75M13.4167 18.583H10.75M10.75 18.583V15.958M10.75 15.958H16.75C17.8546 15.958 18.75 15.0626 18.75 13.958V6.58301C18.75 5.47844 17.8546 4.58301 16.75 4.58301H4.75C3.64543 4.58301 2.75 5.47844 2.75 6.58301V13.958C2.75 15.0626 3.64543 15.958 4.75 15.958H10.75Z" stroke={category === "games" ? "white" : "black"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            ) : (
+                                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.375 13.625V17.125M17.125 15.375H13.625M14.75 9.25H16C17.1046 9.25 18 8.35457 18 7.25V6C18 4.89543 17.1046 4 16 4H14.75C13.6454 4 12.75 4.89543 12.75 6V7.25C12.75 8.35457 13.6454 9.25 14.75 9.25ZM6 18H7.25C8.35457 18 9.25 17.1046 9.25 16V14.75C9.25 13.6454 8.35457 12.75 7.25 12.75H6C4.89543 12.75 4 13.6454 4 14.75V16C4 17.1046 4.89543 18 6 18ZM6 9.25H7.25C8.35457 9.25 9.25 8.35457 9.25 7.25V6C9.25 4.89543 8.35457 4 7.25 4H6C4.89543 4 4 4.89543 4 6V7.25C4 8.35457 4.89543 9.25 6 9.25Z" stroke={category === "business" ? "white" : "black"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            )}
+                            <p>{c.label}</p>
+                        </button>
+                    ))}
                 </div>
 
-                <div className="digital-grid">
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
+                {err && <div className="error" role="alert" style={{ marginTop: 24 }}>{err}</div>}
+                {loading && <div className="loading" style={{ marginTop: 24 }}>Загрузка…</div>}
+
+                {!loading && !err && (
+                    <div className="digital-grid">
+                        {filtered.map(item => (
+                            <div key={item.group_name} className="digital-card" title={item.group_name}>
+                                <img
+                                    src={item.icon_url || "/image.png"}
+                                    alt={item.group_name}
+                                    onError={(e) => { e.currentTarget.src = "/image.png"; }}
+                                />
+                                <center><b>{item.group_name}</b></center>
+                            </div>
+                        ))}
+                        {filtered.length === 0 && (
+                            <div style={{ opacity: 0.7, padding: 16 }}>Ничего не найдено</div>
+                        )}
                     </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                    <div>
-                        <img src="/image.png" alt="img" />
-                        <center><b>Apex Legends Mobile</b></center>
-                    </div>
-                </div>
+                )}
             </div>
         </div>
     )

@@ -136,7 +136,7 @@ table tr p:first-child {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: 24px 0px 108px 0px;
+    margin-top: 24px;
 }
 
 .pags button {

@@ -1,39 +1,94 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import api from "../lib/api";
 import "../styles/eSim.css";
 
 function Esim() {
+    // tabs
     const [mode, setMode] = useState("countries"); // "countries" | "regions"
+
+    // data
     const [countries, setCountries] = useState([]);
     const [regions, setRegions] = useState([]);
+    const [regionCoverage, setRegionCoverage] = useState(null); // count of countries for selected region
+
+    // search
     const [q, setQ] = useState("");
+
+    // loading/errors for lists
     const [loading, setLoading] = useState(true);
     const [err, setErr] = useState(null);
 
     // selection + tariffs
     const [selectedCountry, setSelectedCountry] = useState(null);
+    const [selectedRegion, setSelectedRegion] = useState(null);
     const [tariffs, setTariffs] = useState([]);
     const [tLoading, setTLoading] = useState(false);
     const [tErr, setTErr] = useState(null);
 
-    // tiny normalizer for search
+    // utils
     const norm = (s = "") => s.toString().toLowerCase().replace(/\s|-/g, "");
-
-    // pretty traffic label
     const formatTraffic = (traffic) => {
         if (traffic == null) return "—";
-        // API gives traffic in MB (1024 => 1GB in your screenshot)
         const mb = Number(traffic);
         if (!Number.isFinite(mb)) return "—";
         if (mb >= 1024) {
             const gb = mb / 1024;
-            // avoid ugly 1.00GB
             return gb % 1 === 0 ? `${gb}GB` : `${gb.toFixed(1)}GB`;
         }
         return `${mb}MB`;
     };
 
-    // fetch countries on mount
+    // ------- load tariffs (country) -------
+    const loadTariffsFor = useCallback(async (c) => {
+        setSelectedRegion(null);
+        setRegionCoverage(null); // NEW: ensure we don’t show region coverage in country mode
+        setSelectedCountry(c);
+        setTErr(null);
+        setTLoading(true);
+        setTariffs([]);
+        try {
+            const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
+                params: { country_code: c.country_code },
+            });
+            const root = Array.isArray(data) ? (data[0] || {}) : (data || {});
+            const list = root.tariffs || root.tarrifs || [];
+            setTariffs(Array.isArray(list) ? list : []);
+        } catch (e) {
+            setTErr("Не удалось загрузить тарифы.");
+            console.error("Tariffs error", e?.response || e);
+        } finally {
+            setTLoading(false);
+        }
+    }, []);
+
+    // ------- load tariffs (region) -------
+    const loadTariffsForRegion = useCallback(async (r) => {
+        setSelectedCountry(null);
+        setSelectedRegion(r);
+        setTErr(null);
+        setTLoading(true);
+        setTariffs([]);
+        try {
+            const regionParam = r?.region_name?.en;
+            const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
+                params: { region: regionParam },
+            });
+            const root = Array.isArray(data) ? (data[0] || {}) : (data || {});
+            const list = root.tariffs || root.tarrifs || [];
+            setTariffs(Array.isArray(list) ? list : []);
+
+            // NEW: count how many countries this region covers
+            const codes = root.country_code;
+            setRegionCoverage(Array.isArray(codes) ? codes.length : null);
+        } catch (e) {
+            setTErr("Не удалось загрузить тарифы.");
+            console.error("Region tariffs error", e?.response || e);
+        } finally {
+            setTLoading(false);
+        }
+    }, []);
+
+    // ------- fetch countries on mount (+ auto-select first) -------
     useEffect(() => {
         let isMounted = true;
         (async () => {
@@ -45,9 +100,9 @@ function Esim() {
                 const arr = Array.isArray(data) ? data : [];
                 setCountries(arr);
 
-                // auto-select first country and load tariffs
-                if (arr.length > 0 && !selectedCountry) {
-                    await loadTariffsFor(arr[0]);
+                // auto-select first country and show tariffs
+                if (arr.length > 0) {
+                    loadTariffsFor(arr[0]);
                 }
             } catch {
                 if (!isMounted) return;
@@ -57,9 +112,9 @@ function Esim() {
             }
         })();
         return () => { isMounted = false; };
-    }, []);
+    }, [loadTariffsFor]);
 
-    // lazy fetch regions
+    // ------- lazy fetch regions when tab is opened -------
     useEffect(() => {
         let isMounted = true;
 
@@ -80,46 +135,19 @@ function Esim() {
 
         if (mode === "regions" && regions.length === 0) {
             fetchRegions();
-        } else {
-            // switching back to countries
-            setErr(null);
-            setLoading(false);
+        }
+        if (mode === "countries") {
+            setSelectedRegion(null);
+            // keep current country tariffs (feels nicer)
         }
 
         return () => { isMounted = false; };
-    }, [mode]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [mode, regions.length]);
 
-    // click a country → load tariffs
-    const loadTariffsFor = async (c) => {
-        setSelectedCountry(c);
-        setTErr(null);
-        setTLoading(true);
-        setTariffs([]);
-
-        try {
-            const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
-                params: { country_code: c.country_code },
-            });
-
-            // Handle both shapes:
-            // 1) { country_name, country_code, flag_url, tariffs: [...] }
-            // 2) [ { country_name, country_code, flag_url, tariffs: [...] } ]
-            const root = Array.isArray(data) ? (data[0] || {}) : (data || {});
-            const list = root.tariffs || root.tarrifs || [];
-
-            setTariffs(Array.isArray(list) ? list : []);
-        } catch (e) {
-            setTErr("Не удалось загрузить тарифы.");
-            console.error("Tariffs error", e?.response || e);
-        } finally {
-            setTLoading(false);
-        }
-    };
-
-    // decide current list (countries or regions)
+    // ------- active list (for search) -------
     const list = mode === "countries" ? countries : regions;
 
-    // search filter
+    // ------- search filter -------
     const filtered = useMemo(() => {
         const term = norm(q);
         if (!term) return list;
@@ -133,7 +161,6 @@ function Esim() {
                 return ru.includes(term) || en.includes(term) || tm.includes(term) || code.includes(term);
             });
         }
-
         return list.filter((r) => {
             const ru = norm(r?.region_name?.ru);
             const en = norm(r?.region_name?.en);
@@ -204,9 +231,9 @@ function Esim() {
                         <ul>
                             {filtered.map((item, i) => {
                                 if (mode === "countries") {
-                                    const name =
-                                        item?.country_name?.ru || item?.country_name?.en || item?.country_code;
+                                    const name = item?.country_name?.ru || item?.country_name?.en || item?.country_code;
                                     const key = item.country_code || name || i;
+                                    const isSel = selectedCountry?.country_code === item.country_code;
                                     return (
                                         <li
                                             key={key}
@@ -214,7 +241,7 @@ function Esim() {
                                             tabIndex={0}
                                             onClick={() => loadTariffsFor(item)}
                                             onKeyDown={(e) => (e.key === "Enter" ? loadTariffsFor(item) : null)}
-                                            className={selectedCountry?.country_code === item.country_code ? "selected" : ""}
+                                            className={isSel ? "selected" : ""}
                                             style={{ cursor: "pointer" }}
                                             title="Показать тарифы"
                                         >
@@ -237,8 +264,18 @@ function Esim() {
                                     );
                                 } else {
                                     const name = item?.region_name?.ru || item?.region_name?.en;
+                                    const isSel = selectedRegion?.region_name?.en === item?.region_name?.en;
                                     return (
-                                        <li key={name || i}>
+                                        <li
+                                            key={name || i}
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={() => loadTariffsForRegion(item)}
+                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsForRegion(item) : null)}
+                                            className={isSel ? "selected" : ""}
+                                            style={{ cursor: "pointer" }}
+                                            title="Показать тарифы"
+                                        >
                                             {item.region_url ? (
                                                 <img
                                                     src={item.region_url}
@@ -273,21 +310,21 @@ function Esim() {
                     {tErr && !tLoading && <div style={{ padding: 12, color: "#ED2428" }}>{tErr}</div>}
 
                     {!tLoading && !tErr && tariffs.length === 0 && (
-                        <div style={{ padding: 12, opacity: 0.7 }}>
-                            {selectedCountry
-                                ? "Тарифы не найдены."
-                                : ""}
-                        </div>
+                        <div style={{ padding: 12, opacity: 0.7 }}>Тарифы не найдены.</div>
                     )}
 
                     {!tLoading && !tErr && tariffs.map((t, i) => (
                         <div className="esim" key={`${t.name || "tariff"}-${i}`}>
                             <div className="esim-flex">
                                 <b>{t.is_unlimited ? "Безлимит" : formatTraffic(t.traffic)}</b>
-                                {selectedCountry?.flag_url && (
+                                {(selectedCountry?.flag_url || selectedRegion?.region_url) && (
                                     <img
-                                        src={selectedCountry.flag_url}
-                                        alt={selectedCountry?.country_name?.ru || selectedCountry?.country_code}
+                                        src={selectedCountry?.flag_url || selectedRegion?.region_url}
+                                        alt={
+                                            selectedCountry
+                                                ? (selectedCountry?.country_name?.ru || selectedCountry?.country_code)
+                                                : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en)
+                                        }
                                         width={56}
                                         height={56}
                                         style={{ borderRadius: 12, objectFit: "cover" }}
@@ -297,12 +334,13 @@ function Esim() {
 
                             <div className="data-flex">
                                 <div style={{ borderBottom: "1px solid #00000026" }}>
-                                    <p>Страна</p>
+                                    <p>{selectedCountry ? "Страна" : "Покрытие"}</p>
                                     <p>
-                                        {selectedCountry?.country_name?.ru ||
-                                            selectedCountry?.country_name?.en ||
-                                            selectedCountry?.country_code ||
-                                            "—"}
+                                        {selectedCountry
+                                            ? (selectedCountry?.country_name?.ru ||
+                                                selectedCountry?.country_name?.en ||
+                                                selectedCountry?.country_code || "—")
+                                            : (`${regionCoverage} стран` ?? "—")}
                                     </p>
                                 </div>
                                 <div>

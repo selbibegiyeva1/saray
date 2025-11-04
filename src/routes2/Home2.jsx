@@ -114,7 +114,7 @@ function Home2() {
                             <img src="/services.png" alt="box" />
                             <center><b>Сервисы</b></center>
                         </Link>
-                        <Link to="/digital">
+                        <Link to="/esim">
                             <img src="/esim.png" alt="box" />
                             <center><b>eSIM</b></center>
                         </Link>

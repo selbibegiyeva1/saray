@@ -15,6 +15,7 @@ import Navbar from "./components/Navbar";
 
 import Home2 from './routes2/Home2';
 import Digital from './routes2/Digital';
+import Esim from './routes2/eSim';
 
 // Shell with Navbar shown on ALL protected pages
 function ProtectedLayout() {
@@ -55,6 +56,7 @@ function App() {
 
           <Route path="/operator" element={<Home2 />} />
           <Route path="/digital" element={<Digital />} />
+          <Route path="/esim" element={<Esim />} />
         </Route>
       </Routes>
     </div>

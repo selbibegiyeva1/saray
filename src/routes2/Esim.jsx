@@ -169,6 +169,12 @@ function Esim() {
         });
     }, [list, q, mode]);
 
+    const [payform, setPayform] = useState(false);
+    const formFunc = () => setPayform(!payform);
+
+    const [tariff, setTarrif] = useState(false);
+    const tariffFunc = () => setTarrif(!tariff);
+
     return (
         <div className="Esim">
             <h1 className="e-head">e-SIM</h1>
@@ -333,17 +339,22 @@ function Esim() {
                             </div>
 
                             <div className="data-flex">
-                                <div style={{ borderBottom: "1px solid #00000026" }}>
+                                <div className="d-flex-div" style={{ borderBottom: "1px solid #00000026" }}>
                                     <p>{selectedCountry ? "Страна" : "Покрытие"}</p>
-                                    <p>
-                                        {selectedCountry
-                                            ? (selectedCountry?.country_name?.ru ||
-                                                selectedCountry?.country_name?.en ||
-                                                selectedCountry?.country_code || "—")
-                                            : (`${regionCoverage} стран` ?? "—")}
-                                    </p>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={tariffFunc}>
+                                        <p>
+                                            {selectedCountry
+                                                ? (selectedCountry?.country_name?.ru ||
+                                                    selectedCountry?.country_name?.en ||
+                                                    selectedCountry?.country_code || "—")
+                                                : (`${regionCoverage} стран` ?? "—")}
+                                        </p>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                        </svg>
+                                    </div>
                                 </div>
-                                <div>
+                                <div className="d-flex-div">
                                     <p>Срок действия</p>
                                     <p>{t.days ?? "—"} дней</p>
                                 </div>
@@ -354,10 +365,88 @@ function Esim() {
                                 <b>{t.price_tmt != null ? `${t.price_tmt} ТМТ` : "—"}</b>
                             </div>
 
-                            <button>Купить</button>
+                            <button onClick={formFunc}>Купить</button>
                         </div>
                     ))}
                 </div>
+            </div>
+
+            {/* Payment form */}
+            <div className={payform ? "payment-form showform" : "payment-form"}>
+                <form>
+                    <div>
+                        <p className="pay-h">Покупка тарифа</p>
+                        <div className="pay-data">
+                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
+                                <p>Покрытие</p>
+                                <p>Австралия</p>
+                            </div>
+                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
+                                <p>Трафик</p>
+                                <p>3GB</p>
+                            </div>
+                            <div>
+                                <p>Срок действия</p>
+                                <p>3 дней</p>
+                            </div>
+                            <div style={{ marginTop: 30 }}>
+                                <p>Сумма</p>
+                                <p>150 ТМТ</p>
+                            </div>
+                        </div>
+                        <span className="pay-desc">После оплаты вы получите письмо со ссылкой QR/ для установки eSIM</span>
+                    </div>
+                    <div className="pay-data2">
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <p className="pay-h">Данные клиента</p>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={formFunc} className="close-payment">
+                                <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div className="pay-inputs">
+                            <p className="pay-label">ФИО</p>
+                            <input type="text" placeholder="Введите ФИО" />
+                        </div>
+                        <div className="pay-inputs" style={{ marginTop: 20 }}>
+                            <p className="pay-label">Электронный адрес</p>
+                            <input type="text" placeholder="Введите почту клиента" />
+                        </div>
+                        <div className="pay-inputs" style={{ marginTop: 20 }}>
+                            <p className="pay-label">Номер телефона</p>
+                            <input type="text" placeholder="Введите номер телефона клиента" />
+                        </div>
+                        <div className="pay-data">
+                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
+                                <p>Покрытие</p>
+                                <p>Австралия</p>
+                            </div>
+                            <div>
+                                <p>Итого</p>
+                                <p>221 ТМТ</p>
+                            </div>
+                        </div>
+                        <label class="checkbox" style={{ marginTop: 20 }}>
+                            <input type="checkbox" />
+                            <span class="checkmark"></span>
+                            <span class="label">Я подтверждаю, что правильно указал все данные</span>
+                        </label>
+                        <div>
+                            <button className="pay-btn">Оплатить</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            {/* Сервис доступен в следующих странах */}
+            <div className={tariff ? "conts-list showtariff" : "conts-list"}>
+                <ul>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+                        <span>Сервис доступен в следующих странах</span>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={tariffFunc}>
+                            <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                </ul>
             </div>
         </div>
     );

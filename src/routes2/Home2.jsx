@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 
 import api from "../lib/api";
 import "../styles/Home.css";
@@ -101,22 +102,22 @@ function Home2() {
 
                 <div className="oper-flex-block">
                     <div className="operator-flex">
-                        <div>
+                        <Link to="/digital">
                             <img src="/steam.png" alt="box" />
                             <center><b>Steam</b></center>
-                        </div>
-                        <div>
+                        </Link>
+                        <Link to="/digital?category=games">
                             <img src="/games.png" alt="box" />
                             <center><b>Игры</b></center>
-                        </div>
-                        <div>
+                        </Link>
+                        <Link to="/digital?category=business">
                             <img src="/services.png" alt="box" />
                             <center><b>Сервисы</b></center>
-                        </div>
-                        <div>
+                        </Link>
+                        <Link to="/digital">
                             <img src="/esim.png" alt="box" />
                             <center><b>eSIM</b></center>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="oper-balance">

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import api from "../lib/api"; // uses axios instance with auth + refresh
 
 import "../styles/Digital.css";
@@ -9,7 +10,10 @@ const CATEGORIES = [
 ];
 
 function Digital() {
-    const [category, setCategory] = useState("business");
+    const [searchParams, setSearchParams] = useSearchParams();
+    const getValidCategory = (v) => (["business", "games"].includes(v) ? v : "business");
+    const [category, setCategory] = useState(getValidCategory(searchParams.get("category")));
+
     const [query, setQuery] = useState("");
     const [groups, setGroups] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -39,6 +43,12 @@ function Digital() {
         if (!q) return groups;
         return groups.filter(g => (g.group_name || "").toLowerCase().includes(q));
     }, [groups, query]);
+
+    useEffect(() => {
+        const urlCat = getValidCategory(searchParams.get("category"));
+        setCategory((curr) => (curr === urlCat ? curr : urlCat));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
 
     return (
         <div className='Digital'>
@@ -93,7 +103,10 @@ function Digital() {
                         <button
                             key={c.key}
                             className={category === c.key ? "active" : ""}
-                            onClick={() => setCategory(c.key)}
+                            onClick={() => {
+                                setCategory(c.key);
+                                setSearchParams({ category: c.key });
+                            }}
                             aria-pressed={category === c.key}
                             title={c.label}
                         >

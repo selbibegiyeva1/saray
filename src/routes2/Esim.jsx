@@ -31,6 +31,10 @@ function Esim() {
     const [covErr, setCovErr] = useState(null);
     const [coverageSearch, setCoverageSearch] = useState("");
 
+    const [selectedTariff, setSelectedTariff] = useState(null);
+
+    const [formConfirmed, setFormConfirmed] = useState(false);
+
     // utils
     const norm = (s = "") => s.toString().toLowerCase().replace(/\s|-/g, "");
     const formatTraffic = (traffic) => {
@@ -184,7 +188,10 @@ function Esim() {
     }, [list, q, mode]);
 
     const [payform, setPayform] = useState(false);
-    const formFunc = () => setPayform(!payform);
+    const formFunc = () => {
+        setFormConfirmed(false);       // reset checkbox each time
+        setPayform(prev => !prev);     // <-- use the correct state
+    };
 
     const [tariff, setTarrif] = useState(false);
 
@@ -217,6 +224,17 @@ function Esim() {
             return ru.includes(term) || en.includes(term) || code.includes(term);
         });
     }, [coverageSearch, coverageCountries]);
+
+    const coverageLabel = selectedCountry
+        ? (selectedCountry?.country_name?.ru || selectedCountry?.country_name?.en || selectedCountry?.country_code || "—")
+        : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en || "—");
+
+    const trafficLabel = selectedTariff
+        ? (selectedTariff.is_unlimited ? "Безлимит" : formatTraffic(selectedTariff.traffic))
+        : "—";
+
+    const daysLabel = selectedTariff?.days != null ? `${selectedTariff.days} дней` : "—";
+    const priceLabel = selectedTariff?.price_tmt != null ? `${selectedTariff.price_tmt} ТМТ` : "—";
 
     return (
         <div className="Esim">
@@ -423,7 +441,12 @@ function Esim() {
                                 <b>{t.price_tmt != null ? `${t.price_tmt} ТМТ` : "—"}</b>
                             </div>
 
-                            <button onClick={formFunc}>Купить</button>
+                            <button
+                                type="button"
+                                onClick={() => { setSelectedTariff(t); formFunc(); }}
+                            >
+                                Купить
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -437,19 +460,19 @@ function Esim() {
                         <div className="pay-data">
                             <div style={{ borderBottom: "1.5px solid #00000026" }}>
                                 <p>Покрытие</p>
-                                <p>Австралия</p>
+                                <p>{coverageLabel}</p>
                             </div>
                             <div style={{ borderBottom: "1.5px solid #00000026" }}>
                                 <p>Трафик</p>
-                                <p>3GB</p>
+                                <p>{trafficLabel}</p>
                             </div>
                             <div>
                                 <p>Срок действия</p>
-                                <p>3 дней</p>
+                                <p>{daysLabel}</p>
                             </div>
                             <div style={{ marginTop: 30 }}>
                                 <p>Сумма</p>
-                                <p>150 ТМТ</p>
+                                <p>{priceLabel}</p>
                             </div>
                         </div>
                         <span className="pay-desc">После оплаты вы получите письмо со ссылкой QR/ для установки eSIM</span>
@@ -476,20 +499,30 @@ function Esim() {
                         <div className="pay-data">
                             <div style={{ borderBottom: "1.5px solid #00000026" }}>
                                 <p>Покрытие</p>
-                                <p>Австралия</p>
+                                <p>{coverageLabel}</p>
                             </div>
                             <div>
                                 <p>Итого</p>
-                                <p>221 ТМТ</p>
+                                <p>{priceLabel}</p>
                             </div>
                         </div>
-                        <label class="checkbox" style={{ marginTop: 20 }}>
-                            <input type="checkbox" />
-                            <span class="checkmark"></span>
-                            <span class="label">Я подтверждаю, что правильно указал все данные</span>
+                        <label className="checkbox" style={{ marginTop: 20 }}>
+                            <input
+                                type="checkbox"
+                                checked={formConfirmed}
+                                onChange={(e) => setFormConfirmed(e.target.checked)}
+                            />
+                            <span className="checkmark"></span>
+                            <span className="label">Я подтверждаю, что правильно указал все данные</span>
                         </label>
                         <div>
-                            <button className="pay-btn">Оплатить</button>
+                            <button
+                                type="button"
+                                className="pay-btn"
+                                disabled={!formConfirmed}
+                            >
+                                Оплатить
+                            </button>
                         </div>
                     </div>
                 </form>

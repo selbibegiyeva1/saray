@@ -364,3 +364,8 @@
     background-color: #5682FF;
     border-radius: 10px;
 }
+
+.pay-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

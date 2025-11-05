@@ -209,3 +209,8 @@
     background-color: #F5F5F9;
     margin-top: 16px;
 }
+
+.pay-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

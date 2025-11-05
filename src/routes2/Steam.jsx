@@ -5,7 +5,7 @@ import "../styles/Steam.css";
 
 function Steam() {
     const [activeTab, setActiveTab] = useState("topup"); // 'topup' or 'voucher'
-    const [activeVoucher, setActiveVoucher] = useState("100 ТМТ");
+    const [activeVoucher, setActiveVoucher] = useState(null);
 
     // inside Steam component, add state
     const [voucherRegions, setVoucherRegions] = useState([]);
@@ -18,6 +18,17 @@ function Steam() {
     const [selectedTopupRegion, setSelectedTopupRegion] = useState("");
     const [loadingForms, setLoadingForms] = useState(false);
 
+    // after your existing states
+    const [voucherProducts, setVoucherProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [confirmed, setConfirmed] = useState(false);
+
+    const [selectedVoucher, setSelectedVoucher] = useState(null);  // full object
+
+    const [modalConfirmed, setModalConfirmed] = useState(false);
+
+    const [userEmail, setUserEmail] = useState("");
+
     useEffect(() => {
         const loadForms = async () => {
             setLoadingForms(true);
@@ -29,36 +40,66 @@ function Steam() {
 
                 const root = data?.data ?? data ?? {};
 
-                // --- voucher_fields (object or array layout) ---
+                // voucher fields
                 const voucherFieldsObj = Array.isArray(root?.forms?.voucher_fields)
                     ? root.forms.voucher_fields : null;
                 const voucherFieldsArr = Array.isArray(root?.forms)
                     ? root.forms.flatMap(f => Array.isArray(f?.voucher_fields) ? f.voucher_fields : [])
                     : null;
                 const voucherFields = voucherFieldsObj ?? voucherFieldsArr ?? [];
-                const voucherRegion = voucherFields.find(f => f?.name === "region");
-                setVoucherRegions(Array.isArray(voucherRegion?.options) ? voucherRegion.options : []);
 
-                // --- topup_fields (object or array layout) ---
+                const regionField = voucherFields.find(f => f.name === "region");
+                const productField = voucherFields.find(f => f.name === "product_id");
+
+                setVoucherRegions(Array.isArray(regionField?.options) ? regionField.options : []);
+                setVoucherProducts(Array.isArray(productField?.options) ? productField.options : []);
+
+                // topup fields
                 const topupFieldsObj = Array.isArray(root?.forms?.topup_fields)
                     ? root.forms.topup_fields : null;
                 const topupFieldsArr = Array.isArray(root?.forms)
                     ? root.forms.flatMap(f => Array.isArray(f?.topup_fields) ? f.topup_fields : [])
                     : null;
                 const topupFields = topupFieldsObj ?? topupFieldsArr ?? [];
-                const topupRegion = topupFields.find(f => f?.name === "region");
-                setTopupRegions(Array.isArray(topupRegion?.options) ? topupRegion.options : []);
-            } catch {
-                setFetchErr("Не удалось загрузить регионы");
+
+                const topupRegionField = topupFields.find(f => f.name === "region");
+                setTopupRegions(Array.isArray(topupRegionField?.options) ? topupRegionField.options : []);
+            } catch (e) {
+                setFetchErr("Не удалось загрузить формы");
             } finally {
                 setLoadingForms(false);
             }
         };
+
         loadForms();
     }, []);
 
+    useEffect(() => {
+        if (!selectedRegion) {
+            setFilteredProducts([]);
+            return;
+        }
+
+        const filtered = voucherProducts.filter(
+            (p) => p.region?.toLowerCase() === selectedRegion.toLowerCase() ||
+                p.region?.toLowerCase() ===
+                voucherRegions.find(r => r.value === selectedRegion)?.name?.toLowerCase()
+        );
+
+        setFilteredProducts(filtered);
+    }, [selectedRegion, voucherProducts]);
+
     const [pay, setPay] = useState(false);
-    const payFunc = () => setPay(!pay);
+    const payFunc = () => {
+        setPay(prev => {
+            const next = !prev;
+            if (next) setModalConfirmed(false); // reset on open
+            return next;
+        });
+    };
+
+    const selectedRegionName =
+        voucherRegions.find((r) => r.value === selectedRegion)?.name || "—";
 
     return (
         <div className='Steam'>
@@ -160,7 +201,11 @@ function Steam() {
 
                                     <select
                                         value={selectedRegion}
-                                        onChange={(e) => setSelectedRegion(e.target.value)}
+                                        onChange={(e) => {
+                                            setSelectedRegion(e.target.value);
+                                            setActiveVoucher(null);
+                                            setSelectedVoucher(null);
+                                        }}
                                         disabled={loadingRegions || !!fetchErr}
                                     >
                                         <option value="" disabled>
@@ -175,27 +220,37 @@ function Steam() {
                                     </select>
                                 </div>
 
-                                <div style={{ marginTop: 20 }}>
-                                    <b>Выберите номинал</b>
-                                    <div className="voucher-options">
-                                        {["100 ТМТ", "250 ТМТ", "500 ТМТ", "1000 ТМТ"].map((value, index) => (
-                                            <button
-                                                key={index}
-                                                type="button"
-                                                className={`voucher-btn ${activeVoucher === value ? "active" : ""}`}
-                                                onClick={() => setActiveVoucher(value)}
-                                            >
-                                                {value}
-                                            </button>
-                                        ))}
+                                {selectedRegion && filteredProducts.length > 0 && (
+                                    <div style={{ marginTop: 20 }}>
+                                        <b>Выберите номинал</b>
+                                        <div className="voucher-options">
+                                            {filteredProducts.map((p) => (
+                                                <button
+                                                    key={p.value}
+                                                    type="button"
+                                                    className={`voucher-btn ${activeVoucher === p.value ? "active" : ""}`}
+                                                    onClick={() => {
+                                                        setActiveVoucher(p.value);
+                                                        setSelectedVoucher(p);
+                                                    }}
+                                                >
+                                                    {p.product}
+                                                </button>
+                                            ))}
+                                        </div>
                                     </div>
-                                </div>
+                                )}
                             </div>
                             <div className="steam-block" style={{ marginTop: 16 }} id="voucher">
                                 <p className="s-block-h">Пополнение аккаунта</p>
                                 <div style={{ marginTop: 20 }}>
                                     <span style={{ marginBottom: 16, fontSize: 14, display: "flex" }}>Куда отправить ваучер</span>
-                                    <input type="text" placeholder='Напишите свою почту' />
+                                    <input
+                                        type="email"
+                                        placeholder="Напишите свою почту"
+                                        value={userEmail}
+                                        onChange={(e) => setUserEmail(e.target.value)}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -207,19 +262,30 @@ function Steam() {
                         <p className='steam-bal-h'>Оплата</p>
                         <div className='bal-flex'>
                             <p>К зачислению в Steam</p>
-                            <p>~20.5$</p>
+                            <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                         </div>
                         <div className='bal-flex'>
                             <p>Итого к списанию</p>
-                            <p>105 ТМТ</p>
+                            <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                         </div>
                         <label className="checkbox" style={{ marginTop: 20 }}>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                checked={confirmed}
+                                onChange={(e) => setConfirmed(e.target.checked)}
+                            />
                             <span className="checkmark"></span>
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>
                         </label>
                         <div>
-                            <button type="button" className="pay-btn" onClick={payFunc}>Оплатить</button>
+                            <button
+                                type="button"
+                                className="pay-btn"
+                                onClick={payFunc}
+                                disabled={!confirmed}
+                            >
+                                Оплатить
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -234,19 +300,19 @@ function Steam() {
                         <div className="paydata">
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <p>Регион</p>
-                                <p>Турция</p>
+                                <p>{selectedRegionName}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <p>Почта</p>
-                                <p>ruslan_ghost_24321@gmail.com</p>
+                                <p>{userEmail || "—"}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <p>К зачислению в Steam</p>
-                                <p>~20.5$</p>
+                                <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <b>Итого к списанию</b>
-                                <b>105 ТМТ</b>
+                                <b>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</b>
                             </div>
                         </div>
 
@@ -260,21 +326,27 @@ function Steam() {
                         <div className="paydata">
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <p>К зачислению в Steam</p>
-                                <p>~20.5$</p>
+                                <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <b>Итого к списанию</b>
-                                <b>105 ТМТ</b>
+                                <b>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</b>
                             </div>
                         </div>
 
                         <label className="checkbox" style={{ marginTop: 20 }}>
-                            <input type="checkbox" />
+                            <input
+                                type="checkbox"
+                                checked={modalConfirmed}
+                                onChange={(e) => setModalConfirmed(e.target.checked)}
+                            />
                             <span className="checkmark"></span>
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>
                         </label>
                         <div>
-                            <button type="button" className="pay-btn">Оплатить</button>
+                            <button type="button" className="pay-btn" disabled={!modalConfirmed}>
+                                Оплатить
+                            </button>
                             <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
                         </div>
                     </div>

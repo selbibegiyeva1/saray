@@ -102,7 +102,7 @@ function Home2() {
 
                 <div className="oper-flex-block">
                     <div className="operator-flex">
-                        <Link to="/digital">
+                        <Link to="/steam">
                             <img src="/steam.png" alt="box" />
                             <center><b>Steam</b></center>
                         </Link>

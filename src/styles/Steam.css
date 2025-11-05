@@ -1,0 +1,151 @@
+.Steam {
+    max-width: 1680px;
+    margin: 24px auto auto auto;
+}
+
+.Steam h1 {
+    font-size: 36px;
+}
+
+.steam-grid {
+    display: grid;
+    grid-template-columns: 1fr 490px;
+    gap: 32px;
+    margin-top: 32px;
+    margin-bottom: 100px;
+}
+
+.steam-block {
+    padding: 32px;
+    border-radius: 32px;
+    border: 1.5px solid #00000026;
+}
+
+.s-block-f {
+    display: flex;
+    gap: 29px;
+}
+
+.s-block-h {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.s-block-f span {
+    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    max-width: 905px;
+    margin: 18px 0px;
+    color: #00000099;
+}
+
+.s-block-f img {
+    width: 160px;
+}
+
+.s-block-btns {
+    display: flex;
+    gap: 14px;
+}
+
+.s-block-btns button {
+    background: none;
+    cursor: pointer;
+    outline: none;
+    padding: 10.5px 16px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    border: 1.5px solid #00000026;
+}
+
+.s-block-btns button.active {
+    background: #2D85EA;
+    color: white;
+    border: none;
+}
+
+.steam-block select,
+.steam-block input {
+    background: #F5F5F9;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 500;
+    padding: 16px;
+    border-radius: 10px;
+}
+
+.slct-arr {
+    position: absolute;
+    pointer-events: none;
+    top: 50%;
+    left: 97.5%;
+    transform: translate(-50%, -50%);
+}
+
+.block-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-top: 32px;
+}
+
+.block-grid span {
+    display: flex;
+    margin-bottom: 16px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.block-flex {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-top: 16px;
+    font-weight: 500;
+}
+
+.steam-bal-h {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.bal-flex {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0px;
+    border-bottom: 1px solid #0000001A;
+}
+
+.voucher-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.voucher-btn {
+    background: #f5f5f9;
+    border: 1.5px solid #00000026;
+    border-radius: 10px;
+    padding: 10px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.voucher-btn:hover {
+    background: #e9f2ff;
+}
+
+.voucher-btn.active {
+    background: #2D85EA;
+    border: 1.5px solid #2D85EA;
+    color: white;
+}

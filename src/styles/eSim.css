@@ -344,3 +344,23 @@
     padding: 32px;
     border-radius: 24px;
 }
+
+.list-auto {
+    overflow: auto;
+    height: 540px;
+    margin-top: 14px;
+}
+
+.list-auto::-webkit-scrollbar {
+    width: 5px;
+    padding: 0px 15px;
+}
+
+.list-auto::-webkit-scrollbar-track {
+    background: #F5F5F9;
+}
+
+.list-auto::-webkit-scrollbar-thumb {
+    background-color: #5682FF;
+    border-radius: 10px;
+}

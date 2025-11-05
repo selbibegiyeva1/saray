@@ -25,6 +25,12 @@ function Esim() {
     const [tLoading, setTLoading] = useState(false);
     const [tErr, setTErr] = useState(null);
 
+    const [regionCodes, setRegionCodes] = useState([]);
+    const [coverageCountries, setCoverageCountries] = useState([]);
+    const [covLoading, setCovLoading] = useState(false);
+    const [covErr, setCovErr] = useState(null);
+    const [coverageSearch, setCoverageSearch] = useState("");
+
     // utils
     const norm = (s = "") => s.toString().toLowerCase().replace(/\s|-/g, "");
     const formatTraffic = (traffic) => {
@@ -68,6 +74,7 @@ function Esim() {
         setTErr(null);
         setTLoading(true);
         setTariffs([]);
+
         try {
             const regionParam = r?.region_name?.en;
             const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
@@ -77,9 +84,10 @@ function Esim() {
             const list = root.tariffs || root.tarrifs || [];
             setTariffs(Array.isArray(list) ? list : []);
 
-            // NEW: count how many countries this region covers
+            // ✅ store all country codes from region
             const codes = root.country_code;
             setRegionCoverage(Array.isArray(codes) ? codes.length : null);
+            setRegionCodes(Array.isArray(codes) ? codes : []); // NEW
         } catch (e) {
             setTErr("Не удалось загрузить тарифы.");
             console.error("Region tariffs error", e?.response || e);
@@ -87,6 +95,12 @@ function Esim() {
             setTLoading(false);
         }
     }, []);
+
+    const filterCoverageCountries = useCallback(() => {
+        if (!regionCodes.length || !countries.length) return [];
+        const codesSet = new Set(regionCodes.map((c) => c.toUpperCase()));
+        return countries.filter((c) => codesSet.has(c.country_code?.toUpperCase()));
+    }, [regionCodes, countries]);
 
     // ------- fetch countries on mount (+ auto-select first) -------
     useEffect(() => {
@@ -173,7 +187,36 @@ function Esim() {
     const formFunc = () => setPayform(!payform);
 
     const [tariff, setTarrif] = useState(false);
-    const tariffFunc = () => setTarrif(!tariff);
+
+    const tariffFunc = () => {
+        const newState = !tariff;
+        setTarrif(newState);
+
+        if (newState && selectedRegion && regionCodes.length) {
+            setCovLoading(true);
+            setCovErr(null);
+            try {
+                const filtered = filterCoverageCountries();
+                setCoverageCountries(filtered);
+            } catch (e) {
+                console.error(e);
+                setCovErr("Не удалось загрузить список стран региона.");
+            } finally {
+                setCovLoading(false);
+            }
+        }
+    };
+
+    const filteredCoverage = useMemo(() => {
+        const term = norm(coverageSearch);
+        if (!term) return coverageCountries;
+        return coverageCountries.filter((c) => {
+            const ru = norm(c?.country_name?.ru);
+            const en = norm(c?.country_name?.en);
+            const code = norm(c?.country_code);
+            return ru.includes(term) || en.includes(term) || code.includes(term);
+        });
+    }, [coverageSearch, coverageCountries]);
 
     return (
         <div className="Esim">
@@ -349,9 +392,24 @@ function Esim() {
                                                     selectedCountry?.country_code || "—")
                                                 : (`${regionCoverage} стран` ?? "—")}
                                         </p>
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                                        </svg>
+                                        {selectedRegion && (
+                                            <svg
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                onClick={tariffFunc}
+                                            >
+                                                <path
+                                                    d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01"
+                                                    stroke="black"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="d-flex-div">
@@ -440,11 +498,114 @@ function Esim() {
             {/* Сервис доступен в следующих странах */}
             <div className={tariff ? "conts-list showtariff" : "conts-list"}>
                 <ul>
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", cursor: "pointer" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            cursor: "pointer",
+                        }}
+                    >
                         <span>Сервис доступен в следующих странах</span>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={tariffFunc}>
-                            <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            onClick={tariffFunc}
+                        >
+                            <path
+                                d="M6 6L18 18M18 6L6 18"
+                                stroke="black"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
+                    </div>
+
+                    <div className="esim-inpt" style={{ marginTop: 26 }}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                fillRule="evenodd"
+                                clipRule="evenodd"
+                                d="M17.2491 10.4991C17.2491 11.3855 17.0745 12.2633 16.7352 13.0822C16.3961 13.9012 15.8988 14.6453 15.2721 15.2721C14.6453 15.8988 13.9012 16.3961 13.0822 16.7354C12.2633 17.0745 11.3855 17.2491 10.4991 17.2491C9.6127 17.2491 8.73496 17.0745 7.916 16.7354C7.09706 16.3961 6.35294 15.8988 5.72615 15.2721C5.09935 14.6453 4.60216 13.9012 4.26293 13.0822C3.92371 12.2633 3.74912 11.3855 3.74912 10.4991C3.74912 8.7089 4.46027 6.99202 5.72615 5.72615C6.99202 4.46027 8.7089 3.74912 10.4991 3.74912C12.2893 3.74912 14.0062 4.46027 15.2721 5.72615C16.538 6.99202 17.2491 8.7089 17.2491 10.4991ZM16.0191 17.6091C14.2107 19.0131 11.9352 19.6751 9.65582 19.4603C7.37647 19.2456 5.26463 18.1703 3.75025 16.4532C2.23585 14.7362 1.43275 12.5066 1.50442 10.2182C1.5761 7.92992 2.51717 5.75492 4.13605 4.13605C5.75494 2.51717 7.92992 1.5761 10.2182 1.50442C12.5066 1.43274 14.7362 2.23585 16.4532 3.75025C18.1703 5.26463 19.2456 7.37647 19.4603 9.65582C19.6751 11.9352 19.0131 14.2107 17.6091 16.0191L22.1691 20.5791C22.2797 20.6822 22.3683 20.8064 22.4298 20.9444C22.4913 21.0824 22.5243 21.2313 22.527 21.3824C22.5297 21.5334 22.5018 21.6834 22.4453 21.8235C22.3887 21.9636 22.3044 22.0908 22.1976 22.1976C22.0908 22.3046 21.9636 22.3887 21.8235 22.4453C21.6834 22.5018 21.5334 22.5297 21.3824 22.527C21.2313 22.5243 21.0822 22.4913 20.9444 22.4298C20.8064 22.3683 20.6822 22.2797 20.5791 22.1691L16.0191 17.6091Z"
+                                fill="black"
+                                fillOpacity="0.6"
+                            />
+                        </svg>
+                        <input
+                            type="text"
+                            placeholder="Название страны"
+                            value={coverageSearch}
+                            onChange={(e) => setCoverageSearch(e.target.value)}
+                        />
+
+                        {coverageSearch && (
+                            <button
+                                type="button"
+                                aria-label="Сбросить поиск"
+                                onClick={() => setCoverageSearch("")}
+                                style={{ marginLeft: 8 }}
+                            >
+                                ✕
+                            </button>
+                        )}
+                    </div>
+
+                    <div className="list-auto">
+                        {covLoading && (
+                            <li style={{ padding: 12, opacity: 0.7 }}>Загрузка стран...</li>
+                        )}
+                        {covErr && !covLoading && (
+                            <li style={{ padding: 12, color: "#ED2428" }}>{covErr}</li>
+                        )}
+
+                        {!covLoading && !covErr && selectedRegion && filteredCoverage.map((c) => (
+                            <li
+                                key={c.country_code}
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 10,
+                                    padding: "10px 0",
+                                }}
+                            >
+                                {c.flag_url ? (
+                                    <img
+                                        src={c.flag_url}
+                                        alt={c.country_name?.ru || c.country_name?.en || c.country_code}
+                                        width={28}
+                                        height={20}
+                                        style={{ borderRadius: 6, objectFit: "cover" }}
+                                    />
+                                ) : (
+                                    <div
+                                        style={{
+                                            width: 28,
+                                            height: 20,
+                                            borderRadius: 6,
+                                            background: "#eee",
+                                        }}
+                                    />
+                                )}
+
+                                <p style={{ fontWeight: 500 }}>
+                                    {c.country_name?.ru || c.country_name?.en || c.country_code}
+                                </p>
+
+                                <p style={{ marginLeft: "auto", fontSize: 14 }}>
+                                    {(c.tariff_count ?? "—")} тарифов
+                                </p>
+                            </li>
+                        ))}
+
+                        {!covLoading && !covErr && selectedRegion && filteredCoverage.length === 0 && (
+                            <li style={{ padding: 12, opacity: 0.7 }}>
+                                {coverageSearch ? "Ничего не найдено" : "Нет стран с совпадающим кодом."}
+                            </li>
+                        )}
                     </div>
                 </ul>
             </div>

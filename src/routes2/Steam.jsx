@@ -1,9 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import api from "../lib/api"; // axios instance with auth attached
+
 import "../styles/Steam.css";
 
 function Steam() {
     const [activeTab, setActiveTab] = useState("topup"); // 'topup' or 'voucher'
     const [activeVoucher, setActiveVoucher] = useState("100 ТМТ");
+
+    // inside Steam component, add state
+    const [voucherRegions, setVoucherRegions] = useState([]);
+    const [selectedRegion, setSelectedRegion] = useState("");
+    const [loadingRegions, setLoadingRegions] = useState(false);
+    const [fetchErr, setFetchErr] = useState(null);
+
+    // new
+    const [topupRegions, setTopupRegions] = useState([]);
+    const [selectedTopupRegion, setSelectedTopupRegion] = useState("");
+    const [loadingForms, setLoadingForms] = useState(false);
+
+    useEffect(() => {
+        const loadForms = async () => {
+            setLoadingForms(true);
+            setFetchErr(null);
+            try {
+                const { data } = await api.get("/v1/partner/catalog/product/group/form", {
+                    params: { group: "Steam" }
+                });
+
+                const root = data?.data ?? data ?? {};
+
+                // --- voucher_fields (object or array layout) ---
+                const voucherFieldsObj = Array.isArray(root?.forms?.voucher_fields)
+                    ? root.forms.voucher_fields : null;
+                const voucherFieldsArr = Array.isArray(root?.forms)
+                    ? root.forms.flatMap(f => Array.isArray(f?.voucher_fields) ? f.voucher_fields : [])
+                    : null;
+                const voucherFields = voucherFieldsObj ?? voucherFieldsArr ?? [];
+                const voucherRegion = voucherFields.find(f => f?.name === "region");
+                setVoucherRegions(Array.isArray(voucherRegion?.options) ? voucherRegion.options : []);
+
+                // --- topup_fields (object or array layout) ---
+                const topupFieldsObj = Array.isArray(root?.forms?.topup_fields)
+                    ? root.forms.topup_fields : null;
+                const topupFieldsArr = Array.isArray(root?.forms)
+                    ? root.forms.flatMap(f => Array.isArray(f?.topup_fields) ? f.topup_fields : [])
+                    : null;
+                const topupFields = topupFieldsObj ?? topupFieldsArr ?? [];
+                const topupRegion = topupFields.find(f => f?.name === "region");
+                setTopupRegions(Array.isArray(topupRegion?.options) ? topupRegion.options : []);
+            } catch {
+                setFetchErr("Не удалось загрузить регионы");
+            } finally {
+                setLoadingForms(false);
+            }
+        };
+        loadForms();
+    }, []);
 
     return (
         <div className='Steam'>
@@ -51,8 +103,19 @@ function Steam() {
                                         <path d="M3.33854 6.66699L10.0052 13.3337L16.6719 6.66699"
                                             stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                    <select>
-                                        <option>Турция</option>
+                                    <select
+                                        value={selectedTopupRegion}
+                                        onChange={(e) => setSelectedTopupRegion(e.target.value)}
+                                        disabled={loadingForms || !!fetchErr}
+                                    >
+                                        <option value="" disabled>
+                                            {loadingForms ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : "Выберите регион"}
+                                        </option>
+                                        {topupRegions.map(opt => (
+                                            <option key={opt.value} value={opt.value}>
+                                                {opt.name ?? opt.value}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
                             </div>
@@ -87,12 +150,25 @@ function Steam() {
                                 <p className="s-block-h">Выберите регион</p>
                                 <div style={{ position: "relative", marginTop: 16 }}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg" className='slct-arr'>
+                                        xmlns="http://www.w3.org/2000/svg" className="slct-arr">
                                         <path d="M3.33854 6.66699L10.0052 13.3337L16.6719 6.66699"
                                             stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     </svg>
-                                    <select>
-                                        <option>Турция</option>
+
+                                    <select
+                                        value={selectedRegion}
+                                        onChange={(e) => setSelectedRegion(e.target.value)}
+                                        disabled={loadingRegions || !!fetchErr}
+                                    >
+                                        <option value="" disabled>
+                                            {loadingRegions ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : "Выберите регион"}
+                                        </option>
+
+                                        {voucherRegions.map(opt => (
+                                            <option key={opt.value} value={opt.value}>
+                                                {opt.name ?? opt.value}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 

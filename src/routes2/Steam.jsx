@@ -57,6 +57,9 @@ function Steam() {
         loadForms();
     }, []);
 
+    const [pay, setPay] = useState(false);
+    const payFunc = () => setPay(!pay);
+
     return (
         <div className='Steam'>
             <h1>Steam</h1>
@@ -216,7 +219,63 @@ function Steam() {
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>
                         </label>
                         <div>
-                            <button className="pay-btn">Оплатить</button>
+                            <button type="button" className="pay-btn" onClick={payFunc}>Оплатить</button>
+                        </div>
+                    </div>
+                </div>
+                <div className={pay ? "steam-pay showpay" : "steam-pay"}>
+                    <div className="payform">
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                            <p className="formhead">Пополнение баланса Steam</p>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={payFunc} style={{ cursor: "pointer" }}>
+                                <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div className="paydata">
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <p>Регион</p>
+                                <p>Турция</p>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <p>Почта</p>
+                                <p>ruslan_ghost_24321@gmail.com</p>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <p>К зачислению в Steam</p>
+                                <p>~20.5$</p>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <b>Итого к списанию</b>
+                                <b>105 ТМТ</b>
+                            </div>
+                        </div>
+
+                        <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "16px 0px" }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 16H12.01M12 8V12M9 4H15L20 9V15L15 20H9L4 15V9L9 4Z" stroke="#F50100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>Товар возврату не подлежит</p>
+                        </div>
+
+                        <div className="paydata">
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <p>К зачислению в Steam</p>
+                                <p>~20.5$</p>
+                            </div>
+                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                <b>Итого к списанию</b>
+                                <b>105 ТМТ</b>
+                            </div>
+                        </div>
+
+                        <label className="checkbox" style={{ marginTop: 20 }}>
+                            <input type="checkbox" />
+                            <span className="checkmark"></span>
+                            <span className="label">Я подтверждаю, что правильно указал все данные</span>
+                        </label>
+                        <div>
+                            <button type="button" className="pay-btn">Оплатить</button>
+                            <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
                         </div>
                     </div>
                 </div>

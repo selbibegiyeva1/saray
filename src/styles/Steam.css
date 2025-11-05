@@ -149,3 +149,63 @@
     border: 1.5px solid #2D85EA;
     color: white;
 }
+
+.steam-pay {
+    background: hsl(0, 0%, 0%, 0.5);
+    backdrop-filter: blur(5px);
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    z-index: 4;
+    transition: 0.3s;
+}
+
+.steam-pay.showpay {
+    pointer-events: all;
+    opacity: 1;
+}
+
+.payform {
+    background-color: white;
+    padding: 32px;
+    border-radius: 24px;
+    width: 600px;
+}
+
+.formhead {
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.paydata {
+    background-color: #F5F5F9;
+    padding: 8px 16px 32px 16px;
+    margin-top: 24px;
+}
+
+.paydata div {
+    padding: 16px 0px;
+    font-weight: 500;
+    border-bottom: 1px solid #0000001A;
+}
+
+.paydata div:last-child {
+    border: none;
+    font-size: 18px;
+    margin-top: 20px;
+    padding: 0px;
+}
+
+.pay-btn.cancel {
+    color: black;
+    background-color: #F5F5F9;
+    margin-top: 16px;
+}

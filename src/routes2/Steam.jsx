@@ -29,6 +29,15 @@ function Steam() {
 
     const [userEmail, setUserEmail] = useState("");
 
+    const [steamMinAmount, setSteamMinAmount] = useState(null);
+    const [steamMaxAmount, setSteamMaxAmount] = useState(null);
+
+    const [topupAmountTmt, setTopupAmountTmt] = useState("");
+    const [topupAmountUsd, setTopupAmountUsd] = useState("");
+    const [calcLoading, setCalcLoading] = useState(false);
+
+    const [topupLogin, setTopupLogin] = useState("");
+
     useEffect(() => {
         const loadForms = async () => {
             setLoadingForms(true);
@@ -98,8 +107,65 @@ function Steam() {
         });
     };
 
+    useEffect(() => {
+        const loadSteamLimits = async () => {
+            try {
+                const { data } = await api.get("/v1/partner/steam/info");
+                // adjust endpoint if the real one differs
+                const root = data?.data ?? data ?? {};
+                setSteamMinAmount(root.steam_min_amount_tmt ?? null);
+                setSteamMaxAmount(root.steam_max_amount_tmt ?? null);
+            } catch (err) {
+                console.error("Failed to fetch Steam limits", err);
+            }
+        };
+
+        loadSteamLimits();
+    }, []);
+
+    const calcUsdForTopup = async () => {
+        const v = Number(String(topupAmountTmt).replace(",", "."));
+        if (!Number.isFinite(v) || v <= 0) return;
+
+        try {
+            setCalcLoading(true);
+            // ⬇️ adjust path to your real 1.1 endpoint
+            const { data } = await api.get("/v1/partner/steam/rate", {
+                params: { amount_tmt: v },
+            });
+            const root = data?.data ?? data ?? {};
+            setTopupAmountUsd(root.topup_amount_usd != null ? String(root.topup_amount_usd) : "");
+        } catch (e) {
+            console.error("calc usd error", e?.response || e);
+            setTopupAmountUsd("");
+        } finally {
+            setCalcLoading(false);
+        }
+    };
+
     const selectedRegionName =
-        voucherRegions.find((r) => r.value === selectedRegion)?.name || "—";
+        activeTab === "voucher"
+            ? voucherRegions.find(r => r.value === selectedRegion)?.name || "—"
+            : topupRegions.find(r => r.value === selectedTopupRegion)?.name || "—";
+
+    const canPayVoucher =
+        confirmed &&
+        selectedVoucher &&
+        selectedRegion &&
+        userEmail.trim() !== "";
+
+    const parsedAmount = Number(String(topupAmountTmt).replace(",", "."));
+    const amountWithinLimits =
+        Number.isFinite(parsedAmount) &&
+        (steamMinAmount == null || parsedAmount >= steamMinAmount) &&
+        (steamMaxAmount == null || parsedAmount <= steamMaxAmount);
+
+    const canPayTopup =
+        confirmed &&
+        selectedTopupRegion &&
+        topupLogin.trim() !== "" &&
+        String(topupAmountTmt).trim() !== "" &&
+        amountWithinLimits;
 
     return (
         <div className='Steam'>
@@ -167,20 +233,42 @@ function Steam() {
                             <div className="steam-block" style={{ marginTop: 16 }} id='topup'>
                                 <p className='s-block-h'>Пополнение аккаунта</p>
                                 <div style={{ position: "relative", marginTop: 16 }}>
-                                    <input type="text" placeholder='Введите логин в Steam' />
+                                    <input
+                                        type="text"
+                                        placeholder="Введите логин в Steam"
+                                        value={topupLogin}
+                                        onChange={(e) => setTopupLogin(e.target.value)}
+                                    />
                                 </div>
                                 <div className="block-grid">
                                     <div>
                                         <span>Сумма пополнения в ТМТ</span>
-                                        <input type="text" placeholder='Сумма пополнения в ТМТ' />
+                                        <input
+                                            type="text"
+                                            value={topupAmountTmt}
+                                            onChange={(e) => setTopupAmountTmt(e.target.value)}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault();
+                                                    calcUsdForTopup();
+                                                }
+                                            }}
+                                            placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : "Сумма пополнения в ТМТ"}
+                                        />
                                         <div className='block-flex'>
-                                            <p>Максимальная сумма 1000 ТМТ</p>
-                                            <p>Максимальная сумма 1000 ТМТ</p>
+                                            <p>Минимальная сумма {steamMinAmount ?? "—"} ТМТ</p>
+                                            <p>Максимальная сумма {steamMaxAmount ?? "—"} ТМТ</p>
                                         </div>
                                     </div>
+
                                     <div>
                                         <span>К зачислению в Steam</span>
-                                        <input type="text" placeholder='К зачислению в Steam' />
+                                        <input
+                                            type="text"
+                                            value={calcLoading ? "Рассчитываем…" : (topupAmountUsd ? `~${topupAmountUsd} USD` : "")}
+                                            readOnly
+                                            placeholder="К зачислению в Steam"
+                                        />
                                     </div>
                                 </div>
                             </div>
@@ -262,11 +350,20 @@ function Steam() {
                         <p className='steam-bal-h'>Оплата</p>
                         <div className='bal-flex'>
                             <p>К зачислению в Steam</p>
-                            <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                            {activeTab === "voucher" ? (
+                                <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                            ) : (
+                                <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                            )}
                         </div>
+
                         <div className='bal-flex'>
                             <p>Итого к списанию</p>
-                            <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+                            {activeTab === "voucher" ? (
+                                <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+                            ) : (
+                                <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                            )}
                         </div>
                         <label className="checkbox" style={{ marginTop: 20 }}>
                             <input
@@ -282,7 +379,7 @@ function Steam() {
                                 type="button"
                                 className="pay-btn"
                                 onClick={payFunc}
-                                disabled={!confirmed}
+                                disabled={activeTab === "voucher" ? !canPayVoucher : !canPayTopup}
                             >
                                 Оплатить
                             </button>
@@ -306,13 +403,22 @@ function Steam() {
                                 <p>Почта</p>
                                 <p>{userEmail || "—"}</p>
                             </div>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div className='bal-flex'>
                                 <p>К зачислению в Steam</p>
-                                <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                                {activeTab === "voucher" ? (
+                                    <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                                ) : (
+                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                                )}
                             </div>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <b>Итого к списанию</b>
-                                <b>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</b>
+
+                            <div className='bal-flex'>
+                                <p>Итого к списанию</p>
+                                {activeTab === "voucher" ? (
+                                    <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+                                ) : (
+                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                                )}
                             </div>
                         </div>
 
@@ -324,13 +430,22 @@ function Steam() {
                         </div>
 
                         <div className="paydata">
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <div className='bal-flex'>
                                 <p>К зачислению в Steam</p>
-                                <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                                {activeTab === "voucher" ? (
+                                    <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
+                                ) : (
+                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                                )}
                             </div>
-                            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <b>Итого к списанию</b>
-                                <b>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</b>
+
+                            <div className='bal-flex'>
+                                <p>Итого к списанию</p>
+                                {activeTab === "voucher" ? (
+                                    <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+                                ) : (
+                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                                )}
                             </div>
                         </div>
 

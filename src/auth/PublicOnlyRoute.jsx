@@ -1,7 +1,7 @@
 // src/auth/PublicOnlyRoute.jsx
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-import { setAccessToken, doRefresh, isTokenExpired } from "../lib/api";
+import { setAccessToken, doRefresh, isTokenExpired, getRoleFromToken } from "../lib/api";
 
 export default function PublicOnlyRoute({ children }) {
     const [state, setState] = useState("checking"); // checking | authed | anon
@@ -13,17 +13,17 @@ export default function PublicOnlyRoute({ children }) {
                 setState("authed");
                 return;
             }
-            try {
-                const newToken = await doRefresh();
-                setAccessToken(newToken);
-                setState("authed");
-            } catch {
-                setState("anon");
-            }
+            // IMPORTANT: do NOT refresh on public-only pages if there is no token.
+            // This prevents "can't log out" loops when a refresh cookie still exists.
+            setState("anon");
         })();
     }, []);
 
     if (state === "checking") return null;
-    if (state === "authed") return <Navigate to="/home" replace />;
+    if (state === "authed") {
+        const role = getRoleFromToken();
+        const target = role === "OPERATOR" ? "/operator" : "/home";
+        return <Navigate to={target} replace />;
+    }
     return children;
 }

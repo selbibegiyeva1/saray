@@ -84,4 +84,19 @@ export function isTokenExpired(token, skewMs = 30000) {
     }
 }
 
+// near the other exports
+export function getTokenPayload(token = accessToken) {
+    try {
+        const [, payload] = token.split(".");
+        return JSON.parse(atob(payload));
+    } catch {
+        return null;
+    }
+}
+
+export function getRoleFromToken(token = accessToken) {
+    const p = getTokenPayload(token);
+    return p?.aud || p?.role || null; // backend seems to put role in `aud`
+}
+
 export default api;

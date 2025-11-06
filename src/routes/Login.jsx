@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import "../styles/Login.css";
 
-import api, { setAccessToken } from "../lib/api";
+import api, { setAccessToken, getRoleFromToken } from "../lib/api";
 
 function Login() {
     const { t, i18n } = useTranslation();
@@ -58,7 +58,9 @@ function Login() {
 
             // delay before redirect
             setTimeout(() => {
-                navigate("/home", { replace: true });
+                const role = getRoleFromToken(data?.accessToken);
+                const target = role === "OPERATOR" ? "/operator" : "/home";
+                navigate(target, { replace: true });
             }, 1200);
 
         } catch (err) {

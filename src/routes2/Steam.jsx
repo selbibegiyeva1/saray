@@ -123,25 +123,36 @@ function Steam() {
         loadSteamLimits();
     }, []);
 
-    const calcUsdForTopup = async () => {
-        const v = Number(String(topupAmountTmt).replace(",", "."));
-        if (!Number.isFinite(v) || v <= 0) return;
-
-        try {
-            setCalcLoading(true);
-            // ⬇️ adjust path to your real 1.1 endpoint
-            const { data } = await api.get("/v1/partner/steam/rate", {
-                params: { amount_tmt: v },
-            });
-            const root = data?.data ?? data ?? {};
-            setTopupAmountUsd(root.topup_amount_usd != null ? String(root.topup_amount_usd) : "");
-        } catch (e) {
-            console.error("calc usd error", e?.response || e);
+    useEffect(() => {
+        const raw = String(topupAmountTmt);
+        if (!raw.trim()) {            // empty -> clear preview
             setTopupAmountUsd("");
-        } finally {
-            setCalcLoading(false);
+            return;
         }
-    };
+
+        const v = Number(raw.replace(",", "."));
+        if (!Number.isFinite(v) || v <= 0) { // invalid number -> clear preview
+            setTopupAmountUsd("");
+            return;
+        }
+
+        setCalcLoading(true);
+
+        const tid = setTimeout(async () => {
+            try {
+                const { data } = await api.get("/v1/partner/steam/rate", { params: { amount_tmt: v } });
+                const root = data?.data ?? data ?? {};
+                setTopupAmountUsd(root.topup_amount_usd != null ? String(root.topup_amount_usd) : "");
+            } catch (e) {
+                console.error("calc usd error", e?.response || e);
+                setTopupAmountUsd("");
+            } finally {
+                setCalcLoading(false);
+            }
+        }, 400); // debounce ms
+
+        return () => clearTimeout(tid);
+    }, [topupAmountTmt]);
 
     const selectedRegionName =
         activeTab === "voucher"
@@ -250,14 +261,9 @@ function Steam() {
                                             type="text"
                                             value={topupAmountTmt}
                                             onChange={(e) => setTopupAmountTmt(e.target.value)}
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter") {
-                                                    e.preventDefault();
-                                                    calcUsdForTopup();
-                                                }
-                                            }}
                                             placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : "Сумма пополнения в ТМТ"}
                                         />
+
                                         <div className='block-flex'>
                                             <p>Минимальная сумма {steamMinAmount ?? "—"} ТМТ</p>
                                             <p>Максимальная сумма {steamMaxAmount ?? "—"} ТМТ</p>

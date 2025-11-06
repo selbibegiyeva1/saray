@@ -442,7 +442,8 @@ function Steam() {
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                                 ) : (
-                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                                    // USD here
+                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
                                 )}
                             </div>
 
@@ -451,7 +452,8 @@ function Steam() {
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                                 ) : (
-                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                                    // TMT here
+                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
                                 )}
                             </div>
                         </div>

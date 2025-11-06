@@ -60,6 +60,9 @@ function Home2() {
     const apiPeriod = "all_time"; // day|week|month|year|all_time
     const apiCategory = null; // null => ALL (don’t send category param)
 
+    const [balance, setBalance] = useState(null);
+    const [balanceErr, setBalanceErr] = useState("");
+
     useEffect(() => {
         let cancel = false;
         (async () => {
@@ -95,6 +98,26 @@ function Home2() {
         return () => { cancel = true; };
     }, [page, refreshTick]);
 
+    // OPERATOR balance for the card
+    useEffect(() => {
+        let cancel = false;
+        (async () => {
+            try {
+                const { data } = await api.get("/v1/partner/info/main");
+                if (!cancel) {
+                    setBalance(typeof data?.balance === "number" ? data.balance : null);
+                    setBalanceErr("");
+                }
+            } catch (e) {
+                if (!cancel) {
+                    setBalance(null);
+                    setBalanceErr("—");
+                }
+            }
+        })();
+        return () => { cancel = true; };
+    }, []);
+
     return (
         <div className='Home'>
             <div className="operator-top">
@@ -129,7 +152,13 @@ function Home2() {
                         </div>
                         <div style={{ display: "flex", marginTop: 24, alignItems: "center", justifyContent: "space-between", fontSize: 20, fontWeight: 500 }}>
                             <p>Доступно</p>
-                            <p>45,12 ТМТ</p>
+                            <p>
+                                {balanceErr
+                                    ? balanceErr
+                                    : balance != null
+                                        ? `${Number(balance).toLocaleString("ru-RU")} ТМТ`
+                                        : "—"}
+                            </p>
                         </div>
                         <div style={{ display: "flex", marginTop: 16, alignItems: "center", justifyContent: "space-between", fontSize: 20, fontWeight: 500 }}>
                             <p>Режим</p>

@@ -79,31 +79,28 @@ function Navbar() {
   }, [TOKEN]);
 
   useEffect(() => {
+    if (!user?.role) return;
     const fetchBalance = async () => {
       try {
-        const { data } = await api.get("/v1/partner/info/main?category=ALL&period=all_time");
-        if (data && typeof data.balance === "number") {
-          setBalance(data.balance);
-        } else {
-          setBalance(null);
-        }
+        const url =
+          user.role === "DIRECTOR"
+            ? "/v1/partner/info/main?category=ALL&period=all_time"
+            : "/v1/partner/info/main";
+        const { data } = await api.get(url);
+        setBalance(typeof data?.balance === "number" ? data.balance : null);
       } catch (e) {
         console.error("Failed to fetch balance:", e);
         setBalanceErr("—");
       }
     };
-
-    // Only for DIRECTOR role
-    if (user?.role === "DIRECTOR") {
-      fetchBalance();
-    }
+    fetchBalance();
   }, [user]);
 
   return (
     <div className="Navbar">
       {/* Logo */}
       <NavLink
-        to="/home"
+        to={user?.role === "OPERATOR" ? "/operator" : "/home"}
         className={({ isActive }) => (isActive ? "active" : "")}
         style={{ display: "flex" }}
       >
@@ -117,7 +114,7 @@ function Navbar() {
       {/* Navigation links */}
       <ul className="nav-ul">
         <li>
-          <NavLink to="/home">{t("navbar.home")}</NavLink>
+          <NavLink to={user?.role === "OPERATOR" ? "/operator" : "/home"}>{t("navbar.home")}</NavLink>
         </li>
         <li>
           <NavLink to="/transactions">{t("navbar.transactions")}</NavLink>

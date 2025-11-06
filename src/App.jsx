@@ -15,7 +15,7 @@ import Navbar from "./components/Navbar";
 
 import Home2 from './routes2/Home2';
 import Digital from './routes2/Digital';
-import Esim from './routes2/eSim';
+import Esim from "./routes2/Esim";
 import Steam from './routes2/Steam';
 import Transactions2 from './routes2/Transactions2';
 

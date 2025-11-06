@@ -167,6 +167,9 @@ function Steam() {
         String(topupAmountTmt).trim() !== "" &&
         amountWithinLimits;
 
+    const contactLabel = activeTab === "voucher" ? "Почта" : "Логин в Steam";
+    const contactValue = activeTab === "voucher" ? userEmail : topupLogin;
+
     return (
         <div className='Steam'>
             <h1>Steam</h1>
@@ -353,7 +356,8 @@ function Steam() {
                             {activeTab === "voucher" ? (
                                 <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                             ) : (
-                                <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                                // USD here
+                                <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
                             )}
                         </div>
 
@@ -362,7 +366,8 @@ function Steam() {
                             {activeTab === "voucher" ? (
                                 <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                             ) : (
-                                <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                                // TMT here
+                                <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
                             )}
                         </div>
                         <label className="checkbox" style={{ marginTop: 20 }}>
@@ -400,15 +405,16 @@ function Steam() {
                                 <p>{selectedRegionName}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <p>Почта</p>
-                                <p>{userEmail || "—"}</p>
+                                <p>{contactLabel}</p>
+                                <p>{contactValue || "—"}</p>
                             </div>
                             <div className='bal-flex'>
                                 <p>К зачислению в Steam</p>
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                                 ) : (
-                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
+                                    // USD here
+                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
                                 )}
                             </div>
 
@@ -417,7 +423,8 @@ function Steam() {
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                                 ) : (
-                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
+                                    // TMT here
+                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
                                 )}
                             </div>
                         </div>

@@ -243,6 +243,10 @@ table tr p:first-child {
         width: 1440px;
         margin: auto;
     }
+
+    .transactions-container.oper-trans {
+        width: 1680px;
+    }
 }
 
 @media(max-width: 1024px) {

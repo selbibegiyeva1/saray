@@ -17,6 +17,7 @@ import Home2 from './routes2/Home2';
 import Digital from './routes2/Digital';
 import Esim from './routes2/eSim';
 import Steam from './routes2/Steam';
+import Transactions2 from './routes2/Transactions2';
 
 // Shell with Navbar shown on ALL protected pages
 function ProtectedLayout() {
@@ -59,6 +60,7 @@ function App() {
           <Route path="/digital" element={<Digital />} />
           <Route path="/esim" element={<Esim />} />
           <Route path="/steam" element={<Steam />} />
+          <Route path="/operator_transactions" element={<Transactions2 />} />
         </Route>
       </Routes>
     </div>

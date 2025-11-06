@@ -31,6 +31,12 @@ function Navbar() {
   const [balance, setBalance] = useState(null);
   const [balanceErr, setBalanceErr] = useState("");
 
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null); // 'digital' | 'esim' | 'steam'
+
+  const [prodDrop, setProdDrop] = useState(false);
+  const prodFunc = () => setProdDrop(!prodDrop);
+
   // Language options
   const languages = [
     { code: "ru", label: { ru: "Русский", tm: "Rus dili" } },
@@ -117,11 +123,67 @@ function Navbar() {
           <NavLink to={user?.role === "OPERATOR" ? "/operator" : "/home"}>{t("navbar.home")}</NavLink>
         </li>
         <li>
-          <NavLink to="/transactions">{t("navbar.transactions")}</NavLink>
+          <NavLink
+            to={user?.role === "OPERATOR" ? "/operator_transactions" : "/transactions"}
+          >
+            {t("navbar.transactions")}
+          </NavLink>
         </li>
-        <li>
-          <NavLink to="/reports">{t("navbar.reports")}</NavLink>
-        </li>
+        {user?.role === "OPERATOR" ? (
+          <li style={{ position: "relative" }}>
+            <button type="button" onClick={prodFunc}>
+              <span>Products</span>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 20 20"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M9.29289 12.2929L5.70711 8.70711C5.07714 8.07714 5.52331 7 6.41421 7H13.5858C14.4767 7 14.9229 8.07714 14.2929 8.70711L10.7071 12.2929C10.3166 12.6834 9.68342 12.6834 9.29289 12.2929Z"
+                  fill="black"
+                />
+              </svg>
+            </button>
+            <div className="drop-options days langs prods" style={{ display: `${prodDrop ? "block" : "none"}` }}>
+              <p
+                className={selectedProduct === "digital" ? "active" : ""}
+                onClick={() => {
+                  setSelectedProduct("digital");
+                  setProductsOpen(false);
+                  navigate("/digital");
+                }}
+              >
+                Цифровые товары
+              </p>
+              <p
+                className={selectedProduct === "esim" ? "active" : ""}
+                onClick={() => {
+                  setSelectedProduct("esim");
+                  setProductsOpen(false);
+                  navigate("/esim");
+                }}
+              >
+                eSIM
+              </p>
+              <p
+                className={selectedProduct === "steam" ? "active" : ""}
+                onClick={() => {
+                  setSelectedProduct("steam");
+                  setProductsOpen(false);
+                  navigate("/steam");
+                }}
+              >
+                Steam
+              </p>
+            </div>
+          </li>
+        ) : (
+          <li>
+            <NavLink to="/reports">{t("navbar.reports")}</NavLink>
+          </li>
+        )}
       </ul>
 
       {/* Right section */}

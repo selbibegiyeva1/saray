@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import api from "../lib/api"; // uses axios instance with auth + refresh
 
 import "../styles/Digital.css";
@@ -131,14 +131,17 @@ function Digital() {
                 {!loading && !err && (
                     <div className="digital-grid">
                         {filtered.map(item => (
-                            <div key={item.group_name} className="digital-card" title={item.group_name}>
-                                <img
-                                    src={item.icon_url || "/image.png"}
-                                    alt={item.group_name}
-                                    onError={(e) => { e.currentTarget.src = "/image.png"; }}
-                                />
+                            <Link
+                                to="/product"
+                                state={{ group_id: item.group_id, group_name: item.group_name }}
+                                key={item.group_id}
+                                className="digital-card"
+                                title={item.group_name}
+                                style={{ color: "black" }}
+                            >
+                                <img src={item.icon_url || "/image.png"} alt={item.group_name} />
                                 <center><b>{item.group_name}</b></center>
-                            </div>
+                            </Link>
                         ))}
                         {filtered.length === 0 && (
                             <div style={{ opacity: 0.7, padding: 16 }}>Ничего не найдено</div>

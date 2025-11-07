@@ -130,19 +130,24 @@ function Digital() {
 
                 {!loading && !err && (
                     <div className="digital-grid">
-                        {filtered.map(item => (
-                            <Link
-                                to="/product"
-                                state={{ group_id: item.group_id, group_name: item.group_name }}
-                                key={item.group_id}
-                                className="digital-card"
-                                title={item.group_name}
-                                style={{ color: "black" }}
-                            >
-                                <img src={item.icon_url || "/image.png"} alt={item.group_name} />
-                                <center><b>{item.group_name}</b></center>
-                            </Link>
-                        ))}
+                        {filtered.map(item => {
+                            // 👇 special redirect for Steam
+                            const isSteam = item.group_name?.toLowerCase() === "steam";
+
+                            return (
+                                <Link
+                                    to={isSteam ? "/steam" : "/product"}
+                                    state={!isSteam ? { group_id: item.group_id, group_name: item.group_name } : undefined}
+                                    key={item.group_id}
+                                    className="digital-card"
+                                    title={item.group_name}
+                                    style={{ color: "black" }}
+                                >
+                                    <img src={item.icon_url || "/image.png"} alt={item.group_name} />
+                                    <center><b>{item.group_name}</b></center>
+                                </Link>
+                            );
+                        })}
                         {filtered.length === 0 && (
                             <div style={{ opacity: 0.7, padding: 16 }}>Ничего не найдено</div>
                         )}

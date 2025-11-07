@@ -10,15 +10,24 @@ function Product() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // region + voucher selection
+  // --- modes & tab ---
+  const [activeTab, setActiveTab] = useState(null); // "voucher" | "topup"
+
+  // voucher mode
   const [region, setRegion] = useState("");
   const [activeVoucher, setActiveVoucher] = useState(null);
   const [selectedVoucher, setSelectedVoucher] = useState(null);
 
-  // purchase form (email)
+  // topup mode
+  const [topupRegion, setTopupRegion] = useState("");
+  const [activeTopup, setActiveTopup] = useState(null);
+  const [selectedTopup, setSelectedTopup] = useState(null);
+  const [topupTextValues, setTopupTextValues] = useState({}); // text fields like account/ID
+
+  // shared / purchase
   const [userEmail, setUserEmail] = useState("");
 
-  // sidebar confirmation + modal state (like Steam)
+  // confirmation + modal
   const [confirmed, setConfirmed] = useState(false);
   const [pay, setPay] = useState(false);
   const [modalConfirmed, setModalConfirmed] = useState(false);
@@ -26,7 +35,6 @@ function Product() {
   useEffect(() => {
     if (!group_id && !group_name) return;
     let cancel = false;
-
     (async () => {
       try {
         setLoading(true);
@@ -41,30 +49,41 @@ function Product() {
         if (!cancel) setLoading(false);
       }
     })();
-
     return () => { cancel = true; };
   }, [group_id, group_name]);
 
-  // regions from forms.voucher_fields where name === "region"
+  // pick out fields
+  const voucherFields = item?.forms?.voucher_fields || null;
+  const topupFields = item?.forms?.topup_fields || null;
+
+  // init active tab based on availability
+  useEffect(() => {
+    if (!item) return;
+    const hasVoucher = Array.isArray(voucherFields) && voucherFields.length > 0;
+    const hasTopup = Array.isArray(topupFields) && topupFields.length > 0;
+
+    if (hasVoucher && hasTopup) setActiveTab((t) => t || "voucher"); // default voucher if both
+    else if (hasVoucher) setActiveTab("voucher");
+    else if (hasTopup) setActiveTab("topup");
+    else setActiveTab(null);
+  }, [item]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // --- Voucher helpers ---
   const regionOptions = useMemo(() => {
-    const fields = item?.forms?.voucher_fields || [];
-    const field = fields.find(f => f?.name === "region" && f?.type === "options");
+    const field = (voucherFields || []).find(f => f?.name === "region" && f?.type === "options");
     return Array.isArray(field?.options) ? field.options : [];
-  }, [item]);
+  }, [voucherFields]);
 
-  // vouchers from forms.voucher_fields where name === "product_id"
   const voucherProducts = useMemo(() => {
-    const fields = item?.forms?.voucher_fields || [];
-    const field = fields.find(f => f?.name === "product_id" && f?.type === "options");
+    const field = (voucherFields || []).find(f => f?.name === "product_id" && f?.type === "options");
     return Array.isArray(field?.options) ? field.options : [];
-  }, [item]);
+  }, [voucherFields]);
 
-  // selected region name (human) to match product option.region (e.g., "США")
-  const selectedRegionName = useMemo(() => {
-    return regionOptions.find(r => r.value === region)?.name || "";
-  }, [region, regionOptions]);
+  const selectedRegionName = useMemo(
+    () => regionOptions.find(r => r.value === region)?.name || "",
+    [region, regionOptions]
+  );
 
-  // filter voucher products by region
   const filteredVouchers = useMemo(() => {
     if (!selectedRegionName) return [];
     return voucherProducts.filter(p => {
@@ -73,37 +92,102 @@ function Product() {
     });
   }, [voucherProducts, selectedRegionName, region]);
 
-  // set default region once options load
   useEffect(() => {
-    if (regionOptions.length && !region) {
-      setRegion(regionOptions[0].value);
-    }
-  }, [regionOptions, region]);
+    if (activeTab !== "voucher") return;
+    if (regionOptions.length && !region) setRegion(regionOptions[0].value);
+  }, [activeTab, regionOptions, region]);
 
-  // clear voucher selection when region changes
   useEffect(() => {
     setActiveVoucher(null);
     setSelectedVoucher(null);
   }, [region]);
 
-  // open/close modal
+  const emailField = useMemo(() => {
+    const vf = voucherFields || [];
+    return vf.find(f => f.name === "email");
+  }, [voucherFields]);
+
+  // --- Topup helpers ---
+  const topupRegionOptions = useMemo(() => {
+    const field = (topupFields || []).find(f => f?.name === "region" && f?.type === "options");
+    return Array.isArray(field?.options) ? field.options : [];
+  }, [topupFields]);
+
+  const topupProducts = useMemo(() => {
+    const field = (topupFields || []).find(f => f?.name === "product_id" && f?.type === "options");
+    return Array.isArray(field?.options) ? field.options : [];
+  }, [topupFields]);
+
+  const topupSelectedRegionName = useMemo(
+    () => topupRegionOptions.find(r => r.value === topupRegion)?.name || "",
+    [topupRegion, topupRegionOptions]
+  );
+
+  const filteredTopupProducts = useMemo(() => {
+    if (!topupSelectedRegionName) return topupProducts;
+    return topupProducts.filter(p => {
+      const pr = (p.region || "").toLowerCase();
+      return pr === "любой" || pr === topupSelectedRegionName.toLowerCase() || pr === topupRegion.toLowerCase();
+    });
+  }, [topupProducts, topupSelectedRegionName, topupRegion]);
+
+  useEffect(() => {
+    if (activeTab !== "topup") return;
+    if (topupRegionOptions.length && !topupRegion) setTopupRegion(topupRegionOptions[0].value);
+  }, [activeTab, topupRegionOptions, topupRegion]);
+
+  useEffect(() => {
+    setActiveTopup(null);
+    setSelectedTopup(null);
+  }, [topupRegion]);
+
+  // modal open/close
   const togglePay = () => {
     setPay(prev => {
       const next = !prev;
-      if (next) setModalConfirmed(false); // reset when opening
+      if (next) setModalConfirmed(false);
       return next;
     });
   };
 
-  // enable/disable main "Оплатить"
-  const canPay =
-    confirmed &&
-    region &&
-    selectedVoucher &&
-    userEmail.trim() !== "";
+  // derived for summary per active tab
+  const chosenProduct = activeTab === "voucher" ? selectedVoucher : selectedTopup;
+  const chosenPrice = chosenProduct?.price;
+  const chosenLabel = chosenProduct?.product;
+
+  const regionToShow =
+    activeTab === "voucher"
+      ? (selectedRegionName || "—")
+      : (topupSelectedRegionName || "—");
+
+  // validation per tab
+  const canPayVoucher =
+    !!(activeTab === "voucher") &&
+    !!selectedVoucher &&
+    !!region &&
+    (!emailField || userEmail.trim() !== "") &&
+    confirmed;
+
+  const topupTextRequiredOK = useMemo(() => {
+    // Assume all 'text' fields are required unless backend says otherwise.
+    const texts = (topupFields || []).filter(f => f.type === "text");
+    return texts.every(f => String(topupTextValues[f.name] || "").trim() !== "");
+  }, [topupFields, topupTextValues]);
+
+  const canPayTopup =
+    !!(activeTab === "topup") &&
+    !!topupRegion &&
+    !!selectedTopup &&
+    topupTextRequiredOK &&
+    confirmed;
+
+  const canPay = activeTab === "voucher" ? canPayVoucher : canPayTopup;
 
   if (loading) return <div>Загрузка…</div>;
   if (error) return <div className="error">{error}</div>;
+
+  const hasVoucher = Array.isArray(voucherFields) && voucherFields.length > 0;
+  const hasTopup = Array.isArray(topupFields) && topupFields.length > 0;
 
   return (
     <div className="Home">
@@ -119,90 +203,207 @@ function Product() {
                     onError={(e) => (e.currentTarget.src = "/steamsmall.png")}
                   />
                   <div>
-                    {/* group */}
                     <p className="s-block-h">Пополнение баланса {item.group}</p>
-                    {/* short_info */}
                     <span>{item.short_info}</span>
-                  </div>
-                </div>
-              </div>
 
-              {/* Region + vouchers */}
-              <div className="steam-block" style={{ marginTop: 16 }}>
-                <p className="s-block-h">Выберите регион</p>
-                <div style={{ position: "relative", marginTop: 16 }}>
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
-                    xmlns="http://www.w3.org/2000/svg" className="slct-arr">
-                    <path d="M3.33854 6.66699L10.0052 13.3337L16.6719 6.66699"
-                      stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-
-                  <select
-                    value={region}
-                    onChange={(e) => setRegion(e.target.value)}
-                    disabled={!regionOptions.length}
-                  >
-                    {regionOptions.length ? (
-                      regionOptions.map(opt => (
-                        <option key={opt.value} value={opt.value}>
-                          {opt.name}
-                        </option>
-                      ))
-                    ) : (
-                      <option>Регионы недоступны</option>
-                    )}
-                  </select>
-                </div>
-
-                {selectedRegionName && filteredVouchers.length > 0 && (
-                  <div style={{ marginTop: 20 }}>
-                    <b>Выберите номинал</b>
-                    <div className="voucher-options">
-                      {filteredVouchers.map((p) => (
+                    {/* Switcher: render only buttons that exist */}
+                    <div className="s-block-btns" style={{ marginTop: 8 }}>
+                      {hasTopup && (
                         <button
-                          key={p.value}
                           type="button"
-                          className={`voucher-btn ${activeVoucher === p.value ? "active" : ""}`}
-                          onClick={() => {
-                            setActiveVoucher(p.value);
-                            setSelectedVoucher(p);
-                          }}
-                          title={`${p.product} — ${p.price} ТМТ`}
+                          className={activeTab === "topup" ? "active" : ""}
+                          onClick={() => setActiveTab("topup")}
                         >
-                          {p.product}
+                          Пополнение
                         </button>
-                      ))}
+                      )}
+                      {hasVoucher && (
+                        <button
+                          type="button"
+                          className={activeTab === "voucher" ? "active" : ""}
+                          onClick={() => setActiveTab("voucher")}
+                        >
+                          Ваучер
+                        </button>
+                      )}
                     </div>
                   </div>
-                )}
+                </div>
               </div>
 
-              {/* Оформление покупки + dynamic email field */}
-              <div className="steam-block" style={{ marginTop: 16 }}>
-                <p className="s-block-h">Оформление покупки</p>
-                {(() => {
-                  const fields = item?.forms?.voucher_fields || [];
-                  const emailField = fields.find(f => f.name === "email");
-                  if (!emailField) return null;
+              {/* ========== VOUCHER TAB ONLY ========== */}
+              {activeTab === "voucher" && hasVoucher && (
+                <>
+                  <div className="steam-block" style={{ marginTop: 16 }}>
+                    <p className="s-block-h">Выберите регион</p>
+                    <div style={{ position: "relative", marginTop: 16 }}>
+                      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                        xmlns="http://www.w3.org/2000/svg" className="slct-arr">
+                        <path d="M3.33854 6.66699L10.0052 13.3337L16.6719 6.66699"
+                          stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
 
-                  return (
-                    <div style={{ marginTop: 16 }}>
-                      <span style={{ marginBottom: 16, fontSize: 14, display: "flex" }}>
-                        {emailField.label}
-                      </span>
-
-                      <input
-                        type={emailField.type === "email" ? "email" : "text"}
-                        id={emailField.name}
-                        name={emailField.name}
-                        placeholder={emailField.label}
-                        value={userEmail}
-                        onChange={(e) => setUserEmail(e.target.value)}
-                      />
+                      <select
+                        value={region}
+                        onChange={(e) => {
+                          setRegion(e.target.value);
+                          setActiveVoucher(null);
+                          setSelectedVoucher(null);
+                        }}
+                        disabled={!regionOptions.length}
+                      >
+                        {regionOptions.length ? (
+                          regionOptions.map(opt => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.name}
+                            </option>
+                          ))
+                        ) : (
+                          <option>Регионы недоступны</option>
+                        )}
+                      </select>
                     </div>
-                  );
-                })()}
-              </div>
+
+                    {selectedRegionName && filteredVouchers.length > 0 && (
+                      <div style={{ marginTop: 20 }}>
+                        <b>Выберите номинал</b>
+                        <div className="voucher-options">
+                          {filteredVouchers.map((p) => (
+                            <button
+                              key={p.value}
+                              type="button"
+                              className={`voucher-btn ${activeVoucher === p.value ? "active" : ""}`}
+                              onClick={() => {
+                                setActiveVoucher(p.value);
+                                setSelectedVoucher(p);
+                              }}
+                              title={`${p.product} — ${p.price} ТМТ`}
+                            >
+                              {p.product}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="steam-block" style={{ marginTop: 16 }}>
+                    <p className="s-block-h">Оформление покупки</p>
+
+                    {/* Email field lives only in voucher flow */}
+                    {emailField && (
+                      <div style={{ marginTop: 16 }}>
+                        <span style={{ marginBottom: 16, fontSize: 14, display: "flex" }}>
+                          {emailField.label}
+                        </span>
+                        <input
+                          type={emailField.type === "email" ? "email" : "text"}
+                          id={emailField.name}
+                          name={emailField.name}
+                          placeholder={emailField.label}
+                          value={userEmail}
+                          onChange={(e) => setUserEmail(e.target.value)}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+
+              {/* ========== TOPUP TAB ONLY ========== */}
+              {activeTab === "topup" && hasTopup && (
+                <div className="steam-block" style={{ marginTop: 16 }}>
+                  <p className="s-block-h">Оформление покупки</p>
+
+                  <div style={{ marginTop: 16, display: "grid", gap: 16 }}>
+                    {topupFields.map((f) => {
+                      // topup region (options)
+                      if (f.type === "options" && f.name === "region") {
+                        return (
+                          <div key={f.name}>
+                            <span style={{ marginBottom: 8, fontSize: 14, display: "flex" }}>
+                              {f.label}
+                            </span>
+                            <div style={{ position: "relative" }}>
+                              <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                xmlns="http://www.w3.org/2000/svg" className="slct-arr">
+                                <path d="M3.33854 6.66699L10.0052 13.3337L16.6719 6.66699"
+                                  stroke="black" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              </svg>
+                              <select
+                                value={topupRegion}
+                                onChange={(e) => setTopupRegion(e.target.value)}
+                                disabled={!topupRegionOptions.length}
+                              >
+                                {topupRegionOptions.length ? (
+                                  topupRegionOptions.map(opt => (
+                                    <option key={opt.value} value={opt.value}>
+                                      {opt.name}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <option>Регионы недоступны</option>
+                                )}
+                              </select>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // topup product_id (options) -> buttons
+                      if (f.type === "options" && f.name === "product_id") {
+                        return (
+                          <div key={f.name}>
+                            <b>{f.label}</b>
+                            <div className="voucher-options" style={{ marginTop: 8 }}>
+                              {filteredTopupProducts.map((p) => (
+                                <button
+                                  key={p.value}
+                                  type="button"
+                                  className={`voucher-btn ${activeTopup === p.value ? "active" : ""}`}
+                                  onClick={() => {
+                                    setActiveTopup(p.value);
+                                    setSelectedTopup(p);
+                                  }}
+                                  title={`${p.product} — ${p.price} ТМТ`}
+                                >
+                                  {p.product}
+                                </button>
+                              ))}
+                              {filteredTopupProducts.length === 0 && (
+                                <div style={{ opacity: 0.7 }}>Нет доступных товаров</div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      // any text fields (e.g., account/ID, etc.)
+                      if (f.type === "text") {
+                        return (
+                          <div key={f.name}>
+                            <span style={{ marginBottom: 8, fontSize: 14, display: "flex" }}>
+                              {f.label}
+                            </span>
+                            <input
+                              type="text"
+                              id={f.name}
+                              name={f.name}
+                              placeholder={f.label}
+                              value={topupTextValues[f.name] || ""}
+                              onChange={(e) =>
+                                setTopupTextValues(prev => ({ ...prev, [f.name]: e.target.value }))
+                              }
+                            />
+                          </div>
+                        );
+                      }
+
+                      return null;
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div style={{ opacity: 0.7, padding: 16 }}>Нет данных</div>
@@ -215,11 +416,11 @@ function Product() {
             <p className="steam-bal-h">Оплата</p>
             <div className="bal-flex">
               <p>К зачислению</p>
-              <p>{selectedVoucher ? `~ ${selectedVoucher.product}` : "—"}</p>
+              <p>{chosenLabel ? `${chosenLabel}` : "—"}</p>
             </div>
             <div className="bal-flex">
               <p>Итого к списанию</p>
-              <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+              <p>{chosenPrice ? `${chosenPrice} ТМТ` : "—"}</p>
             </div>
 
             <label className="checkbox" style={{ marginTop: 20 }}>
@@ -245,7 +446,7 @@ function Product() {
           </div>
         </div>
 
-        {/* Modal (Оплата) — same UX as Steam */}
+        {/* Modal (Оплата) */}
         <div className={pay ? "steam-pay showpay" : "steam-pay"}>
           <div className="payform">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
@@ -261,20 +462,33 @@ function Product() {
             <div className="paydata">
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <p>Регион</p>
-                <p>{selectedRegionName || "—"}</p>
+                <p>{regionToShow}</p>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>Email</p>
-                <p>{userEmail || "—"}</p>
-              </div>
+
+              {activeTab === "voucher" && emailField && (
+                <div style={{ display: "flex", justifyContent: "space-between" }}>
+                  <p>{emailField.label}</p>
+                  <p>{userEmail || "—"}</p>
+                </div>
+              )}
+
+              {activeTab === "topup" &&
+                (topupFields || [])
+                  .filter(f => f.type === "text")
+                  .map(f => (
+                    <div key={`m-${f.name}`} style={{ display: "flex", justifyContent: "space-between" }}>
+                      <p>{f.label}</p>
+                      <p>{topupTextValues[f.name] || "—"}</p>
+                    </div>
+                  ))}
 
               <div className="bal-flex">
                 <p>К зачислению</p>
-                <p>{selectedVoucher ? `~ ${selectedVoucher.product}` : "—"}</p>
+                <p>{chosenLabel ? `${chosenLabel}` : "—"}</p>
               </div>
               <div className="bal-flex">
                 <p>Итого к списанию</p>
-                <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
+                <p>{chosenPrice ? `${chosenPrice} ТМТ` : "—"}</p>
               </div>
             </div>
 
@@ -287,17 +501,6 @@ function Product() {
               <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>
                 Товар возврату не подлежит
               </p>
-            </div>
-
-            <div className="paydata">
-              <div className="bal-flex">
-                <p>К зачислению</p>
-                <p>~{selectedVoucher ? selectedVoucher.product : "—"}</p>
-              </div>
-              <div className="bal-flex">
-                <p>Итого к списанию</p>
-                <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
-              </div>
             </div>
 
             <label className="checkbox" style={{ marginTop: 20 }}>

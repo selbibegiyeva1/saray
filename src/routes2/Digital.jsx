@@ -61,14 +61,30 @@ function Digital() {
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M11.1524 11.1572L15.8281 15.833M7.91146 12.4997C10.4428 12.4997 12.4948 10.4476 12.4948 7.91634C12.4948 5.38504 10.4428 3.33301 7.91146 3.33301C5.38015 3.33301 3.32812 5.38504 3.32812 7.91634C3.32812 10.4476 5.38015 12.4997 7.91146 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                         </svg>
-                        <input type="text" placeholder='Введите игру' />
+                        <input type="text" placeholder='Поиск...' />
                     </div>
                     <button className='dig-search-btn'>Поиск</button>
                 </div>
                 <div className="dig-flex2">
                     <div>
                         <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Steam</p>
+                    </div>
+                    <div>
+                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Spotify Premium</p>
+                    </div>
+                    <div>
+                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Netflix</p>
+                    </div>
+                    <div>
+                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>App Store</p>
+                    </div>
+                    <div>
+                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Playstation Network</p>
                     </div>
                     <div>
                         <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
@@ -76,19 +92,11 @@ function Digital() {
                     </div>
                     <div>
                         <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Roblox</p>
                     </div>
                     <div>
                         <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
+                        <p style={{ fontSize: 14, fontWeight: 600 }}>Discord</p>
                     </div>
                 </div>
             </div>

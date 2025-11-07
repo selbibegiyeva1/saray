@@ -93,24 +93,54 @@ function Digital() {
                 <div className="dig-flex2">
                     {[
                         "Steam",
-                        "Spotify Premium",
+                        "Spotify",
                         "Netflix",
-                        "App Store",
-                        "Playstation Network",
-                        "PUBG",
+                        "APPLE ID",
+                        "Playstation",
+                        "PUBG Mobile",
                         "Roblox",
                         "Discord",
-                    ].map(name => (
-                        <div
-                            key={name}
-                            style={{ cursor: "pointer" }}
-                            onClick={() => setQuery(name)}
-                        >
-                            <img src="/pubgmobile 1.png" alt={name} style={{ width: 23 }} />
-                            <p style={{ fontSize: 14, fontWeight: 600 }}>{name}</p>
-                        </div>
-                    ))}
+                    ].map((name) => {
+                        const lower = name.toLowerCase();
+                        const isSteam = lower === "steam";
+
+                        return (
+                            <Link
+                                key={name}
+                                to={isSteam ? "/steam" : "/product"}
+                                state={isSteam ? undefined : { group_name: name }}
+                                title={name}
+                                className="dig-flex2-item"
+                                style={{ textDecoration: "none", color: "inherit" }}
+                            >
+                                <img
+                                    src={
+                                        lower === "steam"
+                                            ? "/digital/steam1.png"
+                                            : lower === "spotify"
+                                                ? "/digital/spotify1.png"
+                                                : lower === "netflix"
+                                                    ? "/digital/netflix1.png"
+                                                    : lower === "apple id"
+                                                        ? "/digital/appstore1.png"
+                                                        : lower === "playstation"
+                                                            ? "/digital/ps1.png"
+                                                            : lower === "pubg mobile"
+                                                                ? "/pubgmobile 1.png"
+                                                                : lower === "roblox"
+                                                                    ? "/digital/rob1.png"
+                                                                    : "/digital/dis1.png"
+                                    }
+                                    alt={name}
+                                    style={{ width: 23 }}
+                                    onError={(e) => (e.currentTarget.src = "/image.png")}
+                                />
+                                <p style={{ fontSize: 14, fontWeight: 600 }}>{name}</p>
+                            </Link>
+                        );
+                    })}
                 </div>
+
             </div>
 
             <div style={{ marginTop: 24 }}>

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import api from "../lib/api"; // uses axios instance with auth + refresh
-
+import api from "../lib/api"; // axios instance with auth + refresh
 import "../styles/Digital.css";
 
 const CATEGORIES = [
@@ -19,6 +18,7 @@ function Digital() {
     const [loading, setLoading] = useState(false);
     const [err, setErr] = useState(null);
 
+    // Fetch groups by category (endpoint doesn't support query)
     useEffect(() => {
         let cancel = false;
         (async () => {
@@ -38,17 +38,24 @@ function Digital() {
         return () => { cancel = true; };
     }, [category]);
 
+    // Keep category in sync with URL
+    useEffect(() => {
+        const urlCat = getValidCategory(searchParams.get("category"));
+        setCategory((curr) => (curr === urlCat ? curr : urlCat));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [searchParams]);
+
+    // Client-side filter as you type
     const filtered = useMemo(() => {
         const q = query.trim().toLowerCase();
         if (!q) return groups;
         return groups.filter(g => (g.group_name || "").toLowerCase().includes(q));
     }, [groups, query]);
 
-    useEffect(() => {
-        const urlCat = getValidCategory(searchParams.get("category"));
-        setCategory((curr) => (curr === urlCat ? curr : urlCat));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [searchParams]);
+    // Submit handler just prevents reload (filtering is live)
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+    };
 
     return (
         <div className='Digital'>
@@ -56,48 +63,53 @@ function Digital() {
 
             <div className="digital-search">
                 <p className='digital-search-h'>Поиск по товарам</p>
-                <div style={{ marginTop: 20, display: "flex", gap: 16 }}>
+                <form
+                    onSubmit={handleSearchSubmit}
+                    style={{ marginTop: 20, display: "flex", gap: 16 }}
+                >
                     <div className="search-input">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11.1524 11.1572L15.8281 15.833M7.91146 12.4997C10.4428 12.4997 12.4948 10.4476 12.4948 7.91634C12.4948 5.38504 10.4428 3.33301 7.91146 3.33301C5.38015 3.33301 3.32812 5.38504 3.32812 7.91634C3.32812 10.4476 5.38015 12.4997 7.91146 12.4997Z" stroke="black" stroke-opacity="0.6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M11.1524 11.1572L15.8281 15.833M7.91146 12.4997C10.4428 12.4997 12.4948 10.4476 12.4948 7.91634C12.4948 5.38504 10.4428 3.33301 7.91146 3.33301C5.38015 3.33301 3.32812 5.38504 3.32812 7.91634C3.32812 10.4476 5.38015 12.4997 7.91146 12.4997Z"
+                                stroke="black"
+                                strokeOpacity="0.6"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            />
                         </svg>
-                        <input type="text" placeholder='Поиск...' />
+                        <input
+                            type="text"
+                            placeholder='Поиск...'
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
                     </div>
-                    <button className='dig-search-btn'>Поиск</button>
-                </div>
+                    <button className='dig-search-btn' type="submit">Поиск</button>
+                </form>
+
+                {/* Quick picks (optional shortcuts that just fill the input) */}
                 <div className="dig-flex2">
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Steam</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Spotify Premium</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Netflix</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>App Store</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Playstation Network</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>PUBG</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Roblox</p>
-                    </div>
-                    <div>
-                        <img src="/pubgmobile 1.png" alt="img" style={{ width: 23 }} />
-                        <p style={{ fontSize: 14, fontWeight: 600 }}>Discord</p>
-                    </div>
+                    {[
+                        "Steam",
+                        "Spotify Premium",
+                        "Netflix",
+                        "App Store",
+                        "Playstation Network",
+                        "PUBG",
+                        "Roblox",
+                        "Discord",
+                    ].map(name => (
+                        <div
+                            key={name}
+                            style={{ cursor: "pointer" }}
+                            onClick={() => setQuery(name)}
+                        >
+                            <img src="/pubgmobile 1.png" alt={name} style={{ width: 23 }} />
+                            <p style={{ fontSize: 14, fontWeight: 600 }}>{name}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
 
@@ -118,7 +130,6 @@ function Digital() {
                             aria-pressed={category === c.key}
                             title={c.label}
                         >
-                            {/* simple icon placeholders; keep your existing svgs if needed */}
                             {c.key === "games" ? (
                                 <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M8.08333 18.583H10.75M13.4167 18.583H10.75M10.75 18.583V15.958M10.75 15.958H16.75C17.8546 15.958 18.75 15.0626 18.75 13.958V6.58301C18.75 5.47844 17.8546 4.58301 16.75 4.58301H4.75C3.64543 4.58301 2.75 5.47844 2.75 6.58301V13.958C2.75 15.0626 3.64543 15.958 4.75 15.958H10.75Z" stroke={category === "games" ? "white" : "black"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -139,9 +150,7 @@ function Digital() {
                 {!loading && !err && (
                     <div className="digital-grid">
                         {filtered.map(item => {
-                            // 👇 special redirect for Steam
                             const isSteam = item.group_name?.toLowerCase() === "steam";
-
                             return (
                                 <Link
                                     to={isSteam ? "/steam" : "/product"}
@@ -151,7 +160,11 @@ function Digital() {
                                     title={item.group_name}
                                     style={{ color: "black" }}
                                 >
-                                    <img src={item.icon_url || "/image.png"} alt={item.group_name} />
+                                    <img
+                                        src={item.icon_url || "/image.png"}
+                                        alt={item.group_name}
+                                        onError={(e) => { e.currentTarget.src = "/image.png"; }}
+                                    />
                                     <center><b>{item.group_name}</b></center>
                                 </Link>
                             );
@@ -163,7 +176,7 @@ function Digital() {
                 )}
             </div>
         </div>
-    )
+    );
 }
 
-export default Digital
+export default Digital;

@@ -262,6 +262,71 @@ function Product() {
     }
   }
 
+  async function handleBuyTopup() {
+    if (activeTab !== "topup") return;
+
+    // Build payload from backend "name" attributes
+    const payload = {};
+
+    // 1) iterate topup_fields and fill by name
+    (topupFields || []).forEach((f) => {
+      if (f.type === "options" && f.name === "region") {
+        payload[f.name] = topupRegion || "";
+      } else if (f.type === "options" && f.name === "product_id") {
+        payload[f.name] = selectedTopup?.value ?? null; // option.value -> product_id
+      } else if (f.type === "text") {
+        // any text field: account, email, nickname, etc.
+        payload[f.name] = String(topupTextValues[f.name] || "").trim();
+      }
+    });
+
+    // Minimal guards (you already gate the pay button with canPayTopup)
+    if (!payload.product_id) {
+      setAppAlert({ type: "red", message: "Выберите товар" });
+      return;
+    }
+
+    setPaying(true);
+    try {
+      const { data } = await api.post("/v1/products/topup/buy", payload);
+
+      if (data?.status && data?.voucher) {
+        // 1) decrease balance immediately by selectedTopup.price
+        const dec = Number(selectedTopup?.price) || 0;
+        if (dec > 0) {
+          window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount: dec } }));
+        }
+
+        // 2) open backend link in new tab (same as Steam/Voucher)
+        window.open(data.voucher, "_blank", "noopener,noreferrer");
+
+        // 3) reset all TOPUP fields + close modal
+        setTopupRegion(topupRegionOptions[0]?.value || "");
+        setActiveTopup(null);
+        setSelectedTopup(null);
+        setTopupTextValues({});
+        setConfirmed(false);
+        setModalConfirmed(false);
+        setPay(false);
+
+        // 4) success alert with backend message
+        const successMsg = data?.comment || data?.message || "Покупка успешно создана. Продолжите в новой вкладке.";
+        setAppAlert({ type: "green", message: successMsg });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      // explicit backend failure
+      const errMsg = data?.comment || data?.message || "Не удалось оформить пополнение";
+      setAppAlert({ type: "red", message: errMsg });
+    } catch (e) {
+      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оформления пополнения";
+      setAppAlert({ type: "red", message: errMsg });
+    } finally {
+      setPaying(false);
+    }
+  }
+
   if (loading) return <div>Загрузка…</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -594,8 +659,8 @@ function Product() {
               <button
                 type="button"
                 className="pay-btn"
-                disabled={!modalConfirmed || paying}
-                onClick={activeTab === "voucher" ? handleBuyVoucher : undefined}
+                disabled={!modalConfirmed || paying || !canPay}
+                onClick={activeTab === "voucher" ? handleBuyVoucher : handleBuyTopup}
               >
                 {paying ? <div className="spinner"></div> : "Оплатить"}
               </button>

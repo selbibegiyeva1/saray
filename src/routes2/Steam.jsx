@@ -216,10 +216,34 @@ function Steam() {
             });
 
             if (data?.status && data?.voucher) {
-                // deduct balance locally
+                // 1) update balance right away
                 window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount } }));
-                // redirect to backend link
-                window.location.href = data.voucher;
+
+                // 2) open backend page in new tab
+                window.open(data.voucher, "_blank", "noopener,noreferrer");
+
+                // 3) reset fields
+                setSelectedTopupRegion("");
+                setTopupLogin("");
+                setTopupAmountTmt("");
+                setTopupAmountUsd("");
+                setConfirmed(false);
+                setModalConfirmed(false);
+                setFieldErrors({ region: false, login: false, amount: false, usd: false });
+                setLimitError("");
+                setActiveVoucher(null);
+                setSelectedRegion("");
+                setSelectedVoucher(null);
+                setPay(false); // close modal
+
+                // 4) show success alert with backend message if available
+                const successMsg =
+                    data?.comment || data?.message || "Оплата успешно создана. Продолжите в новой вкладке.";
+                setAppAlert({ type: "green", message: successMsg });
+
+                // optional smooth scroll to top
+                window.scrollTo({ top: 0, behavior: "smooth" });
+
                 return;
             }
 
@@ -234,6 +258,20 @@ function Steam() {
             setPaying(false);
         }
     }
+
+    useEffect(() => {
+        if (appAlert.type) {
+            // close modal immediately when an alert appears
+            setPay(false);
+
+            // auto-hide alert after 5 seconds
+            const timer = setTimeout(() => {
+                setAppAlert({ type: null, message: "" });
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [appAlert]);
 
     const [fieldErrors, setFieldErrors] = useState({
         region: false,
@@ -608,25 +646,89 @@ function Steam() {
                             {payError ? <div style={{ marginTop: 8, color: "#F50100" }}>{payError}</div> : null}
                             <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
                         </div>
-
-                        {appAlert.type && (
-                            <div className="alerts">
-                                {appAlert.type === "red" && (
-                                    <div className="alt red" role="alert">
-                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                        <span>{appAlert.message}</span>
-                                        <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                        </svg>
-                                    </div>
-                                )}
-                            </div>
-                        )}
                     </div>
                 </div>
             </form>
+
+            {appAlert.type && (
+                <div className="alerts">
+                    {appAlert.type === "green" && (
+                        <div className="alt green" role="alert">
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11"
+                                    stroke="#50A66A"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            <span>{appAlert.message}</span>
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                className="alt-close"
+                                onClick={closeAlert}
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M5 5L15 15M15 5L5 15"
+                                    stroke="black"
+                                    strokeOpacity="0.6"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    )}
+
+                    {appAlert.type === "red" && (
+                        <div className="alt red" role="alert">
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+                                    stroke="#ED2428"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                            <span>{appAlert.message}</span>
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                className="alt-close"
+                                onClick={closeAlert}
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M5 5L15 15M15 5L5 15"
+                                    stroke="black"
+                                    strokeOpacity="0.6"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

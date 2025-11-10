@@ -32,6 +32,13 @@ function Product() {
   const [pay, setPay] = useState(false);
   const [modalConfirmed, setModalConfirmed] = useState(false);
 
+  // alerts like Login/Steam
+  const [appAlert, setAppAlert] = useState({ type: null, message: "" });
+  const closeAlert = () => setAppAlert({ type: null, message: "" });
+
+  // while sending request
+  const [paying, setPaying] = useState(false);
+
   useEffect(() => {
     if (!group_id && !group_name) return;
     let cancel = false;
@@ -183,11 +190,78 @@ function Product() {
 
   const canPay = activeTab === "voucher" ? canPayVoucher : canPayTopup;
 
-  if (loading) return <div>Загрузка…</div>;
-  if (error) return <div className="error">{error}</div>;
-
   const hasVoucher = Array.isArray(voucherFields) && voucherFields.length > 0;
   const hasTopup = Array.isArray(topupFields) && topupFields.length > 0;
+
+  // close modal when alert appears, and auto-hide after 5s
+  useEffect(() => {
+    if (appAlert.type) {
+      setPay(false);
+      const t = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
+      return () => clearTimeout(t);
+    }
+  }, [appAlert]);
+
+  async function handleBuyVoucher() {
+    if (activeTab !== "voucher") return;
+
+    // basic guard: must have product and email (if the field exists)
+    if (!selectedVoucher) {
+      setAppAlert({ type: "red", message: "Выберите номинал ваучера" });
+      return;
+    }
+    if (emailField && !String(userEmail).trim()) {
+      setAppAlert({ type: "red", message: "Введите email" });
+      return;
+    }
+
+    const payload = {
+      product_id: selectedVoucher.value, // <-- voucher option "value" is product_id
+      email: String(userEmail).trim(),
+    };
+
+    setPaying(true);
+    try {
+      const { data } = await api.post("/v1/products/voucher/buy", payload);
+
+      if (data?.status && data?.voucher) {
+        // 1) update balance immediately
+        const dec = Number(selectedVoucher.price) || 0;
+        if (dec > 0) {
+          window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount: dec } }));
+        }
+
+        // 2) open backend voucher link in a new tab
+        window.open(data.voucher, "_blank", "noopener,noreferrer");
+
+        // 3) reset form + close modal
+        setActiveVoucher(null);
+        setSelectedVoucher(null);
+        setUserEmail("");
+        setConfirmed(false);
+        setModalConfirmed(false);
+        setPay(false);
+
+        // 4) success alert with backend message
+        const successMsg = data?.comment || data?.message || "Покупка успешно создана. Продолжите в новой вкладке.";
+        setAppAlert({ type: "green", message: successMsg });
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      // backend returned explicit failure
+      const errMsg = data?.comment || data?.message || "Не удалось купить ваучер";
+      setAppAlert({ type: "red", message: errMsg });
+    } catch (e) {
+      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка покупки ваучера";
+      setAppAlert({ type: "red", message: errMsg });
+    } finally {
+      setPaying(false);
+    }
+  }
+
+  if (loading) return <div>Загрузка…</div>;
+  if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="Home">
@@ -514,16 +588,48 @@ function Product() {
             </label>
 
             <div>
-              <button type="button" className="pay-btn" disabled={!modalConfirmed}>
-                Оплатить
+              {/* inside the modal footer */}
+              <button
+                type="button"
+                className="pay-btn"
+                disabled={!modalConfirmed || paying}
+                onClick={activeTab === "voucher" ? handleBuyVoucher : undefined}
+              >
+                {paying ? "Оплачиваем…" : "Оплатить"}
               </button>
-              <button type="button" className="pay-btn cancel" onClick={togglePay}>
-                Отмена
-              </button>
+              <button type="button" className="pay-btn cancel" onClick={togglePay}>Отмена</button>
             </div>
           </div>
         </div>
       </form>
+
+      {appAlert.type && (
+        <div className="alerts">
+          {appAlert.type === "green" && (
+            <div className="alt green" role="alert">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>{appAlert.message}</span>
+              <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          )}
+
+          {appAlert.type === "red" && (
+            <div className="alt red" role="alert">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>{appAlert.message}</span>
+              <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

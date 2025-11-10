@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// top of file
+import React, { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import "../styles/Navbar.css";
@@ -113,6 +114,39 @@ function Navbar() {
     return () => window.removeEventListener("balance:decrement", onDecrement);
   }, []);
 
+  // inside Navbar()
+  const langRef = useRef(null);
+  const prodRef = useRef(null);
+
+  useEffect(() => {
+    function handleDocClick(e) {
+      // close language if click is outside its container
+      if (openLang && langRef.current && !langRef.current.contains(e.target)) {
+        setOpenLang(false);
+      }
+      // close products if click is outside its container
+      if (prodDrop && prodRef.current && !prodRef.current.contains(e.target)) {
+        setProdDrop(false);
+      }
+    }
+
+    function handleEsc(e) {
+      if (e.key === "Escape") {
+        setOpenLang(false);
+        setProdDrop(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleDocClick, true);
+    document.addEventListener("touchstart", handleDocClick, true);
+    document.addEventListener("keydown", handleEsc, true);
+    return () => {
+      document.removeEventListener("mousedown", handleDocClick, true);
+      document.removeEventListener("touchstart", handleDocClick, true);
+      document.removeEventListener("keydown", handleEsc, true);
+    };
+  }, [openLang, prodDrop]);
+
   return (
     <div className="Navbar">
       {/* Logo */}
@@ -141,9 +175,9 @@ function Navbar() {
           </NavLink>
         </li>
         {user?.role === "OPERATOR" ? (
-          <li style={{ position: "relative" }}>
+          <li style={{ position: "relative" }} ref={prodRef}>
             <button type="button" onClick={prodFunc}>
-              <span>Products</span>
+              <span>Продукты</span>
               <svg
                 width="20"
                 height="20"
@@ -209,7 +243,7 @@ function Navbar() {
 
         {/* Language selector */}
         <li>
-          <div className="nav-filter langs">
+          <div className="nav-filter langs" ref={langRef}>
             <button
               type="button"
               onClick={() => setOpenLang((v) => !v)}

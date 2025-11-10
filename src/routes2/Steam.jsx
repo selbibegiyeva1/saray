@@ -259,6 +259,60 @@ function Steam() {
         }
     }
 
+    async function handlePayVoucher() {
+        if (!modalConfirmed) return;
+
+        // basic guard: must have region, product and email
+        if (!selectedRegion || !selectedVoucher || !userEmail.trim()) {
+            setAppAlert({ type: "red", message: "Заполните все поля корректно" });
+            return;
+        }
+
+        const payload = {
+            product_id: selectedVoucher.value,   // option.value from voucher list
+            email: String(userEmail).trim(),
+        };
+
+        setPaying(true);
+        try {
+            const { data } = await api.post("/v1/products/voucher/buy", payload);
+
+            if (data?.status && data?.voucher) {
+                // 1) decrease balance by voucher price
+                const dec = Number(selectedVoucher.price) || 0;
+                if (dec > 0) {
+                    window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount: dec } }));
+                }
+
+                // 2) open backend link in a NEW TAB
+                window.open(data.voucher, "_blank", "noopener,noreferrer");
+
+                // 3) reset voucher UI + close modal
+                setSelectedRegion("");
+                setActiveVoucher(null);
+                setSelectedVoucher(null);
+                setUserEmail("");
+                setConfirmed(false);
+                setModalConfirmed(false);
+                setPay(false);
+
+                // 4) success alert with backend text
+                const successMsg = data?.comment || data?.message || "Покупка успешно создана. Продолжите в новой вкладке.";
+                setAppAlert({ type: "green", message: successMsg });
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+            }
+
+            const errMsg = data?.comment || data?.message || "Не удалось купить ваучер";
+            setAppAlert({ type: "red", message: errMsg });
+        } catch (e) {
+            const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка покупки ваучера";
+            setAppAlert({ type: "red", message: errMsg });
+        } finally {
+            setPaying(false);
+        }
+    }
+
     useEffect(() => {
         if (appAlert.type) {
             // close modal immediately when an alert appears
@@ -521,22 +575,21 @@ function Steam() {
                                     const checked = e.target.checked;
 
                                     if (checked) {
-                                        const regionErr = !selectedTopupRegion;
-                                        const loginErr = !topupLogin.trim();
-                                        const amt = Number(String(topupAmountTmt).replace(",", "."));
-                                        const amountErr = !Number.isFinite(amt) || amt <= 0;
-                                        const usdErr = !topupAmountUsd || topupAmountUsd === "";
+                                        if (activeTab === "topup") {
+                                            const regionErr = !selectedTopupRegion;
+                                            const loginErr = !topupLogin.trim();
+                                            const amt = Number(String(topupAmountTmt).replace(",", "."));
+                                            const amountErr = !Number.isFinite(amt) || amt <= 0;
+                                            const usdErr = !topupAmountUsd || topupAmountUsd === "";
 
-                                        setFieldErrors({
-                                            region: regionErr,
-                                            login: loginErr,
-                                            amount: amountErr,
-                                            usd: usdErr,
-                                        });
-
-                                        if (regionErr || loginErr || amountErr || usdErr) {
-                                            setConfirmed(false);
-                                            return;
+                                            setFieldErrors({ region: regionErr, login: loginErr, amount: amountErr, usd: usdErr });
+                                            if (regionErr || loginErr || amountErr || usdErr) { setConfirmed(false); return; }
+                                        } else {
+                                            // voucher tab
+                                            const vRegionErr = !selectedRegion;
+                                            const vEmailErr = !userEmail.trim();
+                                            setFieldErrors((f) => ({ ...f, region: vRegionErr })); // only region is visually shared
+                                            if (vRegionErr || vEmailErr || !selectedVoucher) { setConfirmed(false); return; }
                                         }
                                     }
 
@@ -639,7 +692,7 @@ function Steam() {
                                 type="button"
                                 className="pay-btn"
                                 disabled={!modalConfirmed || paying}
-                                onClick={handlePayTopup}
+                                onClick={activeTab === "voucher" ? handlePayVoucher : handlePayTopup}
                             >
                                 {paying ? "Оплачиваем…" : "Оплатить"}
                             </button>

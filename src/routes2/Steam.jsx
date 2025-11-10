@@ -181,6 +181,60 @@ function Steam() {
     const contactLabel = activeTab === "voucher" ? "Почта" : "Логин в Steam";
     const contactValue = activeTab === "voucher" ? userEmail : topupLogin;
 
+    // inside Steam() in Steam.jsx
+
+    const [paying, setPaying] = useState(false);
+    const [payError, setPayError] = useState("");
+
+    const [appAlert, setAppAlert] = useState({ type: null, message: "" });
+    const closeAlert = () => setAppAlert({ type: null, message: "" });
+
+    async function handlePayTopup() {
+        setPayError("");
+        setAppAlert({ type: null, message: "" });
+
+        if (!modalConfirmed) return;
+        const amount = Number(String(topupAmountTmt).replace(",", "."));
+        if (!selectedTopupRegion || !topupLogin.trim() || !Number.isFinite(amount)) {
+            setPayError("Заполните все поля корректно");
+            return;
+        }
+        if (steamMinAmount != null && amount < steamMinAmount) {
+            setPayError(`Минимальная сумма ${steamMinAmount} ТМТ`);
+            return;
+        }
+        if (steamMaxAmount != null && amount > steamMaxAmount) {
+            setPayError(`Максимальная сумма ${steamMaxAmount} ТМТ`);
+            return;
+        }
+
+        setPaying(true);
+        try {
+            const { data } = await api.post("/v1/products/steam/pay", {
+                steam_username: topupLogin.trim(),
+                amount_tmt: amount,
+            });
+
+            if (data?.status && data?.voucher) {
+                // deduct balance locally
+                window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount } }));
+                // redirect to backend link
+                window.location.href = data.voucher;
+                return;
+            }
+
+            // ❌ backend responded but with error -> show alert
+            const msg = data?.comment || "Не удалось выполнить оплату";
+            setAppAlert({ type: "red", message: msg });
+        } catch (e) {
+            // ❌ network / backend crash -> show alert
+            const msg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оплаты";
+            setAppAlert({ type: "red", message: msg });
+        } finally {
+            setPaying(false);
+        }
+    }
+
     return (
         <div className='Steam'>
             <h1>Steam</h1>
@@ -474,11 +528,33 @@ function Steam() {
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>
                         </label>
                         <div>
-                            <button type="button" className="pay-btn" disabled={!modalConfirmed}>
-                                Оплатить
+                            <button
+                                type="button"
+                                className="pay-btn"
+                                disabled={!modalConfirmed || paying}
+                                onClick={handlePayTopup}
+                            >
+                                {paying ? "Оплачиваем…" : "Оплатить"}
                             </button>
+                            {payError ? <div style={{ marginTop: 8, color: "#F50100" }}>{payError}</div> : null}
                             <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
                         </div>
+
+                        {appAlert.type && (
+                            <div className="alerts">
+                                {appAlert.type === "red" && (
+                                    <div className="alt red" role="alert">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                        <span>{appAlert.message}</span>
+                                        <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </form>

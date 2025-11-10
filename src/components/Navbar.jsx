@@ -102,6 +102,17 @@ function Navbar() {
     fetchBalance();
   }, [user]);
 
+  // inside Navbar() in Navbar.jsx
+  useEffect(() => {
+    function onDecrement(ev) {
+      const dec = Number(ev?.detail?.amount);
+      if (!Number.isFinite(dec) || dec <= 0) return;
+      setBalance((b) => (typeof b === "number" ? Math.max(0, b - dec) : b));
+    }
+    window.addEventListener("balance:decrement", onDecrement);
+    return () => window.removeEventListener("balance:decrement", onDecrement);
+  }, []);
+
   return (
     <div className="Navbar">
       {/* Logo */}

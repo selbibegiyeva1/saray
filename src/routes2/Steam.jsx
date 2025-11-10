@@ -235,6 +235,15 @@ function Steam() {
         }
     }
 
+    const [fieldErrors, setFieldErrors] = useState({
+        region: false,
+        login: false,
+        amount: false,
+        usd: false, // 👈 new
+    });
+
+    const [limitError, setLimitError] = useState("");
+
     return (
         <div className='Steam'>
             <h1>Steam</h1>
@@ -283,8 +292,12 @@ function Steam() {
                                     </svg>
                                     <select
                                         value={selectedTopupRegion}
-                                        onChange={(e) => setSelectedTopupRegion(e.target.value)}
+                                        onChange={(e) => {
+                                            setSelectedTopupRegion(e.target.value);
+                                            setFieldErrors((f) => ({ ...f, region: false }));
+                                        }}
                                         disabled={loadingForms || !!fetchErr}
+                                        style={fieldErrors.region ? { border: "1px solid #F50100" } : {}}
                                     >
                                         <option value="" disabled>
                                             {loadingForms ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : "Выберите регион"}
@@ -305,23 +318,54 @@ function Steam() {
                                         type="text"
                                         placeholder="Введите логин в Steam"
                                         value={topupLogin}
-                                        onChange={(e) => setTopupLogin(e.target.value)}
+                                        onChange={(e) => {
+                                            setTopupLogin(e.target.value);
+                                            setFieldErrors((f) => ({ ...f, login: false }));
+                                        }}
+                                        style={fieldErrors.login ? { border: "1px solid #F50100" } : {}}
                                     />
                                 </div>
                                 <div className="block-grid">
                                     <div>
                                         <span>Сумма пополнения в ТМТ</span>
                                         <input
-                                            type="text"
+                                            type="number"
                                             value={topupAmountTmt}
-                                            onChange={(e) => setTopupAmountTmt(e.target.value)}
+                                            onChange={(e) => {
+                                                setTopupAmountTmt(e.target.value);
+                                                // keep inline validation flags if you need them, but DON'T clear limitError here
+                                                setFieldErrors((f) => ({ ...f, amount: false, usd: false }));
+                                            }}
+                                            onKeyDown={(e) => {
+                                                if (e.key === "Enter") {
+                                                    e.preventDefault(); // avoid form submit
+                                                    const amount = Number(String(topupAmountTmt).replace(",", "."));
+                                                    if (!Number.isFinite(amount) || amount <= 0) {
+                                                        // do not change the old message unless Enter yields a new decision
+                                                        setLimitError("");
+                                                        return;
+                                                    }
+                                                    if (steamMaxAmount != null && amount > steamMaxAmount) {
+                                                        setLimitError(`Максимальная сумма ${steamMaxAmount} ТМТ`);
+                                                        return;
+                                                    }
+                                                    if (steamMinAmount != null && amount < steamMinAmount) {
+                                                        setLimitError(`Минимальная сумма ${steamMinAmount} ТМТ`);
+                                                        return;
+                                                    }
+                                                    // within limits -> clear message on Enter
+                                                    setLimitError("");
+                                                }
+                                            }}
                                             placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : "Сумма пополнения в ТМТ"}
+                                            style={fieldErrors.amount ? { border: "1px solid #F50100" } : {}}
                                         />
 
-                                        <div className='block-flex'>
-                                            <p>Минимальная сумма {steamMinAmount ?? "—"} ТМТ</p>
-                                            <p>Максимальная сумма {steamMaxAmount ?? "—"} ТМТ</p>
-                                        </div>
+                                        {limitError && (
+                                            <div className='block-flex' style={{ color: "#F50100", marginTop: 6, fontSize: 14 }}>
+                                                <p>{limitError}</p>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div>
@@ -331,6 +375,7 @@ function Steam() {
                                             value={calcLoading ? "Рассчитываем…" : (topupAmountUsd ? `~${topupAmountUsd} USD` : "")}
                                             readOnly
                                             placeholder="К зачислению в Steam"
+                                            style={fieldErrors.usd ? { border: "1px solid #F50100" } : {}}
                                         />
                                     </div>
                                 </div>
@@ -434,7 +479,31 @@ function Steam() {
                             <input
                                 type="checkbox"
                                 checked={confirmed}
-                                onChange={(e) => setConfirmed(e.target.checked)}
+                                onChange={(e) => {
+                                    const checked = e.target.checked;
+
+                                    if (checked) {
+                                        const regionErr = !selectedTopupRegion;
+                                        const loginErr = !topupLogin.trim();
+                                        const amt = Number(String(topupAmountTmt).replace(",", "."));
+                                        const amountErr = !Number.isFinite(amt) || amt <= 0;
+                                        const usdErr = !topupAmountUsd || topupAmountUsd === "";
+
+                                        setFieldErrors({
+                                            region: regionErr,
+                                            login: loginErr,
+                                            amount: amountErr,
+                                            usd: usdErr,
+                                        });
+
+                                        if (regionErr || loginErr || amountErr || usdErr) {
+                                            setConfirmed(false);
+                                            return;
+                                        }
+                                    }
+
+                                    setConfirmed(checked);
+                                }}
                             />
                             <span className="checkmark"></span>
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>

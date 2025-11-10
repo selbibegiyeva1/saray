@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../lib/api";
 
+import "../styles/Login.css";
+
 function Product() {
   const { state } = useLocation();
   const { group_id, group_name } = state || {};
@@ -595,7 +597,7 @@ function Product() {
                 disabled={!modalConfirmed || paying}
                 onClick={activeTab === "voucher" ? handleBuyVoucher : undefined}
               >
-                {paying ? "Оплачиваем…" : "Оплатить"}
+                {paying ? <div className="spinner"></div> : "Оплатить"}
               </button>
               <button type="button" className="pay-btn cancel" onClick={togglePay}>Отмена</button>
             </div>

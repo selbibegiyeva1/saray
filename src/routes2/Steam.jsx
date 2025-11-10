@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../lib/api"; // axios instance with auth attached
 
 import "../styles/Steam.css";
+import "../styles/Login.css";
 
 function Steam() {
     const [activeTab, setActiveTab] = useState("topup"); // 'topup' or 'voucher'
@@ -694,7 +695,7 @@ function Steam() {
                                 disabled={!modalConfirmed || paying}
                                 onClick={activeTab === "voucher" ? handlePayVoucher : handlePayTopup}
                             >
-                                {paying ? "Оплачиваем…" : "Оплатить"}
+                                {paying ? <div className="spinner"></div> : "Оплатить"}
                             </button>
                             {payError ? <div style={{ marginTop: 8, color: "#F50100" }}>{payError}</div> : null}
                             <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>

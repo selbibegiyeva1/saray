@@ -65,15 +65,17 @@ function Esim() {
     }, []);
 
     // ------- load tariffs (country) -------
-    const loadTariffsFor = useCallback(async (c) => {
+    const loadTariffsFor = useCallback(async (c, shouldScroll = false) => {
         setSelectedRegion(null);
-        setRegionCoverage(null); // NEW: ensure we don’t show region coverage in country mode
+        setRegionCoverage(null);
         setSelectedCountry(c);
         setTErr(null);
         setTLoading(true);
         setTariffs([]);
 
-        scrollToGrid();
+        if (shouldScroll) {
+            scrollToGrid();
+        }
 
         try {
             const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
@@ -91,14 +93,16 @@ function Esim() {
     }, []);
 
     // ------- load tariffs (region) -------
-    const loadTariffsForRegion = useCallback(async (r) => {
+    const loadTariffsForRegion = useCallback(async (r, shouldScroll = false) => {
         setSelectedCountry(null);
         setSelectedRegion(r);
         setTErr(null);
         setTLoading(true);
         setTariffs([]);
 
-        scrollToGrid();
+        if (shouldScroll) {
+            scrollToGrid();
+        }
 
         try {
             const regionParam = r?.region_name?.en;
@@ -109,10 +113,9 @@ function Esim() {
             const list = root.tariffs || root.tarrifs || [];
             setTariffs(Array.isArray(list) ? list : []);
 
-            // ✅ store all country codes from region
             const codes = root.country_code;
             setRegionCoverage(Array.isArray(codes) ? codes.length : null);
-            setRegionCodes(Array.isArray(codes) ? codes : []); // NEW
+            setRegionCodes(Array.isArray(codes) ? codes : []);
         } catch (e) {
             setTErr("Не удалось загрузить тарифы.");
             console.error("Region tariffs error", e?.response || e);
@@ -139,9 +142,9 @@ function Esim() {
                 const arr = Array.isArray(data) ? data : [];
                 setCountries(arr);
 
-                // auto-select first country and show tariffs
+                // auto-select first country, but do NOT scroll
                 if (arr.length > 0) {
-                    loadTariffsFor(arr[0]);
+                    loadTariffsFor(arr[0], false);
                 }
             } catch {
                 if (!isMounted) return;
@@ -412,8 +415,8 @@ function Esim() {
                                             key={key}
                                             role="button"
                                             tabIndex={0}
-                                            onClick={() => loadTariffsFor(item)}
-                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsFor(item) : null)}
+                                            onClick={() => loadTariffsFor(item, true)}
+                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsFor(item, true) : null)}
                                             className={isSel ? "selected" : ""}
                                             style={{ cursor: "pointer" }}
                                             title="Показать тарифы"
@@ -443,8 +446,8 @@ function Esim() {
                                             key={name || i}
                                             role="button"
                                             tabIndex={0}
-                                            onClick={() => loadTariffsForRegion(item)}
-                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsForRegion(item) : null)}
+                                            onClick={() => loadTariffsForRegion(item, true)}
+                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsForRegion(item, true) : null)}
                                             className={isSel ? "selected" : ""}
                                             style={{ cursor: "pointer" }}
                                             title="Показать тарифы"

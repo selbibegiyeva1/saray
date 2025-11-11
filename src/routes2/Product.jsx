@@ -345,7 +345,7 @@ function Product() {
                   />
                   <div>
                     <p className="s-block-h">Пополнение баланса {item.group}</p>
-                    <span>{item.short_info}</span>
+                    <span className="s-d">{item.short_info}</span>
 
                     {/* Switcher: render only buttons that exist */}
                     <div className="s-block-btns" style={{ marginTop: 8 }}>
@@ -359,13 +359,26 @@ function Product() {
                         </button>
                       )}
                       {hasVoucher && (
-                        <button
-                          type="button"
-                          className={activeTab === "voucher" ? "active" : ""}
-                          onClick={() => setActiveTab("voucher")}
-                        >
-                          Ваучер
-                        </button>
+                        <div className="v-tool">
+                          <button
+                            type="button"
+                            className={activeTab === "voucher" ? "active" : ""}
+                            onClick={() => setActiveTab("voucher")}
+                          >
+                            Ваучер
+                            <div className="icon-wrap">
+                              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <rect width="28" height="28" rx="10" fill="#F5F5F9" />
+                                <rect x="0.5" y="0.5" width="27" height="27" rx="9.5" stroke="black" stroke-opacity="0.15" />
+                                <path d="M14.0026 20.6663C15.8435 20.6663 17.5102 19.9201 18.7166 18.7137C19.9231 17.5073 20.6693 15.8406 20.6693 13.9997C20.6693 12.1587 19.9231 10.4921 18.7166 9.28563C17.5102 8.0792 15.8435 7.33301 14.0026 7.33301C12.1617 7.33301 10.495 8.0792 9.28856 9.28563C8.08213 10.4921 7.33594 12.1587 7.33594 13.9997C7.33594 15.8406 8.08213 17.5073 9.28856 18.7137C10.495 19.9201 12.1617 20.6663 14.0026 20.6663Z" stroke="black" stroke-opacity="0.8" stroke-width="1.3" stroke-linejoin="round" />
+                                <path d="M14 15.5413V14.208C15.1046 14.208 16 13.3126 16 12.208C16 11.1034 15.1046 10.208 14 10.208C12.8954 10.208 12 11.1034 12 12.208" stroke="black" stroke-opacity="0.8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 18.5417C14.4576 18.5417 14.8307 18.1686 14.8307 17.7083C14.8307 17.2481 14.4576 16.875 13.9974 16.875C13.5372 16.875 13.1641 17.2481 13.1641 17.7083C13.1641 18.1686 13.5372 18.5417 13.9974 18.5417Z" fill="black" fill-opacity="0.8" />
+                                <path d="M13.9971 17.125C14.3191 17.125 14.5809 17.386 14.5811 17.708C14.5811 18.0302 14.3192 18.292 13.9971 18.292C13.6751 18.2918 13.4141 18.0301 13.4141 17.708C13.4142 17.3861 13.6752 17.1252 13.9971 17.125Z" stroke="black" stroke-opacity="0.8" stroke-width="0.5" />
+                              </svg>
+                              <span>Ваучер — уникальная комбинация из цифр и букв. У ваучера есть денежный номинал, который зачисляется на игровой кошелёк при активации.</span>
+                            </div>
+                          </button>
+                        </div>
                       )}
                     </div>
                   </div>

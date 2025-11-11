@@ -12,7 +12,7 @@
     grid-template-columns: 1fr 490px;
     gap: 32px;
     margin-top: 32px;
-    margin-bottom: 100px;
+    margin-bottom: 200px;
 }
 
 .steam-block {
@@ -31,7 +31,7 @@
     font-weight: bold;
 }
 
-.s-block-f span {
+.s-d {
     display: flex;
     font-size: 14px;
     font-weight: 500;
@@ -54,11 +54,91 @@
     background: none;
     cursor: pointer;
     outline: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
     padding: 10.5px 16px;
     font-size: 16px;
     font-weight: 600;
     border-radius: 10px;
     border: 1.5px solid #00000026;
+}
+
+.sng {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 6.5%;
+    transform: translate(-50%, -50%)
+}
+
+.v-tool .icon-wrap {
+    position: relative;
+}
+
+.v-tool .icon-wrap span,
+.sng div span {
+    display: none;
+    position: absolute;
+    top: 170%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    background: #fff;
+    color: black;
+    border: 1px solid #00000026;
+    box-shadow: 0 12px 35px 0 #0000001a;
+    padding: 20px 16px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: left;
+    z-index: 10;
+}
+
+.sng div span {
+    top: 20px;
+}
+
+.v-tool .icon-wrap svg:hover+span,
+.sng div svg:hover+span {
+    display: block;
+}
+
+.acc-svg:hover+.acc-tl {
+    display: initial;
+}
+
+.acc-tl {
+    position: absolute;
+    padding: 32px;
+    background-color: white;
+    border-radius: 32px;
+    display: none;
+    border: 1px solid #00000026;
+    width: 600px;
+    z-index: 2;
+    top: 0;
+    left: 50px;
+}
+
+.acc-tl p {
+    font-size: 32px;
+    font-weight: 500;
+}
+
+.acc-tl ul {
+    margin: 16px 0px 24px 0px;
+}
+
+.acc-tl ul li {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.acc-tl img {
+    width: 100%;
 }
 
 .s-block-btns button.active {
@@ -93,6 +173,20 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 32px;
     margin-top: 32px;
+}
+
+.tmt-svg {
+    position: absolute;
+    display: none;
+    align-items: center;
+    gap: 4px;
+    top: 50%;
+    left: 92.5%;
+    transform: translate(-50%, -50%);
+}
+
+.tmt-svg svg {
+    background-color: #F5F5F9;
 }
 
 .block-grid span {

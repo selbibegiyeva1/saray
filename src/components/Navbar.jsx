@@ -232,7 +232,7 @@ function Navbar() {
         )}
       </ul>
 
-      <div className="nav-search">
+      {/* <div className="nav-search">
         <svg
           width="20"
           height="20"
@@ -265,7 +265,7 @@ function Navbar() {
             onChange={(e) => setSearchValue(e.target.value)}
           />
         </form>
-      </div>
+      </div> */}
 
       {/* Right section */}
       <ul className="nav-ul ul2">

@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import api from "../lib/api";
 import "../styles/eSim.css";
 
 function Esim() {
+
     // tabs
     const [mode, setMode] = useState("countries"); // "countries" | "regions"
 
@@ -54,6 +55,15 @@ function Esim() {
         return `${mb}MB`;
     };
 
+    const gridRef = useRef(null);
+
+    const scrollToGrid = useCallback(() => {
+        const el = gridRef.current;
+        if (!el) return;
+        const y = el.getBoundingClientRect().top + window.pageYOffset - 80; // adjust 80px if header height differs
+        window.scrollTo({ top: y, behavior: "smooth" });
+    }, []);
+
     // ------- load tariffs (country) -------
     const loadTariffsFor = useCallback(async (c) => {
         setSelectedRegion(null);
@@ -62,6 +72,9 @@ function Esim() {
         setTErr(null);
         setTLoading(true);
         setTariffs([]);
+
+        scrollToGrid();
+
         try {
             const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
                 params: { country_code: c.country_code },
@@ -84,6 +97,8 @@ function Esim() {
         setTErr(null);
         setTLoading(true);
         setTariffs([]);
+
+        scrollToGrid();
 
         try {
             const regionParam = r?.region_name?.en;
@@ -321,6 +336,12 @@ function Esim() {
         }
     }
 
+    useEffect(() => {
+        if (!tLoading && (selectedCountry || selectedRegion)) {
+            scrollToGrid();
+        }
+    }, [tLoading, selectedCountry, selectedRegion, scrollToGrid]);
+
     return (
         <div className="Esim">
             <h1 className="e-head">e-SIM</h1>
@@ -454,7 +475,7 @@ function Esim() {
                 )}
             </div>
 
-            <div className="esim-grid">
+            <div className="esim-grid" ref={gridRef}>
                 <h1 className="e-head e2">Тарифы</h1>
 
                 <div className="blocks">

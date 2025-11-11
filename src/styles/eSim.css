@@ -369,3 +369,14 @@
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+.trf-img {
+    display: flex;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 56px;
+}
+
+.trf-img img {
+    width: 100%;
+}

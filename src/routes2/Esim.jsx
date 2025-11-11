@@ -35,6 +35,12 @@ function Esim() {
 
     const [formConfirmed, setFormConfirmed] = useState(false);
 
+    const [fieldErrors, setFieldErrors] = useState({
+        name: false,
+        email: false,
+        phone: false,
+    });
+
     // utils
     const norm = (s = "") => s.toString().toLowerCase().replace(/\s|-/g, "");
     const formatTraffic = (traffic) => {
@@ -236,6 +242,85 @@ function Esim() {
     const daysLabel = selectedTariff?.days != null ? `${selectedTariff.days} дней` : "—";
     const priceLabel = selectedTariff?.price_tmt != null ? `${selectedTariff.price_tmt} ТМТ` : "—";
 
+    // client data
+    const [clientName, setClientName] = useState("");
+    const [clientEmail, setClientEmail] = useState("");
+    const [clientPhone, setClientPhone] = useState("");
+
+    // pay flow
+    const [paying, setPaying] = useState(false);
+
+    // alerts
+    const [appAlert, setAppAlert] = useState({ type: null, message: "" });
+    const closeAlert = () => setAppAlert({ type: null, message: "" });
+
+    // auto-close modal and auto-dismiss alert after 5s
+    useEffect(() => {
+        if (appAlert.type) {
+            setPayform(false);
+            const t = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
+            return () => clearTimeout(t);
+        }
+    }, [appAlert]);
+
+    async function handleBuyEsim() {
+        if (!formConfirmed) return;
+
+        if (!selectedTariff) {
+            setAppAlert({ type: "red", message: "Выберите тариф" });
+            return;
+        }
+        if (!clientEmail.trim() || !clientPhone.trim()) {
+            setAppAlert({ type: "red", message: "Укажите электронный адрес и номер телефона" });
+            return;
+        }
+
+        const payload = {
+            client_email: clientEmail.trim(),
+            client_phone: clientPhone.trim(),
+            tariff_name: selectedTariff.name, // from tariffs list (1.2)
+        };
+
+        setPaying(true);
+        try {
+            const { data } = await api.post("/v1/products/esim/buy", payload);
+
+            if (data?.status) {
+                // balance down by tariff price (if provided)
+                const dec = Number(selectedTariff?.price_tmt) || 0;
+                if (dec > 0) {
+                    window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount: dec } }));
+                }
+
+                // open backend link in a new tab (as per your examples)
+                if (data.voucher) {
+                    window.open(data.voucher, "_blank", "noopener,noreferrer");
+                }
+
+                // reset
+                setClientName("");
+                setClientEmail("");
+                setClientPhone("");
+                setFormConfirmed(false);
+                setSelectedTariff(null);
+                setPayform(false);
+
+                const ok = data?.comment || data?.message || "Заказ eSIM создан. Продолжите в новой вкладке.";
+                setAppAlert({ type: "green", message: ok });
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                return;
+            }
+
+            const err = data?.comment || data?.message || "Не удалось оформить eSIM";
+            setAppAlert({ type: "red", message: err });
+        } catch (e) {
+            const err = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оформления eSIM";
+            setAppAlert({ type: "red", message: err });
+        } finally {
+            setPaying(false);
+        }
+    }
+
     return (
         <div className="Esim">
             <h1 className="e-head">e-SIM</h1>
@@ -385,24 +470,32 @@ function Esim() {
                             <div className="esim-flex">
                                 <b>{t.is_unlimited ? "Безлимит" : formatTraffic(t.traffic)}</b>
                                 {(selectedCountry?.flag_url || selectedRegion?.region_url) && (
-                                    <img
-                                        src={selectedCountry?.flag_url || selectedRegion?.region_url}
-                                        alt={
-                                            selectedCountry
-                                                ? (selectedCountry?.country_name?.ru || selectedCountry?.country_code)
-                                                : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en)
-                                        }
-                                        width={56}
-                                        height={56}
-                                        style={{ borderRadius: 12, objectFit: "cover" }}
-                                    />
+                                    <div className="trf-img">
+                                        <img
+                                            src={selectedCountry?.flag_url || selectedRegion?.region_url}
+                                            alt={
+                                                selectedCountry
+                                                    ? (selectedCountry?.country_name?.ru || selectedCountry?.country_code)
+                                                    : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en)
+                                            }
+                                        />
+                                    </div>
                                 )}
                             </div>
 
                             <div className="data-flex">
                                 <div className="d-flex-div" style={{ borderBottom: "1px solid #00000026" }}>
                                     <p>{selectedCountry ? "Страна" : "Покрытие"}</p>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer" }} onClick={tariffFunc}>
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            gap: 8,
+                                            cursor: mode === "regions" ? "pointer" : "default",
+                                            opacity: mode === "regions" ? 1 : 0.6, // optional: gray out when disabled
+                                        }}
+                                        onClick={mode === "regions" ? tariffFunc : undefined}
+                                    >
                                         <p>
                                             {selectedCountry
                                                 ? (selectedCountry?.country_name?.ru ||
@@ -417,7 +510,7 @@ function Esim() {
                                                 viewBox="0 0 24 24"
                                                 fill="none"
                                                 xmlns="http://www.w3.org/2000/svg"
-                                                onClick={tariffFunc}
+                                                style={{ opacity: mode === "regions" ? 1 : 0.4 }} // visually muted if disabled
                                             >
                                                 <path
                                                     d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01"
@@ -486,15 +579,44 @@ function Esim() {
                         </div>
                         <div className="pay-inputs">
                             <p className="pay-label">ФИО</p>
-                            <input type="text" placeholder="Введите ФИО" />
+                            <input
+                                type="text"
+                                placeholder="Введите ФИО"
+                                value={clientName}
+                                onChange={(e) => {
+                                    setClientName(e.target.value);
+                                    setFieldErrors((f) => ({ ...f, name: false }));
+                                }}
+                                style={fieldErrors.name ? { border: "1px solid #F50100" } : {}}
+                            />
                         </div>
+
                         <div className="pay-inputs" style={{ marginTop: 20 }}>
                             <p className="pay-label">Электронный адрес</p>
-                            <input type="text" placeholder="Введите почту клиента" />
+                            <input
+                                type="email"
+                                placeholder="Введите почту клиента"
+                                value={clientEmail}
+                                onChange={(e) => {
+                                    setClientEmail(e.target.value);
+                                    setFieldErrors((f) => ({ ...f, email: false }));
+                                }}
+                                style={fieldErrors.email ? { border: "1px solid #F50100" } : {}}
+                            />
                         </div>
+
                         <div className="pay-inputs" style={{ marginTop: 20 }}>
                             <p className="pay-label">Номер телефона</p>
-                            <input type="text" placeholder="Введите номер телефона клиента" />
+                            <input
+                                type="tel"
+                                placeholder="Введите номер телефона клиента"
+                                value={clientPhone}
+                                onChange={(e) => {
+                                    setClientPhone(e.target.value);
+                                    setFieldErrors((f) => ({ ...f, phone: false }));
+                                }}
+                                style={fieldErrors.phone ? { border: "1px solid #F50100" } : {}}
+                            />
                         </div>
                         <div className="pay-data">
                             <div style={{ borderBottom: "1.5px solid #00000026" }}>
@@ -510,7 +632,28 @@ function Esim() {
                             <input
                                 type="checkbox"
                                 checked={formConfirmed}
-                                onChange={(e) => setFormConfirmed(e.target.checked)}
+                                onChange={(e) => {
+                                    const checked = e.target.checked;
+
+                                    if (checked) {
+                                        const nameErr = !clientName.trim();   // include name; remove if truly optional
+                                        const emailErr = !clientEmail.trim();
+                                        const phoneErr = !clientPhone.trim();
+
+                                        setFieldErrors({
+                                            name: nameErr,
+                                            email: emailErr,
+                                            phone: phoneErr,
+                                        });
+
+                                        if (nameErr || emailErr || phoneErr) {
+                                            setFormConfirmed(false);
+                                            return;
+                                        }
+                                    }
+
+                                    setFormConfirmed(checked);
+                                }}
                             />
                             <span className="checkmark"></span>
                             <span className="label">Я подтверждаю, что правильно указал все данные</span>
@@ -519,13 +662,40 @@ function Esim() {
                             <button
                                 type="button"
                                 className="pay-btn"
-                                disabled={!formConfirmed}
+                                disabled={!formConfirmed || !selectedTariff || paying}
+                                onClick={handleBuyEsim}
                             >
-                                Оплатить
+                                {paying ? <div className="spinner"></div> : "Оплатить"}
                             </button>
                         </div>
                     </div>
                 </form>
+                {appAlert.type && (
+                    <div className="alerts">
+                        {appAlert.type === "green" && (
+                            <div className="alt green" role="alert">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                <span>{appAlert.message}</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                        )}
+                        {appAlert.type === "red" && (
+                            <div className="alt red" role="alert">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                                <span>{appAlert.message}</span>
+                                <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
 
             {/* Сервис доступен в следующих странах */}

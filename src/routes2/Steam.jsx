@@ -189,6 +189,7 @@ function Steam() {
 
     const [appAlert, setAppAlert] = useState({ type: null, message: "" });
     const closeAlert = () => setAppAlert({ type: null, message: "" });
+    const [topupEmail, setTopupEmail] = useState("");
 
     async function handlePayTopup() {
         setPayError("");
@@ -214,6 +215,7 @@ function Steam() {
             const { data } = await api.post("/v1/products/steam/pay", {
                 steam_username: topupLogin.trim(),
                 amount_tmt: amount,
+                email: topupEmail.trim() || undefined, // <— add this
             });
 
             if (data?.status && data?.voucher) {
@@ -504,10 +506,10 @@ function Steam() {
                             </div>
 
                             <div className="steam-block" style={{ marginTop: 16 }} id='topup'>
-                                <div className="block-grid" style={{ marginTop: 0 }}>
+                                <p className='s-block-h'>Пополнение аккаунта</p>
+                                <div className="block-grid" style={{ marginTop: 20 }}>
                                     <div>
-                                        <p className='s-block-h'>Пополнение аккаунта</p>
-                                        <div style={{ position: "relative", marginTop: 20 }}>
+                                        <div style={{ position: "relative" }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
                                                 <span style={{ marginBottom: 0 }}>Где искать</span>
                                                 <div style={{ position: "relative" }}>
@@ -547,6 +549,26 @@ function Steam() {
                                                 style={fieldErrors.login ? { border: "1px solid #F50100" } : {}}
                                             />
                                         </div>
+                                    </div>
+                                    <div>
+                                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                                            <div style={{ position: "relative", opacity: 0, pointerEvents: "none" }}>
+                                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="acc-svg">
+                                                    <rect width="32" height="32" rx="10" fill="#F5F5F9" />
+                                                    <rect x="0.5" y="0.5" width="31" height="31" rx="9.5" stroke="black" stroke-opacity="0.15" />
+                                                    <path d="M16.0026 22.6663C17.8435 22.6663 19.5102 21.9201 20.7166 20.7137C21.9231 19.5073 22.6693 17.8406 22.6693 15.9997C22.6693 14.1587 21.9231 12.4921 20.7166 11.2856C19.5102 10.0792 17.8435 9.33301 16.0026 9.33301C14.1617 9.33301 12.495 10.0792 11.2886 11.2856C10.0821 12.4921 9.33594 14.1587 9.33594 15.9997C9.33594 17.8406 10.0821 19.5073 11.2886 20.7137C12.495 21.9201 14.1617 22.6663 16.0026 22.6663Z" stroke="black" stroke-opacity="0.8" stroke-width="1.3" stroke-linejoin="round" />
+                                                    <path d="M16 17.5413V16.208C17.1046 16.208 18 15.3126 18 14.208C18 13.1034 17.1046 12.208 16 12.208C14.8954 12.208 14 13.1034 14 14.208" stroke="black" stroke-opacity="0.8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M15.9974 20.5417C16.4576 20.5417 16.8307 20.1686 16.8307 19.7083C16.8307 19.2481 16.4576 18.875 15.9974 18.875C15.5372 18.875 15.1641 19.2481 15.1641 19.7083C15.1641 20.1686 15.5372 20.5417 15.9974 20.5417Z" fill="black" fill-opacity="0.8" />
+                                                    <path d="M15.9971 19.125C16.3191 19.125 16.5809 19.386 16.5811 19.708C16.5811 20.0302 16.3192 20.292 15.9971 20.292C15.6751 20.2918 15.4141 20.0301 15.4141 19.708C15.4142 19.3861 15.6752 19.1252 15.9971 19.125Z" stroke="black" stroke-opacity="0.8" stroke-width="0.5" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <input
+                                            type="email"
+                                            placeholder="Введите свою почту"
+                                            value={topupEmail}
+                                            onChange={(e) => setTopupEmail(e.target.value)}
+                                        />
                                     </div>
                                 </div>
                                 <div className="block-grid">

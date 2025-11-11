@@ -13,6 +13,7 @@ import api from "../lib/api";
 function Navbar() {
   const { t, i18n } = useTranslation();
   const currentLang = i18n.language || "ru";
+  const [searchValue, setSearchValue] = useState("");
 
   const navigate = useNavigate();
 
@@ -230,6 +231,41 @@ function Navbar() {
           </li>
         )}
       </ul>
+
+      <div className="nav-search">
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M11.1524 11.1575L15.8281 15.8333M7.91146 12.4999C10.4428 12.4999 12.4948 10.4479 12.4948 7.91659C12.4948 5.38528 10.4428 3.33325 7.91146 3.33325C5.38015 3.33325 3.32812 5.38528 3.32812 7.91659C3.32812 10.4479 5.38015 12.4999 7.91146 12.4999Z"
+            stroke="black"
+            strokeOpacity="0.6"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const q = searchValue.trim();
+            if (!q) return;
+            navigate(`/digital?category=business&query=${encodeURIComponent(q)}`);
+            setSearchValue("");
+          }}
+        >
+          <input
+            type="text"
+            placeholder="Введите сервис"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </form>
+      </div>
 
       {/* Right section */}
       <ul className="nav-ul ul2">

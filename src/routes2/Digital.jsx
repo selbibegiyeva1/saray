@@ -57,6 +57,11 @@ function Digital() {
         e.preventDefault();
     };
 
+    const externalQuery = searchParams.get("query") || "";
+    useEffect(() => {
+        if (externalQuery) setQuery(externalQuery);
+    }, [externalQuery]);
+
     return (
         <div className='Digital'>
             <h1>Цифровые товары</h1>

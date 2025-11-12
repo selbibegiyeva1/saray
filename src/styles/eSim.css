@@ -161,10 +161,11 @@
 
 .payment-form {
     position: fixed;
+    pointer-events: none;
+    overflow: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
     opacity: 0;
     backdrop-filter: blur(5px);
     background: hsl(0, 0%, 0%, 0.5);
@@ -172,6 +173,7 @@
     left: 0%;
     width: 100%;
     height: 100%;
+    padding: 61px;
     z-index: 5;
     transition: 0.3s;
 }
@@ -187,6 +189,7 @@
     background-color: white;
     gap: 26px;
     padding: 32px;
+    margin: auto;
     border-radius: 24px;
     width: 1160px;
 }
@@ -313,13 +316,15 @@
 
 .conts-list {
     position: fixed;
+    pointer-events: none;
+    overflow: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    pointer-events: none;
     opacity: 0;
     backdrop-filter: blur(5px);
     background: hsl(0, 0%, 0%, 0.5);
+    padding: 61px 32px;
     top: 0%;
     left: 0%;
     width: 100%;
@@ -340,6 +345,7 @@
 
 .conts-list ul {
     background: white;
+    margin: auto;
     width: 910px;
     padding: 32px;
     border-radius: 24px;
@@ -379,4 +385,50 @@
 
 .trf-img img {
     width: 100%;
+}
+
+@media(max-width: 1440px) {
+    .Esim {
+        padding: 0px 80px;
+    }
+}
+
+@media(max-width: 1440px) {
+    .Esim {
+        padding: 0px 60px;
+    }
+
+    .blocks {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media(max-width: 1024px) {
+    .payment-form form {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 768px) {
+    .blocks {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .Esim {
+        padding: 0px 32px;
+    }
+}
+
+@media(max-width: 425px) {
+    .blocks {
+        grid-template-columns: 1fr;
+    }
+
+    .Esim {
+        padding: 0px 16px;
+    }
+
+    .payment-form {
+        padding: 61px 23px;
+    }
 }

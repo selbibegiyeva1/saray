@@ -404,7 +404,7 @@ function Esim() {
 
                 {!loading && !err && (
                     filtered.length ? (
-                        <ul>
+                        <ul style={{ paddingRight: 15 }}>
                             {filtered.map((item, i) => {
                                 if (mode === "countries") {
                                     const name = item?.country_name?.ru || item?.country_name?.en || item?.country_code;
@@ -781,7 +781,7 @@ function Esim() {
                         )}
                     </div>
 
-                    <div className="list-auto">
+                    <div className="list-auto" style={{ paddingRight: 15 }}>
                         {covLoading && (
                             <li style={{ padding: 12, opacity: 0.7 }}>Загрузка стран...</li>
                         )}

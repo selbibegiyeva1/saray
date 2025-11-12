@@ -64,11 +64,15 @@
     border: 1.5px solid #00000026;
 }
 
+.icon-wrap {
+    display: flex;
+}
+
 .sng {
     position: absolute;
     display: none;
     top: 50%;
-    left: 6.5%;
+    left: 70px;
     transform: translate(-50%, -50%)
 }
 
@@ -253,6 +257,7 @@
     align-items: center;
     justify-content: center;
     pointer-events: none;
+    overflow: auto;
     opacity: 0;
     top: 50%;
     left: 50%;
@@ -270,6 +275,7 @@
 
 .payform {
     background-color: white;
+    margin: auto;
     padding: 32px;
     border-radius: 24px;
     width: 600px;
@@ -374,6 +380,10 @@
     .Steam {
         padding: 0px 60px;
     }
+
+    .sng div span {
+        left: 60px;
+    }
 }
 
 @media(max-width: 768px) {
@@ -383,6 +393,11 @@
 
     .Steam {
         padding: 0px 32px;
+    }
+
+    .acc-tl {
+        left: -100px;
+        top: 50px;
     }
 }
 
@@ -417,6 +432,15 @@
 
     .s-block-f img {
         width: 100%;
+    }
+
+    .acc-tl {
+        width: 400px;
+        left: -125px;
+    }
+
+    .steam-pay {
+        padding: 61px 24px;
     }
 }
 

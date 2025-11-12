@@ -334,7 +334,7 @@ function Transactions2() {
                                         const label = StatusDef?.label || tx.status;
 
                                         return (
-                                            <tr key={tx.transaction_id || i} className="row-titles row-data oper-row">
+                                            <tr key={tx.transaction_id || i} className="row-titles row-data oper-row" style={{ height: 48 }}>
                                                 <p>{date} {time}</p>
                                                 <p>{tx.email}</p>
                                                 <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }} onClick={() => copyTxId(tx.transaction_id)}>

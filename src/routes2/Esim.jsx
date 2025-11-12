@@ -37,7 +37,6 @@ function Esim() {
     const [formConfirmed, setFormConfirmed] = useState(false);
 
     const [fieldErrors, setFieldErrors] = useState({
-        name: false,
         email: false,
         phone: false,
     });
@@ -143,9 +142,7 @@ function Esim() {
                 setCountries(arr);
 
                 // auto-select first country, but do NOT scroll
-                if (arr.length > 0) {
-                    loadTariffsFor(arr[0], false);
-                }
+
             } catch {
                 if (!isMounted) return;
                 setErr("Не удалось загрузить страны.");
@@ -275,7 +272,9 @@ function Esim() {
     // auto-close modal and auto-dismiss alert after 5s
     useEffect(() => {
         if (appAlert.type) {
-            setPayform(false);
+            if (appAlert.type === "green") {
+                setPayform(false); // close only on success
+            }
             const t = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
             return () => clearTimeout(t);
         }
@@ -485,8 +484,14 @@ function Esim() {
                     {tLoading && <div style={{ padding: 12, opacity: 0.7 }}>Загружаем тарифы…</div>}
                     {tErr && !tLoading && <div style={{ padding: 12, color: "#ED2428" }}>{tErr}</div>}
 
-                    {!tLoading && !tErr && tariffs.length === 0 && (
-                        <div style={{ padding: 12, opacity: 0.7 }}>Тарифы не найдены.</div>
+                    {!tLoading && !tErr && (
+                        tariffs.length === 0 ? (
+                            selectedCountry || selectedRegion ? (
+                                <div style={{ padding: 12, opacity: 0.7 }}>Тарифы не найдены.</div>
+                            ) : (
+                                <div style={{ padding: 12, opacity: 0.7 }}>Выберите страну чтобы посмотреть тарифы.</div>
+                            )
+                        ) : null
                     )}
 
                     {!tLoading && !tErr && tariffs.map((t, i) => (
@@ -592,6 +597,12 @@ function Esim() {
                                 <p>{priceLabel}</p>
                             </div>
                         </div>
+                        <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "16px 0px" }}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 16H12.01M12 8V12M9 4H15L20 9V15L15 20H9L4 15V9L9 4Z" stroke="#F50100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>Товар возврату не подлежит</p>
+                        </div>
                         <span className="pay-desc">После оплаты вы получите письмо со ссылкой QR/ для установки eSIM</span>
                     </div>
                     <div className="pay-data2">
@@ -600,19 +611,6 @@ function Esim() {
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={formFunc} className="close-payment">
                                 <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                        </div>
-                        <div className="pay-inputs">
-                            <p className="pay-label">ФИО</p>
-                            <input
-                                type="text"
-                                placeholder="Введите ФИО"
-                                value={clientName}
-                                onChange={(e) => {
-                                    setClientName(e.target.value);
-                                    setFieldErrors((f) => ({ ...f, name: false }));
-                                }}
-                                style={fieldErrors.name ? { border: "1px solid #F50100" } : {}}
-                            />
                         </div>
 
                         <div className="pay-inputs" style={{ marginTop: 20 }}>
@@ -632,7 +630,7 @@ function Esim() {
                         <div className="pay-inputs" style={{ marginTop: 20 }}>
                             <p className="pay-label">Номер телефона</p>
                             <input
-                                type="tel"
+                                type="number"
                                 placeholder="Введите номер телефона клиента"
                                 value={clientPhone}
                                 onChange={(e) => {
@@ -660,17 +658,15 @@ function Esim() {
                                     const checked = e.target.checked;
 
                                     if (checked) {
-                                        const nameErr = !clientName.trim();   // include name; remove if truly optional
                                         const emailErr = !clientEmail.trim();
                                         const phoneErr = !clientPhone.trim();
 
                                         setFieldErrors({
-                                            name: nameErr,
                                             email: emailErr,
                                             phone: phoneErr,
                                         });
 
-                                        if (nameErr || emailErr || phoneErr) {
+                                        if (emailErr || phoneErr) {
                                             setFormConfirmed(false);
                                             return;
                                         }

@@ -164,7 +164,7 @@
     position: absolute;
     pointer-events: none;
     top: 50%;
-    left: 97.5%;
+    right: 0px;
     transform: translate(-50%, -50%);
 }
 
@@ -347,6 +347,77 @@
 .checkbox input:checked+.checkmark {
     background: #2D85EA;
     border-color: #2D85EA;
+}
+
+.s-div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+@media(max-width: 1440px) {
+    .Steam {
+        padding: 0px 80px;
+    }
+}
+
+@media(max-width: 1024px) {
+    .s-block-f {
+        align-items: flex-start;
+    }
+
+    .steam-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .Steam {
+        padding: 0px 60px;
+    }
+}
+
+@media(max-width: 768px) {
+    .steam-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .Steam {
+        padding: 0px 32px;
+    }
+}
+
+@media(max-width: 425px) {
+    .s-block-btns {
+        flex-direction: column;
+    }
+
+    .Steam {
+        padding: 0px 16px;
+    }
+
+    .s-div {
+        display: none;
+    }
+
+    .s-block-btns button {
+        justify-content: center;
+        height: 55px;
+        width: 100%;
+    }
+
+    .s-block-f {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .block-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .s-block-f img {
+        width: 100%;
+    }
 }
 
 /* The SVG tick – appears only when checked */

@@ -291,10 +291,6 @@ table tr p:first-child {
     }
 
     .search-table {
-        flex-direction: column;
-        align-items: initial;
-        justify-content: initial;
-        width: fit-content;
         gap: 14px;
     }
 

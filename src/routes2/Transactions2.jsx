@@ -249,9 +249,13 @@ function Transactions2() {
                                     placeholder='Введите ID транзакции'
                                 />
                             </div>
-                            <button onClick={applyFilters}>Поиск</button>
-                            <button onClick={resetFilters}>Сбросить</button>
                         </div>
+                    </div>
+                    <div className="filter-b">
+                        <button onClick={applyFilters}>Поиск</button>
+                    </div>
+                    <div className="filter-b">
+                        <button style={{ color: "#2D85EA", padding: "11px 0px", background: "none" }} onClick={resetFilters}>Сбросить</button>
                     </div>
                 </div>
             </div>
@@ -304,7 +308,7 @@ function Transactions2() {
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
                                     <p>Дата</p>
-                                    <p>Время</p>
+                                    <p>Почта</p>
                                     <p>ID Транзакции</p>
                                     <p>Оператор</p>
                                     <p>Категория</p>
@@ -331,8 +335,8 @@ function Transactions2() {
 
                                         return (
                                             <tr key={tx.transaction_id || i} className="row-titles row-data oper-row">
-                                                <p>{date}</p>
-                                                <p>{time}</p>
+                                                <p>{date} {time}</p>
+                                                <p>{tx.email}</p>
                                                 <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }} onClick={() => copyTxId(tx.transaction_id)}>
                                                     {tx.transaction_id}
                                                 </p>

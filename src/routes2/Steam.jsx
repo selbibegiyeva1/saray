@@ -335,6 +335,7 @@ function Steam() {
         login: false,
         amount: false,
         usd: false, // 👈 new
+        email: false, // ✅ add this
     });
 
     const [limitError, setLimitError] = useState("");
@@ -551,7 +552,7 @@ function Steam() {
                                         </div>
                                     </div>
                                     <div>
-                                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
+                                        <div className="s-div">
                                             <div style={{ position: "relative", opacity: 0, pointerEvents: "none" }}>
                                                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="acc-svg">
                                                     <rect width="32" height="32" rx="10" fill="#F5F5F9" />
@@ -567,7 +568,11 @@ function Steam() {
                                             type="email"
                                             placeholder="Введите свою почту"
                                             value={topupEmail}
-                                            onChange={(e) => setTopupEmail(e.target.value)}
+                                            onChange={(e) => {
+                                                setTopupEmail(e.target.value);
+                                                setFieldErrors((f) => ({ ...f, email: false }));
+                                            }}
+                                            style={fieldErrors.email ? { border: "1px solid #F50100" } : {}}
                                         />
                                     </div>
                                 </div>
@@ -710,7 +715,11 @@ function Steam() {
                                         type="email"
                                         placeholder="Напишите свою почту"
                                         value={userEmail}
-                                        onChange={(e) => setUserEmail(e.target.value)}
+                                        onChange={(e) => {
+                                            setUserEmail(e.target.value);
+                                            setFieldErrors((f) => ({ ...f, email: false }));
+                                        }}
+                                        style={fieldErrors.email ? { border: "1px solid #F50100" } : {}}
                                     />
                                 </div>
                             </div>
@@ -754,14 +763,15 @@ function Steam() {
                                             const amt = Number(String(topupAmountTmt).replace(",", "."));
                                             const amountErr = !Number.isFinite(amt) || amt <= 0;
                                             const usdErr = !topupAmountUsd || topupAmountUsd === "";
+                                            const emailErr = !topupEmail.trim();
 
-                                            setFieldErrors({ region: regionErr, login: loginErr, amount: amountErr, usd: usdErr });
-                                            if (regionErr || loginErr || amountErr || usdErr) { setConfirmed(false); return; }
+                                            setFieldErrors({ region: regionErr, login: loginErr, amount: amountErr, usd: usdErr, email: emailErr });
+                                            if (regionErr || loginErr || amountErr || usdErr || emailErr) { setConfirmed(false); return; }
                                         } else {
-                                            // voucher tab
                                             const vRegionErr = !selectedRegion;
                                             const vEmailErr = !userEmail.trim();
-                                            setFieldErrors((f) => ({ ...f, region: vRegionErr })); // only region is visually shared
+
+                                            setFieldErrors({ region: vRegionErr, email: vEmailErr });
                                             if (vRegionErr || vEmailErr || !selectedVoucher) { setConfirmed(false); return; }
                                         }
                                     }

@@ -17,6 +17,7 @@
 
 .filter-flex {
     display: flex;
+    align-items: flex-end;
     gap: 16px;
     margin-top: 20px;
 }
@@ -39,7 +40,7 @@
     position: absolute;
     pointer-events: none;
     top: 50%;
-    left: 92.5%;
+    right: 12px;
     transform: translate(-50%, -50%);
 }
 
@@ -58,6 +59,7 @@
     outline: none;
     font-size: 14px;
     font-weight: 500;
+    width: 100%;
 }
 
 .b-flex {
@@ -65,7 +67,7 @@
     display: flex;
 }
 
-.b-flex button {
+.filter-b button {
     height: 41px;
     cursor: pointer;
     border: none;
@@ -74,13 +76,31 @@
     color: white;
     font-size: 15px;
     font-weight: 500;
-    margin: 8px 0px 0px 16px;
     padding: 11px 37px;
     border-radius: 8px;
 }
 
-.b-flex button:nth-child(3) {
-    background: none;
-    color: #2D85EA;
-    padding: 11px 0px;
+@media(max-width: 1024px) {
+
+    .filter-flex,
+    .filter-flex select {
+        width: 100%;
+    }
+
+    .filter-flex {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr auto
+    }
+}
+
+@media(max-width: 425px) {
+    .filter-flex {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .filter-flex .filter-b:nth-child(3) span {
+        display: none;
+    }
 }

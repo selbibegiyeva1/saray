@@ -199,63 +199,65 @@ function Transactions2() {
 
     return (
         <div className='Home transhome'>
-            <h1>{t("transFilter.title")}</h1>
 
-            <div className="trans-filter">
-                <p className="filter-h">{t("transFilter.filters")}</p>
-                <div className="filter-flex">
-                    <div className='filter-b'>
-                        <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.date")}</span>
-                        <div style={{ position: 'relative', marginTop: 8 }}>
-                            <select value={periodInput} onChange={(e) => setPeriodInput(e.target.value)}>
-                                <option value="day">{t("transFilter.date_day")}</option>
-                                <option value="week">{t("transFilter.date_week")}</option>
-                                <option value="month">{t("transFilter.date_month")}</option>
-                                <option value="year">{t("transFilter.date_year")}</option>
-                                <option value="all_time">{t("transFilter.date_all")}</option>
-                            </select>
-                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
-                                <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div className='filter-b'>
-                        <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.category")}</span>
-                        <div style={{ position: 'relative', marginTop: 8 }}>
-                            <select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
-                                <option value="ALL">{t("transFilter.category_all")}</option>
-                                <option value="ESIM">{t("transFilter.category_esim")}</option>
-                                <option value="VOUCHER">{t("transFilter.category_voucher")}</option>
-                                <option value="STEAM">{t("transFilter.category_steam")}</option>
-                                <option value="TOPUP">{t("transFilter.category_topup")}</option>
-                            </select>
-                            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
-                                <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
-                            </svg>
-                        </div>
-                    </div>
-                    <div className="filter-b">
-                        <span style={{ fontSize: 14, fontWeight: 500, opacity: 0 }}>{t("transFilter.category")}</span>
-                        <div className="b-flex">
-                            <div className="search-filt" style={{ position: 'relative', marginTop: 8 }}>
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M11.1524 11.1572L15.8281 15.833M7.91146 12.4997C10.4428 12.4997 12.4948 10.4476 12.4948 7.91634C12.4948 5.38504 10.4428 3.33301 7.91146 3.33301C5.38015 3.33301 3.32812 5.38504 3.32812 7.91634C3.32812 10.4476 5.38015 12.4997 7.91146 12.4997Z" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <div style={{ maxWidth: 1680, margin: "auto" }}>
+                <h1>{t("transFilter.title")}</h1>
+                <div className="trans-filter">
+                    <p className="filter-h">{t("transFilter.filters")}</p>
+                    <div className="filter-flex">
+                        <div className='filter-b'>
+                            <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.date")}</span>
+                            <div style={{ position: 'relative', marginTop: 8 }}>
+                                <select value={periodInput} onChange={(e) => setPeriodInput(e.target.value)}>
+                                    <option value="day">{t("transFilter.date_day")}</option>
+                                    <option value="week">{t("transFilter.date_week")}</option>
+                                    <option value="month">{t("transFilter.date_month")}</option>
+                                    <option value="year">{t("transFilter.date_year")}</option>
+                                    <option value="all_time">{t("transFilter.date_all")}</option>
+                                </select>
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
+                                    <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
                                 </svg>
-                                <input
-                                    value={txidInput}
-                                    onChange={(e) => setTxidInput(e.target.value)}
-                                    onKeyDown={onEnter}
-                                    type="text"
-                                    placeholder={t("transFilter.searchPlaceholder")}
-                                />
                             </div>
                         </div>
-                    </div>
-                    <div className="filter-b">
-                        <button onClick={applyFilters}>{t("transFilter.search")}</button>
-                    </div>
-                    <div className="filter-b">
-                        <button style={{ color: "#2D85EA", padding: "11px 0px", background: "none" }} onClick={resetFilters}>{t("transFilter.reset")}</button>
+                        <div className='filter-b'>
+                            <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.category")}</span>
+                            <div style={{ position: 'relative', marginTop: 8 }}>
+                                <select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
+                                    <option value="ALL">{t("transFilter.category_all")}</option>
+                                    <option value="ESIM">{t("transFilter.category_esim")}</option>
+                                    <option value="VOUCHER">{t("transFilter.category_voucher")}</option>
+                                    <option value="STEAM">{t("transFilter.category_steam")}</option>
+                                    <option value="TOPUP">{t("transFilter.category_topup")}</option>
+                                </select>
+                                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
+                                    <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div className="filter-b">
+                            <span style={{ fontSize: 14, fontWeight: 500, opacity: 0 }}>{t("transFilter.category")}</span>
+                            <div className="b-flex">
+                                <div className="search-filt" style={{ position: 'relative', marginTop: 8 }}>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M11.1524 11.1572L15.8281 15.833M7.91146 12.4997C10.4428 12.4997 12.4948 10.4476 12.4948 7.91634C12.4948 5.38504 10.4428 3.33301 7.91146 3.33301C5.38015 3.33301 3.32812 5.38504 3.32812 7.91634C3.32812 10.4476 5.38015 12.4997 7.91146 12.4997Z" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    <input
+                                        value={txidInput}
+                                        onChange={(e) => setTxidInput(e.target.value)}
+                                        onKeyDown={onEnter}
+                                        type="text"
+                                        placeholder={t("transFilter.searchPlaceholder")}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="filter-b">
+                            <button onClick={applyFilters}>{t("transFilter.search")}</button>
+                        </div>
+                        <div className="filter-b">
+                            <button style={{ color: "#2D85EA", padding: "11px 0px", background: "none" }} onClick={resetFilters}>{t("transFilter.reset")}</button>
+                        </div>
                     </div>
                 </div>
             </div>

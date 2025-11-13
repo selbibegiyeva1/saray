@@ -11,8 +11,8 @@
     display: grid;
     grid-template-columns: 1fr 490px;
     gap: 32px;
-    margin-top: 32px;
-    margin-bottom: 200px;
+    margin: 32px auto 200px auto;
+    max-width: 1680px;
 }
 
 .steam-block {

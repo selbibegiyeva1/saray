@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import api from "../lib/api"; // axios instance with auth attached
 
+import { useTranslation } from "react-i18next";
+
 import "../styles/Steam.css";
 import "../styles/Login.css";
 
 function Steam() {
+    const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("topup"); // 'topup' or 'voucher'
     const [activeVoucher, setActiveVoucher] = useState(null);
 
@@ -396,7 +399,7 @@ function Steam() {
 
     return (
         <div className='Steam'>
-            <h1>Steam</h1>
+            <h1>{t("steam.title")}</h1>
 
             <form className="steam-grid">
                 <div>
@@ -404,10 +407,9 @@ function Steam() {
                         <div className="s-block-f">
                             <img src="/steamsmall.png" alt="img" />
                             <div>
-                                <p className='s-block-h'>Пополнение баланса Steam</p>
+                                <p className='s-block-h'>{t("steam.topupTitle")}</p>
                                 <span className="s-d">
-                                    Ваучер для пополнения баланса аккаунта <br />
-                                    (При регистрации нового аккаунта используйте почту от gmail.com)
+                                    {t("steam.topupDescription")}
                                 </span>
                                 <div className="s-block-btns">
                                     <button
@@ -415,7 +417,7 @@ function Steam() {
                                         className={activeTab === "topup" ? "active" : ""}
                                         onClick={() => setActiveTab("topup")}
                                     >
-                                        Пополнение
+                                        {t("steam.tabTopup")}
                                     </button>
                                     <div className="v-tool">
                                         <button
@@ -423,7 +425,7 @@ function Steam() {
                                             className={activeTab === "voucher" ? "active" : ""}
                                             onClick={() => setActiveTab("voucher")}
                                         >
-                                            Ваучер
+                                            {t("steam.tabVoucher")}
                                             <div className="icon-wrap">
                                                 <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <rect width="28" height="28" rx="10" fill="#F5F5F9" />
@@ -433,7 +435,7 @@ function Steam() {
                                                     <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 18.5417C14.4576 18.5417 14.8307 18.1686 14.8307 17.7083C14.8307 17.2481 14.4576 16.875 13.9974 16.875C13.5372 16.875 13.1641 17.2481 13.1641 17.7083C13.1641 18.1686 13.5372 18.5417 13.9974 18.5417Z" fill="black" fill-opacity="0.8" />
                                                     <path d="M13.9971 17.125C14.3191 17.125 14.5809 17.386 14.5811 17.708C14.5811 18.0302 14.3192 18.292 13.9971 18.292C13.6751 18.2918 13.4141 18.0301 13.4141 17.708C13.4142 17.3861 13.6752 17.1252 13.9971 17.125Z" stroke="black" stroke-opacity="0.8" stroke-width="0.5" />
                                                 </svg>
-                                                <span>Ваучер — уникальная комбинация из цифр и букв. У ваучера есть денежный номинал, который зачисляется на игровой кошелёк при активации.</span>
+                                                <span>{t("steam.tooltipVoucherTitle")}</span>
                                             </div>
                                         </button>
                                     </div>
@@ -446,7 +448,7 @@ function Steam() {
                     {activeTab === "topup" && (
                         <>
                             <div className="steam-block" style={{ marginTop: 16 }} id='topup'>
-                                <p className='s-block-h' style={{ marginBottom: 16 }}>Выберите регион</p>
+                                <p className='s-block-h' style={{ marginBottom: 16 }}>{t("steam.selectRegion")}</p>
                                 <div style={{ position: "relative" }}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" className='slct-arr'>
@@ -463,7 +465,7 @@ function Steam() {
                                         style={fieldErrors.region ? { border: "1px solid #F50100" } : {}}
                                     >
                                         <option value="" disabled>
-                                            {loadingForms ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : "Выберите регион"}
+                                            {loadingForms ? `${t("steam.loading")}` : fetchErr ? `${t("steam.loadError")}` : `${t("steam.selectRegion")}`}
                                         </option>
                                         {topupRegions.map(opt => (
                                             <option key={opt.value} value={opt.value}>
@@ -540,7 +542,7 @@ function Steam() {
                                     <div>
                                         <div style={{ position: "relative" }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                                                <span style={{ marginBottom: 0 }}>Где искать</span>
+                                                <span style={{ marginBottom: 0 }}>${t("steam.whereToFind")}</span>
                                                 <div style={{ position: "relative" }}>
                                                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="acc-svg">
                                                         <rect width="32" height="32" rx="10" fill="#F5F5F9" />

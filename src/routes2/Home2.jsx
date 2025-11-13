@@ -185,25 +185,25 @@ function Home2() {
     return (
         <div className='Home'>
             <div className="operator-top">
-                <h1>Основные разделы</h1>
+                <h1>{t("operator.mainSections")}</h1>
 
                 <div className="oper-flex-block">
                     <div className="operator-flex">
                         <Link to="/steam">
                             <img src="/steam.png" alt="box" />
-                            <center><b>Steam</b></center>
+                            <center><b>{t("operator.steam")}</b></center>
                         </Link>
                         <Link to="/digital?category=games">
                             <img src="/games.png" alt="box" />
-                            <center><b>Игры</b></center>
+                            <center><b>{t("operator.games")}</b></center>
                         </Link>
                         <Link to="/digital?category=business">
                             <img src="/services.png" alt="box" />
-                            <center><b>Сервисы</b></center>
+                            <center><b>{t("operator.services")}</b></center>
                         </Link>
                         <Link to="/esim">
                             <img src="/esim.png" alt="box" />
-                            <center><b>eSIM</b></center>
+                            <center><b>{t("operator.esim")}</b></center>
                         </Link>
                     </div>
 
@@ -212,10 +212,10 @@ function Home2() {
                             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.9974 6.66667H24.9409C25.7087 6.66667 26.1901 7.49615 25.8091 8.16281L21.9066 14.9923C21.5505 15.6154 20.8878 16 20.1701 16H10.6641M10.6641 16L8.28698 19.8033C7.8707 20.4694 8.34954 21.3333 9.13498 21.3333H23.9974M10.6641 16L5.21685 5.10557C4.87806 4.428 4.18554 4 3.42799 4H2.66406M10.6641 26.6667C10.6641 27.403 10.0671 28 9.33073 28C8.59435 28 7.9974 27.403 7.9974 26.6667C7.9974 25.9303 8.59435 25.3333 9.33073 25.3333C10.0671 25.3333 10.6641 25.9303 10.6641 26.6667ZM23.9974 26.6667C23.9974 27.403 23.4004 28 22.6641 28C21.9277 28 21.3307 27.403 21.3307 26.6667C21.3307 25.9303 21.9277 25.3333 22.6641 25.3333C23.4004 25.3333 23.9974 25.9303 23.9974 26.6667Z" stroke="#5682FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
-                            <p>Баланс</p>
+                            <p>{t("operator.balance")}</p>
                         </div>
                         <div style={{ display: "flex", marginTop: 24, alignItems: "center", justifyContent: "space-between", fontSize: 20, fontWeight: 500 }}>
-                            <p>Доступно</p>
+                            <p>{t("operator.available")}</p>
                             <p>
                                 {balanceErr
                                     ? balanceErr
@@ -225,8 +225,8 @@ function Home2() {
                             </p>
                         </div>
                         <div style={{ display: "flex", marginTop: 16, alignItems: "center", justifyContent: "space-between", fontSize: 20, fontWeight: 500 }}>
-                            <p>Режим</p>
-                            <p>Депозит</p>
+                            <p>{t("operator.mode")}</p>
+                            <p>{t("operator.deposit")}</p>
                         </div>
                     </div>
                 </div>
@@ -234,7 +234,7 @@ function Home2() {
 
             <div style={{ maxWidth: 1680, margin: "auto" }}>
                 <div className="oper-head">
-                    <h1>Сегодня по операциям</h1>
+                    <h1>{t("operator.todayOperations")}</h1>
                 </div>
             </div>
 

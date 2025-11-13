@@ -304,12 +304,12 @@
 
     .page-head,
     #home-charts {
-        width: 1440px;
+        width: 1680px;
         margin: 24px auto auto auto;
     }
 
     .grid-blocks {
-        width: 1440px;
+        width: 1680px;
         margin: 18px auto auto auto;
     }
 }

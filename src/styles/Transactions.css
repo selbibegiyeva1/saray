@@ -240,7 +240,7 @@ table tr p:first-child {
 
 @media(min-width: 1740px) {
     .transactions-container {
-        width: 1440px;
+        width: 1680px;
         margin: auto;
     }
 

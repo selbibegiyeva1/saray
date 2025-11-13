@@ -38,6 +38,8 @@ function Steam() {
     const [calcLoading, setCalcLoading] = useState(false);
 
     const [topupLogin, setTopupLogin] = useState("");
+    const [topupEmail, setTopupEmail] = useState("");   // ← move it here
+
 
     useEffect(() => {
         const loadForms = async () => {
@@ -160,11 +162,18 @@ function Steam() {
             ? voucherRegions.find(r => r.value === selectedRegion)?.name || "—"
             : topupRegions.find(r => r.value === selectedTopupRegion)?.name || "—";
 
+    const isValidEmail = (value) => {
+        const v = String(value || "").trim();
+        if (!v) return false;
+        // simple but good-enough pattern
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    };
+
     const canPayVoucher =
         confirmed &&
         selectedVoucher &&
         selectedRegion &&
-        userEmail.trim() !== "";
+        isValidEmail(userEmail);
 
     const parsedAmount = Number(String(topupAmountTmt).replace(",", "."));
     const amountWithinLimits =
@@ -177,7 +186,8 @@ function Steam() {
         selectedTopupRegion &&
         topupLogin.trim() !== "" &&
         String(topupAmountTmt).trim() !== "" &&
-        amountWithinLimits;
+        amountWithinLimits &&
+        isValidEmail(topupEmail);
 
     const contactLabel = activeTab === "voucher" ? "Почта" : "Логин в Steam";
     const contactValue = activeTab === "voucher" ? userEmail : topupLogin;
@@ -189,7 +199,6 @@ function Steam() {
 
     const [appAlert, setAppAlert] = useState({ type: null, message: "" });
     const closeAlert = () => setAppAlert({ type: null, message: "" });
-    const [topupEmail, setTopupEmail] = useState("");
 
     async function handlePayTopup() {
         setPayError("");
@@ -318,10 +327,11 @@ function Steam() {
 
     useEffect(() => {
         if (appAlert.type) {
-            // close modal immediately when an alert appears
-            setPay(false);
+            // close modal only on success (green), stay open on errors
+            if (appAlert.type === "green") {
+                setPay(false);
+            }
 
-            // auto-hide alert after 5 seconds
             const timer = setTimeout(() => {
                 setAppAlert({ type: null, message: "" });
             }, 5000);
@@ -752,16 +762,33 @@ function Steam() {
                                             const amt = Number(String(topupAmountTmt).replace(",", "."));
                                             const amountErr = !Number.isFinite(amt) || amt <= 0;
                                             const usdErr = !topupAmountUsd || topupAmountUsd === "";
-                                            const emailErr = !topupEmail.trim();
+                                            const emailErr = !isValidEmail(topupEmail);
 
-                                            setFieldErrors({ region: regionErr, login: loginErr, amount: amountErr, usd: usdErr, email: emailErr });
-                                            if (regionErr || loginErr || amountErr || usdErr || emailErr) { setConfirmed(false); return; }
+                                            setFieldErrors({
+                                                region: regionErr,
+                                                login: loginErr,
+                                                amount: amountErr,
+                                                usd: usdErr,
+                                                email: emailErr,
+                                            });
+
+                                            if (regionErr || loginErr || amountErr || usdErr || emailErr) {
+                                                setConfirmed(false);
+                                                return;
+                                            }
                                         } else {
                                             const vRegionErr = !selectedRegion;
-                                            const vEmailErr = !userEmail.trim();
+                                            const vEmailErr = !isValidEmail(userEmail);
 
-                                            setFieldErrors({ region: vRegionErr, email: vEmailErr });
-                                            if (vRegionErr || vEmailErr || !selectedVoucher) { setConfirmed(false); return; }
+                                            setFieldErrors({
+                                                region: vRegionErr,
+                                                email: vEmailErr,
+                                            });
+
+                                            if (vRegionErr || vEmailErr || !selectedVoucher) {
+                                                setConfirmed(false);
+                                                return;
+                                            }
                                         }
                                     }
 
@@ -872,88 +899,89 @@ function Steam() {
                             <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
                         </div>
                     </div>
+
+                    {appAlert.type && (
+                        <div className="alerts">
+                            {appAlert.type === "green" && (
+                                <div className="alt green" role="alert">
+                                    <svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11"
+                                            stroke="#50A66A"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    <span>{appAlert.message}</span>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        className="alt-close"
+                                        onClick={closeAlert}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M5 5L15 15M15 5L5 15"
+                                            stroke="black"
+                                            strokeOpacity="0.6"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            )}
+
+                            {appAlert.type === "red" && (
+                                <div className="alt red" role="alert">
+                                    <svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+                                            stroke="#ED2428"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                    <span>{appAlert.message}</span>
+                                    <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        className="alt-close"
+                                        onClick={closeAlert}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M5 5L15 15M15 5L5 15"
+                                            stroke="black"
+                                            strokeOpacity="0.6"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </form>
 
-            {appAlert.type && (
-                <div className="alerts">
-                    {appAlert.type === "green" && (
-                        <div className="alt green" role="alert">
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11"
-                                    stroke="#50A66A"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                            <span>{appAlert.message}</span>
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                className="alt-close"
-                                onClick={closeAlert}
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M5 5L15 15M15 5L5 15"
-                                    stroke="black"
-                                    strokeOpacity="0.6"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                        </div>
-                    )}
-
-                    {appAlert.type === "red" && (
-                        <div className="alt red" role="alert">
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
-                                    stroke="#ED2428"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                            <span>{appAlert.message}</span>
-                            <svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                className="alt-close"
-                                onClick={closeAlert}
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M5 5L15 15M15 5L5 15"
-                                    stroke="black"
-                                    strokeOpacity="0.6"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
-                        </div>
-                    )}
-                </div>
-            )}
         </div>
     );
 }

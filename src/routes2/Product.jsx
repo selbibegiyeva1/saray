@@ -41,6 +41,20 @@ function Product() {
   // while sending request
   const [paying, setPaying] = useState(false);
 
+  const [fieldErrors, setFieldErrors] = useState({
+    voucherRegion: false,
+    voucherEmail: false,
+    topupRegion: false,
+    topupProduct: false,
+    topupTexts: {}, // { [fieldName]: boolean }
+  });
+
+  const isValidEmail = (value) => {
+    const v = String(value || "").trim();
+    if (!v) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  };
+
   useEffect(() => {
     if (!group_id && !group_name) return;
     let cancel = false;
@@ -122,6 +136,15 @@ function Product() {
     return Array.isArray(field?.options) ? field.options : [];
   }, [topupFields]);
 
+  const topupEmailField = useMemo(() => {
+    const tf = topupFields || [];
+    return tf.find(f => f.name === "email" && f.type === "text");
+  }, [topupFields]);
+
+  const topupEmail = topupEmailField
+    ? String(topupTextValues[topupEmailField.name] || "")
+    : "";
+
   const topupProducts = useMemo(() => {
     const field = (topupFields || []).find(f => f?.name === "product_id" && f?.type === "options");
     return Array.isArray(field?.options) ? field.options : [];
@@ -174,7 +197,7 @@ function Product() {
     !!(activeTab === "voucher") &&
     !!selectedVoucher &&
     !!region &&
-    (!emailField || userEmail.trim() !== "") &&
+    (!emailField || isValidEmail(userEmail)) &&
     confirmed;
 
   const topupTextRequiredOK = useMemo(() => {
@@ -188,6 +211,7 @@ function Product() {
     !!topupRegion &&
     !!selectedTopup &&
     topupTextRequiredOK &&
+    (!topupEmailField || isValidEmail(topupEmail)) &&
     confirmed;
 
   const canPay = activeTab === "voucher" ? canPayVoucher : canPayTopup;
@@ -196,9 +220,12 @@ function Product() {
   const hasTopup = Array.isArray(topupFields) && topupFields.length > 0;
 
   // close modal when alert appears, and auto-hide after 5s
+  // close modal only on success, auto-hide alert after 5s
   useEffect(() => {
     if (appAlert.type) {
-      setPay(false);
+      if (appAlert.type === "green") {
+        setPay(false); // close only on success, keep open on error
+      }
       const t = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
       return () => clearTimeout(t);
     }
@@ -212,8 +239,8 @@ function Product() {
       setAppAlert({ type: "red", message: "Выберите номинал ваучера" });
       return;
     }
-    if (emailField && !String(userEmail).trim()) {
-      setAppAlert({ type: "red", message: "Введите email" });
+    if (emailField && !isValidEmail(userEmail)) {
+      setAppAlert({ type: "red", message: "Введите корректный email" });
       return;
     }
 
@@ -280,11 +307,17 @@ function Product() {
       }
     });
 
-    // Minimal guards (you already gate the pay button with canPayTopup)
     if (!payload.product_id) {
       setAppAlert({ type: "red", message: "Выберите товар" });
       return;
     }
+
+    if (topupEmailField && !isValidEmail(topupEmail)) {
+      setAppAlert({ type: "red", message: "Введите корректный email" });
+      return;
+    }
+
+    setPaying(true);
 
     setPaying(true);
     try {
@@ -403,8 +436,10 @@ function Product() {
                           setRegion(e.target.value);
                           setActiveVoucher(null);
                           setSelectedVoucher(null);
+                          setFieldErrors(prev => ({ ...prev, voucherRegion: false }));
                         }}
                         disabled={!regionOptions.length}
+                        style={fieldErrors.voucherRegion ? { border: "1px solid #F50100" } : {}}
                       >
                         {regionOptions.length ? (
                           regionOptions.map(opt => (
@@ -456,7 +491,11 @@ function Product() {
                           name={emailField.name}
                           placeholder={emailField.label}
                           value={userEmail}
-                          onChange={(e) => setUserEmail(e.target.value)}
+                          onChange={(e) => {
+                            setUserEmail(e.target.value);
+                            setFieldErrors(prev => ({ ...prev, voucherEmail: false }));
+                          }}
+                          style={fieldErrors.voucherEmail ? { border: "1px solid #F50100" } : {}}
                         />
                       </div>
                     )}
@@ -486,8 +525,12 @@ function Product() {
                               </svg>
                               <select
                                 value={topupRegion}
-                                onChange={(e) => setTopupRegion(e.target.value)}
+                                onChange={(e) => {
+                                  setTopupRegion(e.target.value);
+                                  setFieldErrors(prev => ({ ...prev, topupRegion: false }));
+                                }}
                                 disabled={!topupRegionOptions.length}
+                                style={fieldErrors.topupRegion ? { border: "1px solid #F50100" } : {}}
                               >
                                 {topupRegionOptions.length ? (
                                   topupRegionOptions.map(opt => (
@@ -518,6 +561,7 @@ function Product() {
                                   onClick={() => {
                                     setActiveTopup(p.value);
                                     setSelectedTopup(p);
+                                    setFieldErrors(prev => ({ ...prev, topupProduct: false }));
                                   }}
                                   title={`${p.product} — ${p.price} ТМТ`}
                                 >
@@ -534,6 +578,8 @@ function Product() {
 
                       // any text fields (e.g., account/ID, etc.)
                       if (f.type === "text") {
+                        const hasError = !!fieldErrors.topupTexts?.[f.name];
+
                         return (
                           <div key={f.name}>
                             <span style={{ marginBottom: 8, fontSize: 14, display: "flex" }}>
@@ -545,9 +591,15 @@ function Product() {
                               name={f.name}
                               placeholder={f.label}
                               value={topupTextValues[f.name] || ""}
-                              onChange={(e) =>
-                                setTopupTextValues(prev => ({ ...prev, [f.name]: e.target.value }))
-                              }
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                setTopupTextValues(prev => ({ ...prev, [f.name]: value }));
+                                setFieldErrors(prev => ({
+                                  ...prev,
+                                  topupTexts: { ...(prev.topupTexts || {}), [f.name]: false },
+                                }));
+                              }}
+                              style={hasError ? { border: "1px solid #F50100" } : {}}
                             />
                           </div>
                         );
@@ -581,7 +633,57 @@ function Product() {
               <input
                 type="checkbox"
                 checked={confirmed}
-                onChange={(e) => setConfirmed(e.target.checked)}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+
+                  if (checked) {
+                    if (activeTab === "voucher") {
+                      const vRegionErr = !region;
+                      const vEmailErr = !!emailField && !isValidEmail(userEmail);
+                      const voucherProductErr = !selectedVoucher;
+
+                      setFieldErrors(prev => ({
+                        ...prev,
+                        voucherRegion: vRegionErr,
+                        voucherEmail: vEmailErr,
+                      }));
+
+                      if (vRegionErr || vEmailErr || voucherProductErr) {
+                        setConfirmed(false);
+                        return;
+                      }
+                    } else if (activeTab === "topup") {
+                      const regionErr = !topupRegion;
+                      const productErr = !selectedTopup;
+
+                      const texts = (topupFields || []).filter(f => f.type === "text");
+                      const textErrors = {};
+                      let hasTextErr = false;
+
+                      texts.forEach((f) => {
+                        const value = String(topupTextValues[f.name] || "").trim();
+                        const isEmailField = f.name === (topupEmailField?.name || "");
+                        const err = !value || (isEmailField && !isValidEmail(value));
+                        textErrors[f.name] = err;
+                        if (err) hasTextErr = true;
+                      });
+
+                      setFieldErrors(prev => ({
+                        ...prev,
+                        topupRegion: regionErr,
+                        topupProduct: productErr,
+                        topupTexts: textErrors,
+                      }));
+
+                      if (regionErr || productErr || hasTextErr) {
+                        setConfirmed(false);
+                        return;
+                      }
+                    }
+                  }
+
+                  setConfirmed(checked);
+                }}
               />
               <span className="checkmark"></span>
               <span className="label">Я подтверждаю, что правильно указал все данные</span>
@@ -680,36 +782,38 @@ function Product() {
               <button type="button" className="pay-btn cancel" onClick={togglePay}>Отмена</button>
             </div>
           </div>
+          {appAlert.type && (
+            <div className="alerts">
+              {appAlert.type === "green" && (
+                <div className="alt green" role="alert">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span>{appAlert.message}</span>
+                  <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              )}
+
+              {appAlert.type === "red" && (
+                <div className="alt red" role="alert">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <span>{appAlert.message}</span>
+                  <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          )}
+
+
         </div>
       </form>
 
-      {appAlert.type && (
-        <div className="alerts">
-          {appAlert.type === "green" && (
-            <div className="alt green" role="alert">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span>{appAlert.message}</span>
-              <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          )}
-
-          {appAlert.type === "red" && (
-            <div className="alt red" role="alert">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span>{appAlert.message}</span>
-              <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
-                <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

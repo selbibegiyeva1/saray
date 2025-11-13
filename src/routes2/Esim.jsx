@@ -41,6 +41,12 @@ function Esim() {
         phone: false,
     });
 
+    const isValidEmail = (value) => {
+        const v = String(value || "").trim();
+        if (!v) return false;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    };
+
     // utils
     const norm = (s = "") => s.toString().toLowerCase().replace(/\s|-/g, "");
     const formatTraffic = (traffic) => {
@@ -287,15 +293,16 @@ function Esim() {
             setAppAlert({ type: "red", message: "Выберите тариф" });
             return;
         }
-        if (!clientEmail.trim() || !clientPhone.trim()) {
-            setAppAlert({ type: "red", message: "Укажите электронный адрес и номер телефона" });
+        if (!isValidEmail(clientEmail) || !clientPhone.trim()) {
+            // This is just a safety check in case someone bypasses the UI.
+            setAppAlert({ type: "red", message: "Заполните данные клиента корректно" });
             return;
         }
 
         const payload = {
             client_email: clientEmail.trim(),
             client_phone: clientPhone.trim(),
-            tariff_name: selectedTariff.name, // from tariffs list (1.2)
+            tariff_name: selectedTariff.name,
         };
 
         setPaying(true);
@@ -658,7 +665,7 @@ function Esim() {
                                     const checked = e.target.checked;
 
                                     if (checked) {
-                                        const emailErr = !clientEmail.trim();
+                                        const emailErr = !isValidEmail(clientEmail);
                                         const phoneErr = !clientPhone.trim();
 
                                         setFieldErrors({

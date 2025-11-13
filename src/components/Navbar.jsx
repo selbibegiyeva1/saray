@@ -178,7 +178,7 @@ function Navbar() {
         {user?.role === "OPERATOR" ? (
           <li style={{ position: "relative" }} ref={prodRef}>
             <button type="button" onClick={prodFunc}>
-              <span>Продукты</span>
+              <span>{t("navbar.product")}</span>
               <svg
                 width="20"
                 height="20"
@@ -201,7 +201,7 @@ function Navbar() {
                   navigate("/digital");
                 }}
               >
-                Цифровые товары
+                {t("navbar.dig_prod")}
               </p>
               <p
                 className={selectedProduct === "esim" ? "active" : ""}

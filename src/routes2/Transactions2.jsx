@@ -199,20 +199,20 @@ function Transactions2() {
 
     return (
         <div className='Home transhome'>
-            <h1>Транзакции</h1>
+            <h1>{t("transFilter.title")}</h1>
 
             <div className="trans-filter">
-                <p className="filter-h">Фильтры</p>
+                <p className="filter-h">{t("transFilter.filters")}</p>
                 <div className="filter-flex">
                     <div className='filter-b'>
-                        <span style={{ fontSize: 14, fontWeight: 500 }}>Дата</span>
+                        <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.date")}</span>
                         <div style={{ position: 'relative', marginTop: 8 }}>
                             <select value={periodInput} onChange={(e) => setPeriodInput(e.target.value)}>
-                                <option value="day">День</option>
-                                <option value="week">Неделя</option>
-                                <option value="month">Месяц</option>
-                                <option value="year">Год</option>
-                                <option value="all_time">Всё</option>
+                                <option value="day">{t("transFilter.date_day")}</option>
+                                <option value="week">{t("transFilter.date_week")}</option>
+                                <option value="month">{t("transFilter.date_month")}</option>
+                                <option value="year">{t("transFilter.date_year")}</option>
+                                <option value="all_time">{t("transFilter.date_all")}</option>
                             </select>
                             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
                                 <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
@@ -220,14 +220,14 @@ function Transactions2() {
                         </div>
                     </div>
                     <div className='filter-b'>
-                        <span style={{ fontSize: 14, fontWeight: 500 }}>Категория</span>
+                        <span style={{ fontSize: 14, fontWeight: 500 }}>{t("transFilter.category")}</span>
                         <div style={{ position: 'relative', marginTop: 8 }}>
                             <select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
-                                <option value="ALL">Всё</option>
-                                <option value="ESIM">eSIM</option>
-                                <option value="VOUCHER">Цифровые товары</option>
-                                <option value="STEAM">Steam</option>
-                                <option value="TOPUP">TopUp</option>
+                                <option value="ALL">{t("transFilter.category_all")}</option>
+                                <option value="ESIM">{t("transFilter.category_esim")}</option>
+                                <option value="VOUCHER">{t("transFilter.category_voucher")}</option>
+                                <option value="STEAM">{t("transFilter.category_steam")}</option>
+                                <option value="TOPUP">{t("transFilter.category_topup")}</option>
                             </select>
                             <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg" className='filt-arr'>
                                 <path d="M3.87883 5.29289L0.293044 1.70711C-0.336921 1.07714 0.109246 0 1.00015 0H8.17172C9.06263 0 9.50879 1.07714 8.87883 1.70711L5.29304 5.29289C4.90252 5.68342 4.26935 5.68342 3.87883 5.29289Z" fill="black" />
@@ -235,7 +235,7 @@ function Transactions2() {
                         </div>
                     </div>
                     <div className="filter-b">
-                        <span style={{ fontSize: 14, fontWeight: 500, opacity: 0 }}>Категория</span>
+                        <span style={{ fontSize: 14, fontWeight: 500, opacity: 0 }}>{t("transFilter.category")}</span>
                         <div className="b-flex">
                             <div className="search-filt" style={{ position: 'relative', marginTop: 8 }}>
                                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -246,16 +246,16 @@ function Transactions2() {
                                     onChange={(e) => setTxidInput(e.target.value)}
                                     onKeyDown={onEnter}
                                     type="text"
-                                    placeholder='Введите ID транзакции'
+                                    placeholder={t("transFilter.searchPlaceholder")}
                                 />
                             </div>
                         </div>
                     </div>
                     <div className="filter-b">
-                        <button onClick={applyFilters}>Поиск</button>
+                        <button onClick={applyFilters}>{t("transFilter.search")}</button>
                     </div>
                     <div className="filter-b">
-                        <button style={{ color: "#2D85EA", padding: "11px 0px", background: "none" }} onClick={resetFilters}>Сбросить</button>
+                        <button style={{ color: "#2D85EA", padding: "11px 0px", background: "none" }} onClick={resetFilters}>{t("transFilter.reset")}</button>
                     </div>
                 </div>
             </div>
@@ -307,15 +307,15 @@ function Transactions2() {
 
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p>Дата</p>
-                                    <p>Почта</p>
-                                    <p>ID Транзакции</p>
-                                    <p>Оператор</p>
-                                    <p>Категория</p>
-                                    <p>Описание</p>
-                                    <p>Сумма</p>
-                                    <p>Статус</p>
-                                    <p>Ссылка</p>
+                                    <p>{t("transactions.date")}</p>
+                                    <p>{t("transactions.email")}</p>
+                                    <p>{t("transactions.txId")}</p>
+                                    <p>{t("transactions.operator")}</p>
+                                    <p>{t("transactions.category")}</p>
+                                    <p>{t("transactions.description")}</p>
+                                    <p>{t("transactions.amount")}</p>
+                                    <p>{t("transactions.statusLabel")}</p>
+                                    <p>{t("transactions.link")}</p>
                                 </tr>
 
                                 {!err &&
@@ -352,7 +352,7 @@ function Transactions2() {
                                                 </div>
                                                 <p>
                                                     {tx.instruction_url
-                                                        ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>QR/Инструкция</a>
+                                                        ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
                                                         : "—"}
                                                 </p>
                                             </tr>

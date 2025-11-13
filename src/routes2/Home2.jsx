@@ -293,7 +293,7 @@ function Home2() {
                                     <p>{t("transactions.description")}</p>
                                     <p>{t("transactions.amount")}</p>
                                     <p>{t("transactions.statusLabel")}</p>
-                                    <p>{t("transactions.qr")}</p>
+                                    <p>{t("transactions.link")}</p>
                                 </tr>
 
                                 {!err &&
@@ -330,7 +330,7 @@ function Home2() {
                                                 </div>
                                                 <p>
                                                     {tx.instruction_url
-                                                        ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>QR/Инструкция</a>
+                                                        ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
                                                         : "—"}
                                                 </p>
                                             </tr>

@@ -44,7 +44,9 @@
         "tokenManage": "Tokenleri dolandyrmak",
         "yourToken": "Siziň tokeniňiz",
         "copied": "Üstünlikli göçürildi!",
-        "logout": "Çyk"
+        "logout": "Çyk",
+        "product": "Önümler",
+        "dig_prod": "Sanly harytlar"
     },
     "transactions": {
         "title": "Tranzaksiýalar",
@@ -56,6 +58,7 @@
         "date": "Sene",
         "email": "Poçta",
         "qr": "QR/Görkezmeler",
+        "link": "Baglanyşyk",
         "time": "Wagt",
         "txId": "Tranzaksiýa ID",
         "operator": "Operator",
@@ -135,5 +138,24 @@
         "turnoverReports": "Dolanyşyk möçberi ",
         "transactionsReports": "Tranzaksiýalaryň sany",
         "reward": "Hakyň möçberi"
+    },
+    "transFilter": {
+        "title": "Tranzaksiýalar",
+        "filters": "Süzgütler",
+        "date": "Sene",
+        "date_day": "Gün",
+        "date_week": "Hepde",
+        "date_month": "Aý",
+        "date_year": "Ýyl",
+        "date_all": "Hemmesi",
+        "category": "Kategoriýa",
+        "category_all": "Hemmesi",
+        "category_esim": "eSIM",
+        "category_voucher": "Sanly harytlar",
+        "category_steam": "Steam",
+        "category_topup": "TopUp",
+        "searchPlaceholder": "Tranzaksiýanyň ID-ni giriziň",
+        "search": "Gözle",
+        "reset": "Arassala"
     }
 }

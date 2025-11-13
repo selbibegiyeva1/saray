@@ -7,7 +7,7 @@
         "enterUsername": "Введите логин",
         "enterPassword": "Введите пароль",
         "button": "Войти",
-        "noRegistration": "Самостоятельная регистрация недоступна. Доступ выдаёт поддержка",
+        "noRegistration": "Самостоятельная регистрация недоступна. Доступ выдаёт поддержка.",
         "support": "Поддержка: +993 62 42-31-18",
         "success": "Успешно зарегистрировано",
         "empty": "Заполните поле"
@@ -44,7 +44,9 @@
         "tokenManage": "Управление токенами",
         "yourToken": "Ваш токен",
         "copied": "Успешно скопировано!",
-        "logout": "Выйти"
+        "logout": "Выйти",
+        "product": "Продукты",
+        "dig_prod": "Цифровые товары"
     },
     "transactions": {
         "title": "Транзакции",
@@ -56,6 +58,7 @@
         "date": "Дата",
         "email": "Почта",
         "qr": "QR/Инструкция",
+        "link": "Ссылка",
         "time": "Время",
         "txId": "ID Транзакции",
         "operator": "Оператор",
@@ -70,7 +73,7 @@
             "rejected": "Отклонено",
             "pending": "В процессе"
         },
-        "noData": "У вас пока нет транзакций", 
+        "noData": "У вас пока нет транзакций",
         "empty": "У вас еще нет пополнений"
     },
     "help": {
@@ -135,5 +138,24 @@
         "turnoverReports": "Сумма оборота",
         "transactionsReports": "Транзакций, шт",
         "reward": "Сумма вознаграждение"
+    },
+    "transFilter": {
+        "title": "Транзакции",
+        "filters": "Фильтры",
+        "date": "Дата",
+        "date_day": "День",
+        "date_week": "Неделя",
+        "date_month": "Месяц",
+        "date_year": "Год",
+        "date_all": "Всё",
+        "category": "Категория",
+        "category_all": "Всё",
+        "category_esim": "eSIM",
+        "category_voucher": "Цифровые товары",
+        "category_steam": "Steam",
+        "category_topup": "TopUp",
+        "searchPlaceholder": "Введите ID транзакции",
+        "search": "Поиск",
+        "reset": "Сбросить"
     }
 }

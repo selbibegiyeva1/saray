@@ -285,15 +285,15 @@ function Home2() {
 
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p>Дата</p>
-                                    <p>Почта</p>
-                                    <p>ID Транзакции</p>
-                                    <p>Оператор</p>
-                                    <p>Категория</p>
-                                    <p>Описание</p>
-                                    <p>Сумма</p>
-                                    <p>Статус</p>
-                                    <p>Ссылка</p>
+                                    <p>{t("transactions.date")}</p>
+                                    <p>{t("transactions.email")}</p>
+                                    <p>{t("transactions.txId")}</p>
+                                    <p>{t("transactions.operator")}</p>
+                                    <p>{t("transactions.category")}</p>
+                                    <p>{t("transactions.description")}</p>
+                                    <p>{t("transactions.amount")}</p>
+                                    <p>{t("transactions.statusLabel")}</p>
+                                    <p>{t("transactions.qr")}</p>
                                 </tr>
 
                                 {!err &&

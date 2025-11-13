@@ -8,7 +8,7 @@
         "enterPassword": "Parolyňyzy giriziň",
         "button": "Giriş",
         "noRegistration": "Özbaşdak hasaba alyş elýeterli däl. Giriş rugsadyny goldaw gullugy berýär.",
-        "support": "Goldaw gullugy:+99365 45 87 89",
+        "support": "Goldaw gullugy: +993 62 42-31-18",
         "success": "Üstünlikli hasaba alyndy",
         "empty": "Meýdany dolduryň"
     },
@@ -54,6 +54,8 @@
         "latest": "Soňky tranzaksiýalar",
         "searchPlaceholder": "Tranzaksiýanyň ID-ni giriziň",
         "date": "Sene",
+        "email": "Poçta",
+        "qr": "QR/Görkezmeler",
         "time": "Wagt",
         "txId": "Tranzaksiýa ID",
         "operator": "Operator",

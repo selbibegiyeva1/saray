@@ -377,20 +377,17 @@ function Steam() {
         );
 
     const handleTopupAmountTmtChange = (e) => {
-        // normalize potential comma to dot (optional, can drop this line if you truly want dot only)
         const raw = e.target.value.replace(",", ".");
 
-        // allow empty (so user can clear input)
         if (raw === "") {
             setTopupAmountTmt("");
             setFieldErrors((f) => ({ ...f, amount: false, usd: false }));
             return;
         }
 
-        // only digits and at most one dot
-        if (!/^\d*\.?\d*$/.test(raw)) {
-            // ignore any other symbols
-            return;
+        // allow only digits + optional dot + max 2 decimals
+        if (!/^\d+(\.\d{0,2})?$/.test(raw)) {
+            return; // block invalid input
         }
 
         setTopupAmountTmt(raw);

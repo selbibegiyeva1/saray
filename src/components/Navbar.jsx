@@ -15,7 +15,30 @@ function Navbar() {
   const currentLang = i18n.language || "ru";
   const [searchValue, setSearchValue] = useState("");
 
+  const [activeNavId, setActiveNavId] = useState(null);
+  const navbarRef = useRef(null);
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    function handleDocClick(e) {
+      if (!navbarRef.current) return;
+
+      // Did we click on something that has data-nav-id and is inside Navbar?
+      const targetNavItem = e.target.closest("[data-nav-id]");
+
+      if (targetNavItem && navbarRef.current.contains(targetNavItem)) {
+        const id = targetNavItem.getAttribute("data-nav-id");
+        setActiveNavId(id);
+      } else {
+        // Clicked somewhere that is NOT one of our nav items
+        setActiveNavId(null);
+      }
+    }
+
+    document.addEventListener("click", handleDocClick);
+    return () => document.removeEventListener("click", handleDocClick);
+  }, []);
 
   const TOKEN = localStorage.getItem("accessToken") || "";
 
@@ -147,11 +170,10 @@ function Navbar() {
   }, [openLang, prodDrop]);
 
   return (
-    <div className="Navbar">
+    <div className="Navbar" ref={navbarRef}>
       {/* Logo */}
       <NavLink
         to={user?.role === "OPERATOR" ? "/operator" : "/home"}
-        className={({ isActive }) => (isActive ? "active" : "")}
         style={{ display: "flex" }}
       >
         <div style={{ display: "flex" }}>
@@ -164,18 +186,31 @@ function Navbar() {
       {/* Navigation links */}
       <ul className="nav-ul">
         <li>
-          <NavLink to={user?.role === "OPERATOR" ? "/operator" : "/home"}>{t("navbar.home")}</NavLink>
+          <NavLink
+            to={user?.role === "OPERATOR" ? "/operator" : "/home"}
+            data-nav-id="home"
+            className={activeNavId === "home" ? "nav-manual-active" : ""}
+          >
+            {t("navbar.home")}
+          </NavLink>
         </li>
         <li>
           <NavLink
             to={user?.role === "OPERATOR" ? "/operator_transactions" : "/transactions"}
+            data-nav-id="transactions"
+            className={activeNavId === "transactions" ? "nav-manual-active" : ""}
           >
             {t("navbar.transactions")}
           </NavLink>
         </li>
         {user?.role === "OPERATOR" ? (
           <li style={{ position: "relative" }} ref={prodRef}>
-            <button type="button" onClick={prodFunc}>
+            <button
+              type="button"
+              onClick={prodFunc}
+              data-nav-id="products"
+              className={activeNavId === "products" ? "nav-manual-active" : ""}
+            >
               <span>{t("navbar.product")}</span>
               <svg
                 width="20"

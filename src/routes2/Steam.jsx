@@ -376,6 +376,27 @@ function Steam() {
             ["CIS", "SNG", "CIS_COUNTRIES"].includes(String(selectedTopup.value || "").toUpperCase()) // or value is CIS-ish
         );
 
+    const handleTopupAmountTmtChange = (e) => {
+        // normalize potential comma to dot (optional, can drop this line if you truly want dot only)
+        const raw = e.target.value.replace(",", ".");
+
+        // allow empty (so user can clear input)
+        if (raw === "") {
+            setTopupAmountTmt("");
+            setFieldErrors((f) => ({ ...f, amount: false, usd: false }));
+            return;
+        }
+
+        // only digits and at most one dot
+        if (!/^\d*\.?\d*$/.test(raw)) {
+            // ignore any other symbols
+            return;
+        }
+
+        setTopupAmountTmt(raw);
+        setFieldErrors((f) => ({ ...f, amount: false, usd: false }));
+    };
+
     return (
         <div className='Steam'>
             <h1>Steam</h1>
@@ -580,20 +601,16 @@ function Steam() {
                                         <span>Сумма пополнения в ТМТ</span>
                                         <div style={{ position: "relative" }}>
                                             <input
-                                                type="number"
+                                                type="text"
                                                 value={topupAmountTmt}
-                                                onChange={(e) => {
-                                                    setTopupAmountTmt(e.target.value);
-                                                    // do NOT clear limitError here: it should persist until Enter/blur validates again
-                                                    setFieldErrors((f) => ({ ...f, amount: false, usd: false }));
-                                                }}
+                                                onChange={handleTopupAmountTmtChange}
                                                 onKeyDown={(e) => {
                                                     if (e.key === "Enter") {
                                                         e.preventDefault();
                                                         validateAmountLimits();
                                                     }
                                                 }}
-                                                onBlur={validateAmountLimits}  // 👈 validate when clicking outside
+                                                onBlur={validateAmountLimits}
                                                 placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : "Сумма пополнения в ТМТ"}
                                                 style={fieldErrors.amount ? { border: "1px solid #F50100" } : {}}
                                             />

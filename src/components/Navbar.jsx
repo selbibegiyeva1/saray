@@ -225,7 +225,11 @@ function Navbar() {
                 />
               </svg>
             </button>
-            <div className="drop-options days langs prods" style={{ display: `${prodDrop ? "block" : "none"}` }}>
+            <div
+              className="drop-options days langs prods"
+              style={{ display: `${prodDrop ? "block" : "none"}` }}
+              data-nav-id="products"
+            >
               <p
                 className={selectedProduct === "digital" ? "active" : ""}
                 onClick={() => {

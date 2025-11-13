@@ -869,28 +869,6 @@ function Steam() {
                             <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>Товар возврату не подлежит</p>
                         </div>
 
-                        <div className="paydata">
-                            <div className='bal-flex'>
-                                <p>К зачислению в Steam</p>
-                                {activeTab === "voucher" ? (
-                                    <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
-                                ) : (
-                                    // USD here
-                                    <p>{topupAmountUsd ? `~${topupAmountUsd} USD` : "—"}</p>
-                                )}
-                            </div>
-
-                            <div className='bal-flex'>
-                                <p>Итого к списанию</p>
-                                {activeTab === "voucher" ? (
-                                    <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
-                                ) : (
-                                    // TMT here
-                                    <p>{topupAmountTmt ? `${topupAmountTmt} ТМТ` : "—"}</p>
-                                )}
-                            </div>
-                        </div>
-
                         <label className="checkbox" style={{ marginTop: 20 }}>
                             <input
                                 type="checkbox"

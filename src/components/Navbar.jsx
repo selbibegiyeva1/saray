@@ -18,10 +18,8 @@ function Navbar() {
   const navigate = useNavigate();
 
   const TOKEN = localStorage.getItem("accessToken") || "";
-  const displayToken = TOKEN ? `${TOKEN.slice(0, 32)}...` : "—";
 
   const [profile, setProfile] = useState(false);
-  const [copied, setCopied] = useState(false);
   const [sidebar, setSidebar] = useState(false);
   const [openLang, setOpenLang] = useState(false);
 
@@ -419,12 +417,12 @@ function Navbar() {
           {profileErr && <div className="alert error" style={{ marginBottom: 14 }}>{profileErr}</div>}
 
           <div style={{ marginBottom: 14 }}>
-            <p>Email</p>
-            <input type="text" value={user?.email || "—"} readOnly />
+            <p>{t("navbar.company")}</p>
+            <input type="text" value={company?.display_name || user?.username || "—"} readOnly />
           </div>
           <div style={{ marginBottom: 14 }}>
-            <p>{t("navbar.nickname")}</p>
-            <input type="text" value={user?.username || "—"} readOnly />
+            <p>Email</p>
+            <input type="text" value={user?.email || "—"} readOnly />
           </div>
           <div style={{ marginBottom: 14 }}>
             <p>{t("navbar.fullname")}</p>

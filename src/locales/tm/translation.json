@@ -39,6 +39,7 @@
         "myProfile": "Meniň profilim",
         "nickname": "Ady",
         "fullname": "Doly ady",
+        "company": "Kompaniýanyň ady",
         "role": "Rol",
         "director": "Direktor",
         "tokenManage": "Tokenleri dolandyrmak",
@@ -88,7 +89,7 @@
             },
             {
                 "question": "«Jemi gazanylan», «Çykarylan» we «Çykarmak üçin elýeterli» diýenler nämäni aňladýar?",
-                "answer": "• Jemi gazanylan — siziň satuwlaryňyz boýunça hasaplanan jemi sylag (keşbek)..<br><br>• Çykarylan — siziň eýýäm alan puluňyz (nagt berlen ýa-da hasaba/karta/USDT geçirilen tölegler).<br><br>• Çykarmak üçin elýeterli — häzirki wagtda çykaryp bolýan pul möçberi"
+                "answer": "• Jemi gazanylan — siziň satuwlaryňyz boýunça hasaplanan jemi sylag (keşbek)..<br><br>• Çykarylan — siziň eýýäm alan puluňyz (nagt berlen ýa-da hasaba/karta geçirilen tölegler).<br><br>• Çykarmak üçin elýeterli — häzirki wagtda çykaryp bolýan pul möçberi"
             },
             {
                 "question": "Pul çykarmak üçin iň az möçber barmy?",

@@ -31,10 +31,10 @@ function Help() {
                 <div className="faq-flex">
                     <b>{t("help.contactsTitle")}</b>
                     <div className="f-flex-block">
-                        <span>Email: roycharyyew@gmail.com</span>
-                        <span>Telegram: @Huwejqwo</span>
+                        <span>Email: esim@unite-venture.com</span>
+                        <span>Telegram: @unite_esim</span>
                         <span>
-                            {t("help.support")}: +99365 45 87 89
+                            {t("help.support")}: +99362 42 31 18
                         </span>
                     </div>
                 </div>

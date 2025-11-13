@@ -646,6 +646,9 @@ function Esim() {
                                     // allow + only at the first position and only once
                                     v = v.replace(/\+/g, (m, offset) => (offset === 0 ? m : ''));
                                     v = v.replace(/(.)(?=.*\+)/g, (ch, offset) => (ch === '+' ? '' : ch));
+
+                                    v = v.slice(0, 12);
+
                                     setClientPhone(v);
                                     setFieldErrors((f) => ({ ...f, phone: false }));
                                 }}

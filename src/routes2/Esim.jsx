@@ -637,11 +637,16 @@ function Esim() {
                         <div className="pay-inputs" style={{ marginTop: 20 }}>
                             <p className="pay-label">Номер телефона</p>
                             <input
-                                type="number"
+                                type="tel"
+                                inputMode="tel"
                                 placeholder="Введите номер телефона клиента"
                                 value={clientPhone}
                                 onChange={(e) => {
-                                    setClientPhone(e.target.value);
+                                    let v = e.target.value.replace(/[^0-9+]/g, '');
+                                    // allow + only at the first position and only once
+                                    v = v.replace(/\+/g, (m, offset) => (offset === 0 ? m : ''));
+                                    v = v.replace(/(.)(?=.*\+)/g, (ch, offset) => (ch === '+' ? '' : ch));
+                                    setClientPhone(v);
                                     setFieldErrors((f) => ({ ...f, phone: false }));
                                 }}
                                 style={fieldErrors.phone ? { border: "1px solid #F50100" } : {}}

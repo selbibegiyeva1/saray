@@ -159,7 +159,6 @@
         "search": "Поиск",
         "reset": "Сбросить"
     },
-    
     "operator": {
         "mainSections": "Основные разделы",
         "steam": "Steam",
@@ -191,6 +190,10 @@
         "email": "Email",
         "enterEmail": "Введите свою почту",
         "topupAmountTmt": "Сумма пополнения в ТМТ",
+        "counting": "Рассчитываем...",
+        "maxAmount": "Максимальная сумма",
+        "minAmount": "Минимальная сумма",
+        "steamLog": "Логин в Steam",
         "topupAmountUsd": "К зачислению в Steam",
         "chooseVoucherNominal": "Выберите номинал",
         "voucherSendTo": "Куда отправить ваучер",
@@ -203,8 +206,8 @@
         "refundWarning": "Товар возврату не подлежит",
         "cancel": "Отмена",
         "modalTopupTitle": "Пополнение баланса Steam",
+        "accTopup": "Пополнение аккаунта",
         "modalRegion": "Регион",
-        "modalContact": "Почта / Логин",
         "modalTotalToSteam": "К зачислению в Steam",
         "modalTotalPay": "Итого к списанию",
         "sngCountries": "Азербайджан, Армения, Беларусь, Казахстан, Киргизия, Молдова, Таджикистан, Туркменистан, Узбекистан",

@@ -192,7 +192,7 @@ function Steam() {
         amountWithinLimits &&
         isValidEmail(topupEmail);
 
-    const contactLabel = activeTab === "voucher" ? "Почта" : "Логин в Steam";
+    const contactLabel = activeTab === "voucher" ? `${t("transactions.email")}` : `${t("steam.steamLog")}`;
     const contactValue = activeTab === "voucher" ? userEmail : topupLogin;
 
     // inside Steam() in Steam.jsx
@@ -360,11 +360,11 @@ function Steam() {
             return false;
         }
         if (steamMaxAmount != null && amount > steamMaxAmount) {
-            setLimitError(`Максимальная сумма ${steamMaxAmount} ТМТ`);
+            setLimitError(`${t("steam.maxAmount")} ${steamMaxAmount} ТМТ`);
             return true;
         }
         if (steamMinAmount != null && amount < steamMinAmount) {
-            setLimitError(`Минимальная сумма ${steamMinAmount} ТМТ`);
+            setLimitError(`${t("steam.minAmount")} ${steamMinAmount} ТМТ`);
             return true;
         }
         setLimitError("");
@@ -528,8 +528,7 @@ function Steam() {
                                             </svg>
 
                                             <span>
-                                                Азербайджан, Армения, Беларусь, Казахстан, Киргизия, Молдова, Таджикистан,
-                                                Туркменистан, Узбекистан
+                                                {t("steam.sngCountries")}
                                             </span>
                                         </div>
                                     </div>
@@ -537,12 +536,12 @@ function Steam() {
                             </div>
 
                             <div className="steam-block" style={{ marginTop: 16 }} id='topup'>
-                                <p className='s-block-h'>Пополнение аккаунта</p>
+                                <p className='s-block-h'>{t("steam.accTopup")}</p>
                                 <div className="block-grid" style={{ marginTop: 20 }}>
                                     <div>
                                         <div style={{ position: "relative" }}>
                                             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
-                                                <span style={{ marginBottom: 0 }}>${t("steam.whereToFind")}</span>
+                                                <span style={{ marginBottom: 0 }}>{t("steam.whereToFind")}</span>
                                                 <div style={{ position: "relative" }}>
                                                     <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="acc-svg">
                                                         <rect width="32" height="32" rx="10" fill="#F5F5F9" />
@@ -554,15 +553,15 @@ function Steam() {
                                                     </svg>
 
                                                     <div className="acc-tl">
-                                                        <p>Как найти свой логин в Steam?</p>
+                                                        <p>{t("steam.whereToFindLoginTitle")}</p>
                                                         <ul>
                                                             <li style={{ marginBottom: 16 }}>
                                                                 <div style={{ minWidth: 8, minHeight: 8, background: "#2D85EA", borderRadius: "50%" }} />
-                                                                Откройте клиент Steam.Нажмите на имя пользователя в правом углу главной страницы
+                                                                {t("steam.whereToFindLoginStep1")}
                                                             </li>
                                                             <li>
                                                                 <div style={{ minWidth: 8, minHeight: 8, background: "#2D85EA", borderRadius: "50%" }} />
-                                                                В выпадающем меню выберите пункт “Об аккаунте”
+                                                                {t("steam.whereToFindLoginStep2")}
                                                             </li>
                                                         </ul>
                                                         <img src="/steam-tool.png" alt="" />
@@ -571,7 +570,7 @@ function Steam() {
                                             </div>
                                             <input
                                                 type="text"
-                                                placeholder="Введите логин в Steam"
+                                                placeholder={t("steam.enterSteamLogin")}
                                                 value={topupLogin}
                                                 onChange={(e) => {
                                                     setTopupLogin(e.target.value);
@@ -582,10 +581,10 @@ function Steam() {
                                         </div>
                                     </div>
                                     <div>
-                                        <span>Email</span>
+                                        <span>{t("steam.email")}</span>
                                         <input
                                             type="email"
-                                            placeholder="Введите свою почту"
+                                            placeholder={t("steam.enterEmail")}
                                             value={topupEmail}
                                             onChange={(e) => {
                                                 setTopupEmail(e.target.value);
@@ -597,7 +596,7 @@ function Steam() {
                                 </div>
                                 <div className="block-grid">
                                     <div>
-                                        <span>Сумма пополнения в ТМТ</span>
+                                        <span>{t("steam.topupAmountTmt")}</span>
                                         <div style={{ position: "relative" }}>
                                             <input
                                                 type="text"
@@ -610,7 +609,7 @@ function Steam() {
                                                     }
                                                 }}
                                                 onBlur={validateAmountLimits}
-                                                placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : "Сумма пополнения в ТМТ"}
+                                                placeholder={steamMinAmount ? `от ${steamMinAmount} ТМТ` : `${t("steam.topupAmountTmt")}`}
                                                 style={fieldErrors.amount ? { border: "1px solid #F50100" } : {}}
                                             />
                                             <div
@@ -654,12 +653,12 @@ function Steam() {
                                     </div>
 
                                     <div>
-                                        <span>К зачислению в Steam</span>
+                                        <span>{t("steam.topupAmountUsd")}</span>
                                         <input
                                             type="text"
-                                            value={calcLoading ? "Рассчитываем…" : (topupAmountUsd ? `~${topupAmountUsd} USD` : "")}
+                                            value={calcLoading ? `${t("steam.counting")}` : (topupAmountUsd ? `~${topupAmountUsd} USD` : "")}
                                             readOnly
-                                            placeholder="К зачислению в Steam"
+                                            placeholder={t("steam.topupAmountUsd")}
                                             style={fieldErrors.usd ? { border: "1px solid #F50100" } : {}}
                                         />
                                     </div>
@@ -672,7 +671,7 @@ function Steam() {
                     {activeTab === "voucher" && (
                         <div>
                             <div className="steam-block" style={{ marginTop: 16 }} id="voucher">
-                                <p className="s-block-h">Выберите регион</p>
+                                <p className="s-block-h">{t("steam.selectRegion")}</p>
                                 <div style={{ position: "relative", marginTop: 16 }}>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg" className="slct-arr">
@@ -690,7 +689,7 @@ function Steam() {
                                         disabled={loadingRegions || !!fetchErr}
                                     >
                                         <option value="" disabled>
-                                            {loadingRegions ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : "Выберите регион"}
+                                            {loadingRegions ? "Загрузка..." : fetchErr ? "Ошибка загрузки" : `${t("steam.selectRegion")}`}
                                         </option>
 
                                         {voucherRegions.map(opt => (
@@ -703,7 +702,7 @@ function Steam() {
 
                                 {selectedRegion && filteredProducts.length > 0 && (
                                     <div style={{ marginTop: 20 }}>
-                                        <b>Выберите номинал</b>
+                                        <b>{t("steam.chooseVoucherNominal")}</b>
                                         <div className="voucher-options">
                                             {filteredProducts.map((p) => (
                                                 <button
@@ -723,12 +722,12 @@ function Steam() {
                                 )}
                             </div>
                             <div className="steam-block" style={{ marginTop: 16 }} id="voucher">
-                                <p className="s-block-h">Пополнение аккаунта</p>
+                                <p className="s-block-h">{t("steam.accTopup")}</p>
                                 <div style={{ marginTop: 20 }}>
-                                    <span style={{ marginBottom: 16, fontSize: 14, display: "flex" }}>Куда отправить ваучер</span>
+                                    <span style={{ marginBottom: 16, fontSize: 14, display: "flex" }}>{t("steam.voucherSendTo")}</span>
                                     <input
                                         type="email"
-                                        placeholder="Напишите свою почту"
+                                        placeholder={t("steam.enterEmailVoucher")}
                                         value={userEmail}
                                         onChange={(e) => {
                                             setUserEmail(e.target.value);
@@ -744,9 +743,9 @@ function Steam() {
 
                 <div>
                     <div className="steam-block">
-                        <p className='steam-bal-h'>Оплата</p>
+                        <p className='steam-bal-h'>{t("steam.paymentTitle")}</p>
                         <div className='bal-flex'>
-                            <p>К зачислению в Steam</p>
+                            <p>{t("steam.paymentToSteam")}</p>
                             {activeTab === "voucher" ? (
                                 <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                             ) : (
@@ -756,7 +755,7 @@ function Steam() {
                         </div>
 
                         <div className='bal-flex'>
-                            <p>Итого к списанию</p>
+                            <p>{t("steam.paymentTotal")}</p>
                             {activeTab === "voucher" ? (
                                 <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                             ) : (
@@ -812,7 +811,7 @@ function Steam() {
                                 }}
                             />
                             <span className="checkmark"></span>
-                            <span className="label">Я подтверждаю, что правильно указал все данные</span>
+                            <span className="label">{t("steam.iConfirm")}</span>
                         </label>
                         <div>
                             <button
@@ -821,7 +820,7 @@ function Steam() {
                                 onClick={payFunc}
                                 disabled={activeTab === "voucher" ? !canPayVoucher : !canPayTopup}
                             >
-                                Оплатить
+                                {t("steam.pay")}
                             </button>
                         </div>
                     </div>
@@ -829,14 +828,14 @@ function Steam() {
                 <div className={pay ? "steam-pay showpay" : "steam-pay"}>
                     <div className="payform">
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <p className="formhead">Пополнение баланса Steam</p>
+                            <p className="formhead">{t("steam.modalTopupTitle")}</p>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={payFunc} style={{ cursor: "pointer" }}>
                                 <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
                         </div>
                         <div className="paydata">
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <p>Регион</p>
+                                <p>{t("steam.modalRegion")}</p>
                                 <p>{selectedRegionName}</p>
                             </div>
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -844,7 +843,7 @@ function Steam() {
                                 <p>{contactValue || "—"}</p>
                             </div>
                             <div className='bal-flex'>
-                                <p>К зачислению в Steam</p>
+                                <p>{t("steam.modalTotalToSteam")}</p>
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? selectedVoucher.product : "—"}</p>
                                 ) : (
@@ -854,7 +853,7 @@ function Steam() {
                             </div>
 
                             <div className='bal-flex'>
-                                <p>Итого к списанию</p>
+                                <p>{t("steam.modalTotalPay")}</p>
                                 {activeTab === "voucher" ? (
                                     <p>{selectedVoucher ? `${selectedVoucher.price} ТМТ` : "—"}</p>
                                 ) : (
@@ -868,7 +867,7 @@ function Steam() {
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M12 16H12.01M12 8V12M9 4H15L20 9V15L15 20H9L4 15V9L9 4Z" stroke="#F50100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                             </svg>
-                            <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>Товар возврату не подлежит</p>
+                            <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>{t("steam.refundWarning")}</p>
                         </div>
 
                         <label className="checkbox" style={{ marginTop: 20 }}>
@@ -878,7 +877,7 @@ function Steam() {
                                 onChange={(e) => setModalConfirmed(e.target.checked)}
                             />
                             <span className="checkmark"></span>
-                            <span className="label">Я подтверждаю, что правильно указал все данные</span>
+                            <span className="label">{t("steam.iConfirm")}</span>
                         </label>
                         <div>
                             <button
@@ -887,10 +886,10 @@ function Steam() {
                                 disabled={!modalConfirmed || paying}
                                 onClick={activeTab === "voucher" ? handlePayVoucher : handlePayTopup}
                             >
-                                {paying ? <div className="spinner"></div> : "Оплатить"}
+                                {paying ? <div className="spinner"></div> : `${t("steam.pay")}`}
                             </button>
                             {payError ? <div style={{ marginTop: 8, color: "#F50100" }}>{payError}</div> : null}
-                            <button type="button" className="pay-btn cancel" onClick={payFunc}>Отмена</button>
+                            <button type="button" className="pay-btn cancel" onClick={payFunc}>{t("steam.cancel")}</button>
                         </div>
                     </div>
 

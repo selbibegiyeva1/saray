@@ -159,7 +159,6 @@
         "search": "Gözle",
         "reset": "Arassala"
     },
-    
     "operator": {
         "mainSections": "Esasy bölümler",
         "steam": "Steam",
@@ -191,6 +190,10 @@
         "email": "E-poçta",
         "enterEmail": "E-poçtaňyzy giriziň",
         "topupAmountTmt": "Doldurma möçberi TMT",
+        "counting": "Biz sanap ýörüs...",
+        "maxAmount": "Maksimum möçber",
+        "minAmount": "Minimal möçber",
+        "steamLog": "Steam arkaly giriş",
         "topupAmountUsd": "Steam-e geçiriljek",
         "chooseVoucherNominal": "Nominaly saýlaň",
         "voucherSendTo": "Wauçeri nirä ugratmaly",
@@ -203,8 +206,8 @@
         "refundWarning": "Haryt yzyna gaýtarylmaýar",
         "cancel": "Ýatyrmak",
         "modalTopupTitle": "Steam balansyny doldurmak",
+        "accTopup": "Hasap doldurmak",
         "modalRegion": "Sebit",
-        "modalContact": "Poçta / Login",
         "modalTotalToSteam": "Steam-e geçiriljek",
         "modalTotalPay": "Jemi töleg",
         "sngCountries": "Azerbaýjan, Ermenistan, Belarussiýa, Gazagystan, Gyrgyzystan, Moldowa, Täjigistan, Türkmenistan, Özbegistan",

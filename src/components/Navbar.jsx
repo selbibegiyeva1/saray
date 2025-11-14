@@ -177,7 +177,7 @@ function Navbar() {
       </NavLink>
 
       {/* Navigation links */}
-      <ul className="nav-ul">
+      <ul className="nav-ul" style={{ listStyle: "none" }}>
         <li>
           <NavLink
             to={user?.role === "OPERATOR" ? "/operator" : "/home"}

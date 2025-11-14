@@ -174,7 +174,7 @@
     "steam": {
         "title": "Steam",
         "topupTitle": "Steam balansyny doldurmak",
-        "topupDescription": "Hasabyňyzyň balansyny doldurmak üçin wauçer (Täze hasap açanyňyzda gmail.com poçtasyny ulanyň)",
+        "topupDescription": "Hasabyňyzyň balansyny doldurmak üçin wauçer <br />(Täze hasap açanyňyzda gmail.com poçtasyny ulanyň)",
         "tabTopup": "Doldurmak",
         "tabVoucher": "Wauçer",
         "tooltipVoucherTitle": "Wauçer — sanlaryň we harplaryň özboluşly utgaşmagy.",

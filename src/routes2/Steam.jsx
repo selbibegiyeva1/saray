@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import api from "../lib/api"; // axios instance with auth attached
 
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 
 import "../styles/Steam.css";
 import "../styles/Login.css";
@@ -409,7 +409,7 @@ function Steam() {
                             <div>
                                 <p className='s-block-h'>{t("steam.topupTitle")}</p>
                                 <span className="s-d">
-                                    {t("steam.topupDescription")}
+                                    <Trans i18nKey="steam.topupDescription" />
                                 </span>
                                 <div className="s-block-btns">
                                     <button

@@ -22,18 +22,11 @@ function Navbar() {
 
   useEffect(() => {
     function handleDocClick(e) {
-      if (!navbarRef.current) return;
-
-      // Did we click on something that has data-nav-id and is inside Navbar?
       const targetNavItem = e.target.closest("[data-nav-id]");
+      if (!targetNavItem) return;
 
-      if (targetNavItem && navbarRef.current.contains(targetNavItem)) {
-        const id = targetNavItem.getAttribute("data-nav-id");
-        setActiveNavId(id);
-      } else {
-        // Clicked somewhere that is NOT one of our nav items
-        setActiveNavId(null);
-      }
+      const id = targetNavItem.getAttribute("data-nav-id");
+      setActiveNavId(id);
     }
 
     document.addEventListener("click", handleDocClick);

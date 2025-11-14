@@ -60,7 +60,7 @@ function Transactions2() {
         PENDING: { label: t("transactions.status.pending"), Icon: PendingIcon },
     };
 
-    const perPage = 10;
+    const perPage = 8;
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState([]);
     const [totalPages, setTotalPages] = useState(null);
@@ -309,15 +309,15 @@ function Transactions2() {
 
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                 <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p>{t("transactions.date")}</p>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
                                     <p>{t("transactions.email")}</p>
-                                    <p>{t("transactions.txId")}</p>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.txId")}</p>
                                     <p>{t("transactions.operator")}</p>
-                                    <p>{t("transactions.category")}</p>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.category")}</p>
                                     <p>{t("transactions.description")}</p>
-                                    <p>{t("transactions.amount")}</p>
+                                    <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
                                     <p>{t("transactions.statusLabel")}</p>
-                                    <p>{t("transactions.link")}</p>
+                                    <p style={{ textAlign: "right" }}>{t("transactions.link")}</p>
                                 </tr>
 
                                 {!err &&
@@ -337,22 +337,22 @@ function Transactions2() {
 
                                         return (
                                             <tr key={tx.transaction_id || i} className="row-titles row-data oper-row" style={{ height: 48 }}>
-                                                <p>{date} {time}</p>
-                                                <p>{tx.email}</p>
-                                                <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline" }} onClick={() => copyTxId(tx.transaction_id)}>
+                                                <p style={{ textAlign: "left" }}>{date} {time}</p>
+                                                <p className="trans-overflow">{tx.email}</p>
+                                                <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline", textAlign: "left" }} onClick={() => copyTxId(tx.transaction_id)}>
                                                     {tx.transaction_id}
                                                 </p>
                                                 <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
-                                                <p>{tx.category}</p>
+                                                <p style={{ textAlign: "left" }}>{tx.category}</p>
                                                 <p>{tx.description}</p>
-                                                <p>{tx.amount} TMT</p>
+                                                <p style={{ textAlign: "right" }}>{tx.amount} TMT</p>
                                                 <div className="status-block">
-                                                    <div className="status-cell" style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                                                         {Icon && <Icon />}
-                                                        <p className="trans-overflow">{label}</p>
+                                                        <p style={{ width: "auto" }}>{label}</p>
                                                     </div>
                                                 </div>
-                                                <p>
+                                                <p style={{ textAlign: "right" }}>
                                                     {tx.instruction_url
                                                         ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
                                                         : "—"}

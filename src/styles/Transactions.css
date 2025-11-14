@@ -1,24 +1,9 @@
 .transactions-container {
-    padding: 20px 20px 34px 20px;
+    padding: 20px 20px 20px 20px;
     border-radius: 16px;
     width: 100%;
-    height: 734px;
-    overflow: hidden;
+    overflow: auto;
     border: 1px solid #00000026;
-}
-
-.transactions-container::-webkit-scrollbar {
-    width: 5px;
-    padding: 0px 15px;
-}
-
-.transactions-container::-webkit-scrollbar-track {
-    background: #F5F5F9;
-}
-
-.transactions-container::-webkit-scrollbar-thumb {
-    background-color: #5682FF;
-    border-radius: 10px;
 }
 
 .table-viewport {
@@ -27,12 +12,8 @@
     height: 100%;
 }
 
-.table-viewport::-webkit-scrollbar:horizontal {
-    display: none;
-}
-
 .table-viewport::-webkit-scrollbar {
-    width: 5px;
+    height: 5px;
 }
 
 .table-viewport::-webkit-scrollbar-track {
@@ -67,6 +48,7 @@ table {
     display: grid;
     align-items: center;
     grid-template-columns: repeat(8, 1fr);
+    gap: 30px;
     font-weight: 400;
     height: 36px;
     border-radius: 6px;
@@ -91,11 +73,6 @@ table tr p {
     width: 100%;
 }
 
-.status-block {
-    display: flex;
-    justify-content: right;
-}
-
 table .status-cell {
     display: flex;
     align-items: center;
@@ -111,18 +88,6 @@ table .status-cell {
     -webkit-box-orient: vertical;
 }
 
-table tr div p {
-    width: fit-content;
-}
-
-table tr p:last-child {
-    text-align: right;
-}
-
-table tr p:first-child {
-    text-align: left;
-}
-
 .no-data {
     display: flex;
     align-items: center;
@@ -136,7 +101,7 @@ table tr p:first-child {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: 24px 0px 108px 0px;
+    margin: 24px 0px 89px 0px;
 }
 
 .pags button {
@@ -272,12 +237,6 @@ table tr p:first-child {
 
     table .status-cell {
         width: initial;
-    }
-}
-
-@media(max-width: 768px) {
-    table {
-        width: 1000px;
     }
 }
 

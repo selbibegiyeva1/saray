@@ -2,9 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import api from "../lib/api";
 
+import { useTranslation } from "react-i18next";
+
 import "../styles/Login.css";
 
 function Product() {
+  const { t } = useTranslation();
   const { state } = useLocation();
   const { group_id, group_name } = state || {};
 
@@ -272,7 +275,7 @@ function Product() {
         setPay(false);
 
         // 4) success alert with backend message
-        const successMsg = data?.comment || data?.message || "Покупка успешно создана. Продолжите в новой вкладке.";
+        const successMsg = data?.comment || data?.message || `${t("product.successVoucher")}`;
         setAppAlert({ type: "green", message: successMsg });
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
@@ -282,7 +285,7 @@ function Product() {
       const errMsg = data?.comment || data?.message || "Не удалось купить ваучер";
       setAppAlert({ type: "red", message: errMsg });
     } catch (e) {
-      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка покупки ваучера";
+      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || `${t("product.errorVoucherBuy")}`;
       setAppAlert({ type: "red", message: errMsg });
     } finally {
       setPaying(false);
@@ -343,7 +346,7 @@ function Product() {
         setPay(false);
 
         // 4) success alert with backend message
-        const successMsg = data?.comment || data?.message || "Покупка успешно создана. Продолжите в новой вкладке.";
+        const successMsg = data?.comment || data?.message || `${t("product.successTopup")}`;
         setAppAlert({ type: "green", message: successMsg });
         window.scrollTo({ top: 0, behavior: "smooth" });
         return;
@@ -353,7 +356,7 @@ function Product() {
       const errMsg = data?.comment || data?.message || "Не удалось оформить пополнение";
       setAppAlert({ type: "red", message: errMsg });
     } catch (e) {
-      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оформления пополнения";
+      const errMsg = e?.response?.data?.comment || e?.response?.data?.message || `${t("product.errorTopupBuy")}`;
       setAppAlert({ type: "red", message: errMsg });
     } finally {
       setPaying(false);
@@ -377,7 +380,7 @@ function Product() {
                     onError={(e) => (e.currentTarget.src = "/steamsmall.png")}
                   />
                   <div>
-                    <p className="s-block-h">Пополнение баланса {item.group}</p>
+                    <p className="s-block-h">{t("product.topupBalance")} {item.group}</p>
                     <span className="s-d">{item.short_info}</span>
 
                     {/* Switcher: render only buttons that exist */}
@@ -388,7 +391,7 @@ function Product() {
                           className={activeTab === "topup" ? "active" : ""}
                           onClick={() => setActiveTab("topup")}
                         >
-                          Пополнение
+                          {t("product.tabTopup")}
                         </button>
                       )}
                       {hasVoucher && (
@@ -398,7 +401,7 @@ function Product() {
                             className={activeTab === "voucher" ? "active" : ""}
                             onClick={() => setActiveTab("voucher")}
                           >
-                            Ваучер
+                            {t("product.tabVoucher")}
                             <div className="icon-wrap">
                               <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <rect width="28" height="28" rx="10" fill="#F5F5F9" />
@@ -408,7 +411,7 @@ function Product() {
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M13.9974 18.5417C14.4576 18.5417 14.8307 18.1686 14.8307 17.7083C14.8307 17.2481 14.4576 16.875 13.9974 16.875C13.5372 16.875 13.1641 17.2481 13.1641 17.7083C13.1641 18.1686 13.5372 18.5417 13.9974 18.5417Z" fill="black" fill-opacity="0.8" />
                                 <path d="M13.9971 17.125C14.3191 17.125 14.5809 17.386 14.5811 17.708C14.5811 18.0302 14.3192 18.292 13.9971 18.292C13.6751 18.2918 13.4141 18.0301 13.4141 17.708C13.4142 17.3861 13.6752 17.1252 13.9971 17.125Z" stroke="black" stroke-opacity="0.8" stroke-width="0.5" />
                               </svg>
-                              <span>Ваучер — уникальная комбинация из цифр и букв. У ваучера есть денежный номинал, который зачисляется на игровой кошелёк при активации.</span>
+                              <span>{t("product.voucherTooltip")}</span>
                             </div>
                           </button>
                         </div>
@@ -422,7 +425,7 @@ function Product() {
               {activeTab === "voucher" && hasVoucher && (
                 <>
                   <div className="steam-block" style={{ marginTop: 16 }}>
-                    <p className="s-block-h">Выберите регион</p>
+                    <p className="s-block-h">{t("product.selectRegion")}</p>
                     <div style={{ position: "relative", marginTop: 16 }}>
                       <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                         xmlns="http://www.w3.org/2000/svg" className="slct-arr">
@@ -455,7 +458,7 @@ function Product() {
 
                     {selectedRegionName && filteredVouchers.length > 0 && (
                       <div style={{ marginTop: 20 }}>
-                        <b>Выберите номинал</b>
+                        <b>{t("product.selectNominal")}</b>
                         <div className="voucher-options">
                           {filteredVouchers.map((p) => (
                             <button
@@ -477,7 +480,7 @@ function Product() {
                   </div>
 
                   <div className="steam-block" style={{ marginTop: 16 }}>
-                    <p className="s-block-h">Оформление покупки</p>
+                    <p className="s-block-h">{t("product.purchase")}</p>
 
                     {/* Email field lives only in voucher flow */}
                     {emailField && (
@@ -506,7 +509,7 @@ function Product() {
               {/* ========== TOPUP TAB ONLY ========== */}
               {activeTab === "topup" && hasTopup && (
                 <div className="steam-block" style={{ marginTop: 16 }}>
-                  <p className="s-block-h">Оформление покупки</p>
+                  <p className="s-block-h">{t("product.purchase")}</p>
 
                   <div style={{ marginTop: 16, display: "grid", gap: 16 }}>
                     {topupFields.map((f) => {
@@ -539,7 +542,7 @@ function Product() {
                                     </option>
                                   ))
                                 ) : (
-                                  <option>Регионы недоступны</option>
+                                  <option>{t("product.regionsUnavailable")}</option>
                                 )}
                               </select>
                             </div>
@@ -569,7 +572,7 @@ function Product() {
                                 </button>
                               ))}
                               {filteredTopupProducts.length === 0 && (
-                                <div style={{ opacity: 0.7 }}>Нет доступных товаров</div>
+                                <div style={{ opacity: 0.7 }}>{t("product.topupUnavailable")}</div>
                               )}
                             </div>
                           </div>
@@ -612,20 +615,20 @@ function Product() {
               )}
             </div>
           ) : (
-            <div style={{ opacity: 0.7, padding: 16 }}>Нет данных</div>
+            <div style={{ opacity: 0.7, padding: 16 }}>{t("product.noData")}</div>
           )}
         </div>
 
         {/* Right column: Оплата + open modal */}
         <div>
           <div className="steam-block">
-            <p className="steam-bal-h">Оплата</p>
+            <p className="steam-bal-h">{t("product.purchase")}</p>
             <div className="bal-flex">
-              <p>К зачислению</p>
+              <p>{t("product.toCredit")}</p>
               <p>{chosenLabel ? `${chosenLabel}` : "—"}</p>
             </div>
             <div className="bal-flex">
-              <p>Итого к списанию</p>
+              <p>{t("product.totalToPay")}</p>
               <p>{chosenPrice ? `${chosenPrice} ТМТ` : "—"}</p>
             </div>
 
@@ -686,7 +689,7 @@ function Product() {
                 }}
               />
               <span className="checkmark"></span>
-              <span className="label">Я подтверждаю, что правильно указал все данные</span>
+              <span className="label">{t("product.modalConfirmData")}</span>
             </label>
 
             <div>
@@ -696,7 +699,7 @@ function Product() {
                 onClick={togglePay}
                 disabled={!canPay}
               >
-                Оплатить
+                {t("product.modalPay")}
               </button>
             </div>
           </div>
@@ -706,7 +709,7 @@ function Product() {
         <div className={pay ? "steam-pay showpay" : "steam-pay"}>
           <div className="payform">
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <p className="formhead">Пополнение баланса {item?.group || "Оплата"}</p>
+              <p className="formhead">{t("product.topupBalance")} {item?.group || "Оплата"}</p>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                 xmlns="http://www.w3.org/2000/svg"
                 onClick={togglePay} style={{ cursor: "pointer" }}>
@@ -717,7 +720,7 @@ function Product() {
 
             <div className="paydata">
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <p>Регион</p>
+                <p>{t("product.modalRegion")}</p>
                 <p>{regionToShow}</p>
               </div>
 
@@ -739,11 +742,11 @@ function Product() {
                   ))}
 
               <div className="bal-flex">
-                <p>К зачислению</p>
+                <p>{t("product.toCredit")}</p>
                 <p>{chosenLabel ? `${chosenLabel}` : "—"}</p>
               </div>
               <div className="bal-flex">
-                <p>Итого к списанию</p>
+                <p>{t("product.totalToPay")}</p>
                 <p>{chosenPrice ? `${chosenPrice} ТМТ` : "—"}</p>
               </div>
             </div>
@@ -755,7 +758,7 @@ function Product() {
                   stroke="#F50100" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>
-                Товар возврату не подлежит
+                {t("product.nonRefundable")}
               </p>
             </div>
 
@@ -766,7 +769,7 @@ function Product() {
                 onChange={(e) => setModalConfirmed(e.target.checked)}
               />
               <span className="checkmark"></span>
-              <span className="label">Я подтверждаю, что правильно указал все данные</span>
+              <span className="label">{t("product.modalConfirmData")}</span>
             </label>
 
             <div>
@@ -777,9 +780,9 @@ function Product() {
                 disabled={!modalConfirmed || paying || !canPay}
                 onClick={activeTab === "voucher" ? handleBuyVoucher : handleBuyTopup}
               >
-                {paying ? <div className="spinner"></div> : "Оплатить"}
+                {paying ? <div className="spinner"></div> : `${t("product.modalPay")}`}
               </button>
-              <button type="button" className="pay-btn cancel" onClick={togglePay}>Отмена</button>
+              <button type="button" className="pay-btn cancel" onClick={togglePay}>{t("product.modalCancel")}</button>
             </div>
           </div>
           {appAlert.type && (
@@ -809,11 +812,8 @@ function Product() {
               )}
             </div>
           )}
-
-
         </div>
       </form>
-
     </div>
   );
 }

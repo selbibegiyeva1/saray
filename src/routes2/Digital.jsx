@@ -33,7 +33,7 @@ function Digital() {
                 });
                 if (!cancel) setGroups(Array.isArray(data) ? data : []);
             } catch (e) {
-                if (!cancel) setErr(e?.response?.data?.message || "Ошибка загрузки");
+                if (!cancel) setErr(e?.response?.data?.message || `${t("steam.errorLoading")}`);
             } finally {
                 if (!cancel) setLoading(false);
             }
@@ -208,7 +208,7 @@ function Digital() {
                             );
                         })}
                         {filtered.length === 0 && (
-                            <div style={{ opacity: 0.7, padding: 16 }}>Ничего не найдено</div>
+                            <div style={{ opacity: 0.7, padding: 16 }}>{t("steam.nothingFound")}</div>
                         )}
                     </div>
                 )}

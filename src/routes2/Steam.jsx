@@ -267,7 +267,7 @@ function Steam() {
             setAppAlert({ type: "red", message: msg });
         } catch (e) {
             // ❌ network / backend crash -> show alert
-            const msg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оплаты";
+            const msg = e?.response?.data?.comment || e?.response?.data?.message || `${t("steam.payError")}`;
             setAppAlert({ type: "red", message: msg });
         } finally {
             setPaying(false);
@@ -321,7 +321,7 @@ function Steam() {
             const errMsg = data?.comment || data?.message || "Не удалось купить ваучер";
             setAppAlert({ type: "red", message: errMsg });
         } catch (e) {
-            const errMsg = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка покупки ваучера";
+            const errMsg = e?.response?.data?.comment || e?.response?.data?.message || `${t("steam.voucherError")}`;
             setAppAlert({ type: "red", message: errMsg });
         } finally {
             setPaying(false);

@@ -3,12 +3,15 @@ import { useSearchParams, Link } from "react-router-dom";
 import api from "../lib/api"; // axios instance with auth + refresh
 import "../styles/Digital.css";
 
+import { useTranslation } from "react-i18next";
+
 const CATEGORIES = [
     { key: "business", label: "Сервисы" },
     { key: "games", label: "Игры" },
 ];
 
 function Digital() {
+    const { t } = useTranslation();
     const [searchParams, setSearchParams] = useSearchParams();
     const getValidCategory = (v) => (["business", "games"].includes(v) ? v : "business");
     const [category, setCategory] = useState(getValidCategory(searchParams.get("category")));
@@ -64,10 +67,10 @@ function Digital() {
 
     return (
         <div className='Digital'>
-            <h1>Цифровые товары</h1>
+            <h1>{t("digital.title")}</h1>
 
             <div className="digital-search">
-                <p className='digital-search-h'>Поиск по товарам</p>
+                <p className='digital-search-h'>{t("digital.searchTitle")}</p>
                 <form
                     onSubmit={handleSearchSubmit}
                     style={{ marginTop: 20, display: "flex", gap: 16 }}
@@ -86,12 +89,12 @@ function Digital() {
                         </svg>
                         <input
                             type="text"
-                            placeholder='Поиск...'
+                            placeholder={t("digital.searchPlaceholder")}
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                         />
                     </div>
-                    <button className='dig-search-btn' type="submit">Поиск</button>
+                    <button className='dig-search-btn' type="submit">{t("digital.searchButton")}</button>
                 </form>
 
                 {/* Quick picks (optional shortcuts that just fill the input) */}

@@ -276,5 +276,71 @@
         "errorTopupBuy": "Doldurmakda näsazlyk ýüze çykdy ",
         "successVoucher": "Sargyt döredildi. Täze sahypadan dowam ediň.",
         "successTopup": "Sargyt döredildi. Täze sahypadan dowam ediň."
+    },
+    "esim": {
+        "title": "e-SIM",
+        "tabs": {
+            "countries": "Ýurtlar",
+            "regions": "Sebitler"
+        },
+        "search": {
+            "placeholderCountry": "Ýurdun ady",
+            "placeholderRegion": "Sebitiň ady",
+            "clear": "Gözlegi arassala",
+            "nothingFound": "Hiç zat tapylmady",
+            "loading": "Ýüklenýär…"
+        },
+        "list": {
+            "showTariffs": "Tarifleri görkez",
+            "tariffsCount": "{{count}} tarif",
+            "countriesLoadError": "Ýurtlary ýüklemek başartmady.",
+            "regionsLoadError": "Sebitleri ýüklemek başartmady."
+        },
+        "tariffs": {
+            "title": "Tarifler",
+            "loading": "Tarifler ýüklenýär…",
+            "loadError": "Tarifleri ýüklemek başartmady.",
+            "notFound": "Tarif tapylmady.",
+            "selectCountry": "Tarifleri görmek üçin ýurty saýlaň.",
+            "unlimited": "Çäklendirilmedik",
+            "country": "Ýurt",
+            "coverage": "Çägi",
+            "coverageCountriesShort": "{{count}} ýurt",
+            "days": "Möhlet",
+            "daysSuffix": "{{count}} gün",
+            "price": "Bahasy",
+            "buy": "Satyn al"
+        },
+        "coverage": {
+            "modalTitle": "Bu hyzmat aşakdaky ýurtlarda elýeterlidir",
+            "searchPlaceholder": "Ýurdun ady",
+            "loading": "Ýurtlar ýüklenýär...",
+            "loadError": "Sebitiň ýurtlaryny ýüklemek başartmady.",
+            "tariffsCount": "{{count}} tarif",
+            "notFoundQuery": "Hiç zat tapylmady",
+            "notFound": "Gabatalýan kodly ýurt tapylmady."
+        },
+        "purchase": {
+            "title": "Tarifi satyn almak",
+            "coverage": "Çägi",
+            "traffic": "Trafik",
+            "days": "Möhlet",
+            "price": "Bahasy",
+            "nonRefundableNotice": "Haryt yzyna gaýtarylmaýar",
+            "emailNotice": "Tölegden soň eSIM gurmak üçin QR salgysy bolan hat alarsyňyz",
+            "clientData": "Müşderiniň maglumatlary",
+            "email": "Elektron poçta",
+            "emailPlaceholder": "Müşderiniň poçtasyny giriziň",
+            "phone": "Telefon belgisi",
+            "phonePlaceholder": "Müşderiniň telefon belgisi",
+            "total": "Jemi",
+            "confirmation": "Maglumatlary dogry ýazandygymy tassyklaýaryn",
+            "submit": "Töle",
+            "selectTariffError": "Tarifi saýlaň",
+            "invalidClientData": "Müşderiniň maglumatlaryny dogry dolduryň",
+            "orderSuccess": "eSIM sargydy döredildi. Täze penjirede dowam ediň.",
+            "orderError": "eSIM resmileşdirmekde ýalňyşlyk",
+            "orderFailed": "eSIM resmileşdirmek başartmady"
+        }
     }
 }

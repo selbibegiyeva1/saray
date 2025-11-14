@@ -200,7 +200,7 @@ function Transactions2() {
     return (
         <div className='Home transhome'>
 
-            <div style={{ maxWidth: 1680, margin: "auto" }}>
+            <div style={{ margin: "auto" }}>
                 <h1>{t("transFilter.title")}</h1>
                 <div className="trans-filter">
                     <p className="filter-h">{t("transFilter.filters")}</p>

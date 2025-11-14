@@ -220,7 +220,16 @@
     display: flex;
     justify-content: space-between;
     padding: 16px 0px;
+    gap: 24px;
     border-bottom: 1px solid #0000001A;
+}
+
+.bal-flex p:nth-child(1) {
+    text-wrap-mode: nowrap;
+}
+
+.bal-flex p:nth-child(2) {
+    text-align: right;
 }
 
 .voucher-options {

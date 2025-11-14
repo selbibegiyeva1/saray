@@ -80,6 +80,12 @@
     border-radius: 8px;
 }
 
+@media(min-width: 1740px) {
+    .trans-filter {
+        width: 1680px;
+    }
+}
+
 @media(max-width: 1024px) {
 
     .filter-flex,

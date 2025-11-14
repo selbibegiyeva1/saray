@@ -2,7 +2,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import api from "../lib/api";
 import "../styles/eSim.css";
 
+import { useTranslation } from "react-i18next";
+
 function Esim() {
+    const { t } = useTranslation();
 
     // tabs
     const [mode, setMode] = useState("countries"); // "countries" | "regions"
@@ -70,64 +73,70 @@ function Esim() {
     }, []);
 
     // ------- load tariffs (country) -------
-    const loadTariffsFor = useCallback(async (c, shouldScroll = false) => {
-        setSelectedRegion(null);
-        setRegionCoverage(null);
-        setSelectedCountry(c);
-        setTErr(null);
-        setTLoading(true);
-        setTariffs([]);
+    const loadTariffsFor = useCallback(
+        async (c, shouldScroll = false) => {
+            setSelectedRegion(null);
+            setRegionCoverage(null);
+            setSelectedCountry(c);
+            setTErr(null);
+            setTLoading(true);
+            setTariffs([]);
 
-        if (shouldScroll) {
-            scrollToGrid();
-        }
+            if (shouldScroll) {
+                scrollToGrid();
+            }
 
-        try {
-            const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
-                params: { country_code: c.country_code },
-            });
-            const root = Array.isArray(data) ? (data[0] || {}) : (data || {});
-            const list = root.tariffs || root.tarrifs || [];
-            setTariffs(Array.isArray(list) ? list : []);
-        } catch (e) {
-            setTErr("Не удалось загрузить тарифы.");
-            console.error("Tariffs error", e?.response || e);
-        } finally {
-            setTLoading(false);
-        }
-    }, []);
+            try {
+                const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
+                    params: { country_code: c.country_code },
+                });
+                const root = Array.isArray(data) ? data[0] || {} : data || {};
+                const list = root.tariffs || root.tarrifs || [];
+                setTariffs(Array.isArray(list) ? list : []);
+            } catch (e) {
+                setTErr(t("esim.tariffs.loadError"));
+                console.error("Tariffs error", e?.response || e);
+            } finally {
+                setTLoading(false);
+            }
+        },
+        [scrollToGrid, t]
+    );
 
     // ------- load tariffs (region) -------
-    const loadTariffsForRegion = useCallback(async (r, shouldScroll = false) => {
-        setSelectedCountry(null);
-        setSelectedRegion(r);
-        setTErr(null);
-        setTLoading(true);
-        setTariffs([]);
+    const loadTariffsForRegion = useCallback(
+        async (r, shouldScroll = false) => {
+            setSelectedCountry(null);
+            setSelectedRegion(r);
+            setTErr(null);
+            setTLoading(true);
+            setTariffs([]);
 
-        if (shouldScroll) {
-            scrollToGrid();
-        }
+            if (shouldScroll) {
+                scrollToGrid();
+            }
 
-        try {
-            const regionParam = r?.region_name?.en;
-            const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
-                params: { region: regionParam },
-            });
-            const root = Array.isArray(data) ? (data[0] || {}) : (data || {});
-            const list = root.tariffs || root.tarrifs || [];
-            setTariffs(Array.isArray(list) ? list : []);
+            try {
+                const regionParam = r?.region_name?.en;
+                const { data } = await api.get("/v1/partner/esim/countries/tarrifs", {
+                    params: { region: regionParam },
+                });
+                const root = Array.isArray(data) ? data[0] || {} : data || {};
+                const list = root.tariffs || root.tarrifs || [];
+                setTariffs(Array.isArray(list) ? list : []);
 
-            const codes = root.country_code;
-            setRegionCoverage(Array.isArray(codes) ? codes.length : null);
-            setRegionCodes(Array.isArray(codes) ? codes : []);
-        } catch (e) {
-            setTErr("Не удалось загрузить тарифы.");
-            console.error("Region tariffs error", e?.response || e);
-        } finally {
-            setTLoading(false);
-        }
-    }, []);
+                const codes = root.country_code;
+                setRegionCoverage(Array.isArray(codes) ? codes.length : null);
+                setRegionCodes(Array.isArray(codes) ? codes : []);
+            } catch (e) {
+                setTErr(t("esim.tariffs.loadError"));
+                console.error("Region tariffs error", e?.response || e);
+            } finally {
+                setTLoading(false);
+            }
+        },
+        [scrollToGrid, t]
+    );
 
     const filterCoverageCountries = useCallback(() => {
         if (!regionCodes.length || !countries.length) return [];
@@ -148,16 +157,17 @@ function Esim() {
                 setCountries(arr);
 
                 // auto-select first country, but do NOT scroll
-
             } catch {
                 if (!isMounted) return;
-                setErr("Не удалось загрузить страны.");
+                setErr(t("esim.list.countriesLoadError"));
             } finally {
                 if (isMounted) setLoading(false);
             }
         })();
-        return () => { isMounted = false; };
-    }, [loadTariffsFor]);
+        return () => {
+            isMounted = false;
+        };
+    }, [loadTariffsFor, t]);
 
     // ------- lazy fetch regions when tab is opened -------
     useEffect(() => {
@@ -172,7 +182,7 @@ function Esim() {
                 setRegions(Array.isArray(data) ? data : []);
             } catch {
                 if (!isMounted) return;
-                setErr("Не удалось загрузить регионы.");
+                setErr(t("esim.list.regionsLoadError"));
             } finally {
                 if (isMounted) setLoading(false);
             }
@@ -186,8 +196,10 @@ function Esim() {
             // keep current country tariffs (feels nicer)
         }
 
-        return () => { isMounted = false; };
-    }, [mode, regions.length]);
+        return () => {
+            isMounted = false;
+        };
+    }, [mode, regions.length, t]);
 
     // ------- active list (for search) -------
     const list = mode === "countries" ? countries : regions;
@@ -216,8 +228,8 @@ function Esim() {
 
     const [payform, setPayform] = useState(false);
     const formFunc = () => {
-        setFormConfirmed(false);       // reset checkbox each time
-        setPayform(prev => !prev);     // <-- use the correct state
+        setFormConfirmed(false); // reset checkbox each time
+        setPayform((prev) => !prev);
     };
 
     const [tariff, setTarrif] = useState(false);
@@ -234,7 +246,7 @@ function Esim() {
                 setCoverageCountries(filtered);
             } catch (e) {
                 console.error(e);
-                setCovErr("Не удалось загрузить список стран региона.");
+                setCovErr(t("esim.coverage.loadError"));
             } finally {
                 setCovLoading(false);
             }
@@ -253,15 +265,28 @@ function Esim() {
     }, [coverageSearch, coverageCountries]);
 
     const coverageLabel = selectedCountry
-        ? (selectedCountry?.country_name?.ru || selectedCountry?.country_name?.en || selectedCountry?.country_code || "—")
-        : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en || "—");
+        ? selectedCountry?.country_name?.ru ||
+        selectedCountry?.country_name?.en ||
+        selectedCountry?.country_name?.tm ||
+        selectedCountry?.country_code ||
+        "—"
+        : selectedRegion?.region_name?.ru ||
+        selectedRegion?.region_name?.en ||
+        selectedRegion?.region_name?.tm ||
+        "—";
 
     const trafficLabel = selectedTariff
-        ? (selectedTariff.is_unlimited ? "Безлимит" : formatTraffic(selectedTariff.traffic))
+        ? selectedTariff.is_unlimited
+            ? t("esim.tariffs.unlimited")
+            : formatTraffic(selectedTariff.traffic)
         : "—";
 
-    const daysLabel = selectedTariff?.days != null ? `${selectedTariff.days} дней` : "—";
-    const priceLabel = selectedTariff?.price_tmt != null ? `${selectedTariff.price_tmt} ТМТ` : "—";
+    const daysLabel =
+        selectedTariff?.days != null
+            ? t("esim.tariffs.daysSuffix", { count: selectedTariff.days })
+            : "—";
+    const priceLabel =
+        selectedTariff?.price_tmt != null ? `${selectedTariff.price_tmt} TMT` : "—";
 
     // client data
     const [clientName, setClientName] = useState("");
@@ -281,8 +306,8 @@ function Esim() {
             if (appAlert.type === "green") {
                 setPayform(false); // close only on success
             }
-            const t = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
-            return () => clearTimeout(t);
+            const tmr = setTimeout(() => setAppAlert({ type: null, message: "" }), 5000);
+            return () => clearTimeout(tmr);
         }
     }, [appAlert]);
 
@@ -290,12 +315,15 @@ function Esim() {
         if (!formConfirmed) return;
 
         if (!selectedTariff) {
-            setAppAlert({ type: "red", message: "Выберите тариф" });
+            setAppAlert({ type: "red", message: t("esim.purchase.selectTariffError") });
             return;
         }
         if (!isValidEmail(clientEmail) || !clientPhone.trim()) {
-            // This is just a safety check in case someone bypasses the UI.
-            setAppAlert({ type: "red", message: "Заполните данные клиента корректно" });
+            // safety check
+            setAppAlert({
+                type: "red",
+                message: t("esim.purchase.invalidClientData"),
+            });
             return;
         }
 
@@ -313,10 +341,12 @@ function Esim() {
                 // balance down by tariff price (if provided)
                 const dec = Number(selectedTariff?.price_tmt) || 0;
                 if (dec > 0) {
-                    window.dispatchEvent(new CustomEvent("balance:decrement", { detail: { amount: dec } }));
+                    window.dispatchEvent(
+                        new CustomEvent("balance:decrement", { detail: { amount: dec } })
+                    );
                 }
 
-                // open backend link in a new tab (as per your examples)
+                // open backend link in a new tab
                 if (data.voucher) {
                     window.open(data.voucher, "_blank", "noopener,noreferrer");
                 }
@@ -329,17 +359,26 @@ function Esim() {
                 setSelectedTariff(null);
                 setPayform(false);
 
-                const ok = data?.comment || data?.message || "Заказ eSIM создан. Продолжите в новой вкладке.";
+                const ok =
+                    data?.comment ||
+                    data?.message ||
+                    t("esim.purchase.orderSuccess");
                 setAppAlert({ type: "green", message: ok });
                 window.scrollTo({ top: 0, behavior: "smooth" });
                 return;
             }
 
-            const err = data?.comment || data?.message || "Не удалось оформить eSIM";
-            setAppAlert({ type: "red", message: err });
+            const errMsg =
+                data?.comment ||
+                data?.message ||
+                t("esim.purchase.orderFailed");
+            setAppAlert({ type: "red", message: errMsg });
         } catch (e) {
-            const err = e?.response?.data?.comment || e?.response?.data?.message || "Ошибка оформления eSIM";
-            setAppAlert({ type: "red", message: err });
+            const errMsg =
+                e?.response?.data?.comment ||
+                e?.response?.data?.message ||
+                t("esim.purchase.orderError");
+            setAppAlert({ type: "red", message: errMsg });
         } finally {
             setPaying(false);
         }
@@ -353,10 +392,14 @@ function Esim() {
 
     return (
         <div className="Esim">
-            <h1 className="e-head">e-SIM</h1>
+            <h1 className="e-head">{t("esim.title")}</h1>
 
             <div className="esim-search">
-                <b>{mode === "countries" ? "Страны" : "Регионы"}</b>
+                <b>
+                    {mode === "countries"
+                        ? t("esim.tabs.countries")
+                        : t("esim.tabs.regions")}
+                </b>
 
                 <div className="esim-btns">
                     <button
@@ -364,19 +407,25 @@ function Esim() {
                         className={mode === "countries" ? "active" : ""}
                         onClick={() => setMode("countries")}
                     >
-                        Страны
+                        {t("esim.tabs.countries")}
                     </button>
                     <button
                         type="button"
                         className={mode === "regions" ? "active" : ""}
                         onClick={() => setMode("regions")}
                     >
-                        Регионы
+                        {t("esim.tabs.regions")}
                     </button>
                 </div>
 
                 <div className="esim-inpt">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
                         <path
                             fillRule="evenodd"
                             clipRule="evenodd"
@@ -388,7 +437,11 @@ function Esim() {
 
                     <input
                         type="text"
-                        placeholder={mode === "countries" ? "Название страны" : "Название региона"}
+                        placeholder={
+                            mode === "countries"
+                                ? t("esim.search.placeholderCountry")
+                                : t("esim.search.placeholderRegion")
+                        }
                         value={q}
                         onChange={(e) => setQ(e.target.value)}
                     />
@@ -396,7 +449,7 @@ function Esim() {
                     {q && (
                         <button
                             type="button"
-                            aria-label="Сбросить поиск"
+                            aria-label={t("esim.search.clear")}
                             onClick={() => setQ("")}
                             style={{ marginLeft: 8 }}
                         >
@@ -405,27 +458,42 @@ function Esim() {
                     )}
                 </div>
 
-                {loading && <div style={{ padding: 12, opacity: 0.7 }}>Загрузка…</div>}
-                {err && !loading && <div style={{ padding: 12, color: "#ED2428" }}>{err}</div>}
+                {loading && (
+                    <div style={{ padding: 12, opacity: 0.7 }}>
+                        {t("esim.search.loading")}
+                    </div>
+                )}
+                {err && !loading && (
+                    <div style={{ padding: 12, color: "#ED2428" }}>{err}</div>
+                )}
 
                 {!loading && !err && (
                     filtered.length ? (
                         <ul style={{ paddingRight: 15 }}>
                             {filtered.map((item, i) => {
                                 if (mode === "countries") {
-                                    const name = item?.country_name?.ru || item?.country_name?.en || item?.country_code;
+                                    const name =
+                                        item?.country_name?.ru ||
+                                        item?.country_name?.en ||
+                                        item?.country_name?.tm ||
+                                        item?.country_code;
                                     const key = item.country_code || name || i;
-                                    const isSel = selectedCountry?.country_code === item.country_code;
+                                    const isSel =
+                                        selectedCountry?.country_code === item.country_code;
                                     return (
                                         <li
                                             key={key}
                                             role="button"
                                             tabIndex={0}
                                             onClick={() => loadTariffsFor(item, true)}
-                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsFor(item, true) : null)}
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter"
+                                                    ? loadTariffsFor(item, true)
+                                                    : null
+                                            }
                                             className={isSel ? "selected" : ""}
                                             style={{ cursor: "pointer" }}
-                                            title="Показать тарифы"
+                                            title={t("esim.list.showTariffs")}
                                         >
                                             {item.flag_url ? (
                                                 <img
@@ -433,30 +501,54 @@ function Esim() {
                                                     alt={name}
                                                     width={38}
                                                     height={28}
-                                                    style={{ borderRadius: 6, objectFit: "cover" }}
+                                                    style={{
+                                                        borderRadius: 6,
+                                                        objectFit: "cover",
+                                                    }}
                                                 />
                                             ) : (
-                                                <div style={{ width: 38, height: 28, borderRadius: 6, background: "#eee" }} />
+                                                <div
+                                                    style={{
+                                                        width: 38,
+                                                        height: 28,
+                                                        borderRadius: 6,
+                                                        background: "#eee",
+                                                    }}
+                                                />
                                             )}
                                             <span>{name}</span>
-                                            <span style={{ marginLeft: "auto", fontSize: 14 }}>
-                                                {item.tariff_count} тарифов
+                                            <span
+                                                style={{
+                                                    marginLeft: "auto",
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {t("esim.list.tariffsCount", {
+                                                    count: item.tariff_count ?? 0,
+                                                })}
                                             </span>
                                         </li>
                                     );
                                 } else {
-                                    const name = item?.region_name?.ru || item?.region_name?.en;
-                                    const isSel = selectedRegion?.region_name?.en === item?.region_name?.en;
+                                    const name =
+                                        item?.region_name?.ru || item?.region_name?.en;
+                                    const isSel =
+                                        selectedRegion?.region_name?.en ===
+                                        item?.region_name?.en;
                                     return (
                                         <li
                                             key={name || i}
                                             role="button"
                                             tabIndex={0}
                                             onClick={() => loadTariffsForRegion(item, true)}
-                                            onKeyDown={(e) => (e.key === "Enter" ? loadTariffsForRegion(item, true) : null)}
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter"
+                                                    ? loadTariffsForRegion(item, true)
+                                                    : null
+                                            }
                                             className={isSel ? "selected" : ""}
                                             style={{ cursor: "pointer" }}
-                                            title="Показать тарифы"
+                                            title={t("esim.list.showTariffs")}
                                         >
                                             {item.region_url ? (
                                                 <img
@@ -464,14 +556,31 @@ function Esim() {
                                                     alt={name}
                                                     width={38}
                                                     height={28}
-                                                    style={{ borderRadius: 6, objectFit: "cover" }}
+                                                    style={{
+                                                        borderRadius: 6,
+                                                        objectFit: "cover",
+                                                    }}
                                                 />
                                             ) : (
-                                                <div style={{ width: 38, height: 28, borderRadius: 6, background: "#eee" }} />
+                                                <div
+                                                    style={{
+                                                        width: 38,
+                                                        height: 28,
+                                                        borderRadius: 6,
+                                                        background: "#eee",
+                                                    }}
+                                                />
                                             )}
                                             <span>{name}</span>
-                                            <span style={{ marginLeft: "auto", fontSize: 14 }}>
-                                                {item.tariff_count} тарифов
+                                            <span
+                                                style={{
+                                                    marginLeft: "auto",
+                                                    fontSize: 14,
+                                                }}
+                                            >
+                                                {t("esim.list.tariffsCount", {
+                                                    count: item.tariff_count ?? 0,
+                                                })}
                                             </span>
                                         </li>
                                     );
@@ -479,105 +588,171 @@ function Esim() {
                             })}
                         </ul>
                     ) : (
-                        <div style={{ padding: 12, opacity: 0.7 }}>Ничего не найдено</div>
+                        <div style={{ padding: 12, opacity: 0.7 }}>
+                            {t("esim.search.nothingFound")}
+                        </div>
                     )
                 )}
             </div>
 
             <div className="esim-grid" ref={gridRef}>
-                <h1 className="e-head e2">Тарифы</h1>
+                <h1 className="e-head e2">{t("esim.tariffs.title")}</h1>
 
                 <div className="blocks">
-                    {tLoading && <div style={{ padding: 12, opacity: 0.7 }}>Загружаем тарифы…</div>}
-                    {tErr && !tLoading && <div style={{ padding: 12, color: "#ED2428" }}>{tErr}</div>}
+                    {tLoading && (
+                        <div style={{ padding: 12, opacity: 0.7 }}>
+                            {t("esim.tariffs.loading")}
+                        </div>
+                    )}
+                    {tErr && !tLoading && (
+                        <div style={{ padding: 12, color: "#ED2428" }}>{tErr}</div>
+                    )}
 
                     {!tLoading && !tErr && (
                         tariffs.length === 0 ? (
                             selectedCountry || selectedRegion ? (
-                                <div style={{ padding: 12, opacity: 0.7 }}>Тарифы не найдены.</div>
+                                <div style={{ padding: 12, opacity: 0.7 }}>
+                                    {t("esim.tariffs.notFound")}
+                                </div>
                             ) : (
-                                <div style={{ padding: 12, opacity: 0.7 }}>Выберите страну чтобы посмотреть тарифы.</div>
+                                <div style={{ padding: 12, opacity: 0.7 }}>
+                                    {t("esim.tariffs.selectCountry")}
+                                </div>
                             )
                         ) : null
                     )}
 
-                    {!tLoading && !tErr && tariffs.map((t, i) => (
-                        <div className="esim" key={`${t.name || "tariff"}-${i}`}>
-                            <div className="esim-flex">
-                                <b>{t.is_unlimited ? "Безлимит" : formatTraffic(t.traffic)}</b>
-                                {(selectedCountry?.flag_url || selectedRegion?.region_url) && (
-                                    <div className="trf-img">
-                                        <img
-                                            src={selectedCountry?.flag_url || selectedRegion?.region_url}
-                                            alt={
-                                                selectedCountry
-                                                    ? (selectedCountry?.country_name?.ru || selectedCountry?.country_code)
-                                                    : (selectedRegion?.region_name?.ru || selectedRegion?.region_name?.en)
-                                            }
-                                        />
-                                    </div>
-                                )}
-                            </div>
+                    {!tLoading &&
+                        !tErr &&
+                        tariffs.map((tariffItem, i) => (
+                            <div className="esim" key={`${tariffItem.name || "tariff"}-${i}`}>
+                                <div className="esim-flex">
+                                    <b>
+                                        {tariffItem.is_unlimited
+                                            ? t("esim.tariffs.unlimited")
+                                            : formatTraffic(tariffItem.traffic)}
+                                    </b>
+                                    {(selectedCountry?.flag_url ||
+                                        selectedRegion?.region_url) && (
+                                            <div className="trf-img">
+                                                <img
+                                                    src={
+                                                        selectedCountry?.flag_url ||
+                                                        selectedRegion?.region_url
+                                                    }
+                                                    alt={
+                                                        selectedCountry
+                                                            ? selectedCountry?.country_name?.ru ||
+                                                            selectedCountry?.country_code
+                                                            : selectedRegion?.region_name?.ru ||
+                                                            selectedRegion?.region_name?.en
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                </div>
 
-                            <div className="data-flex">
-                                <div className="d-flex-div" style={{ borderBottom: "1px solid #00000026" }}>
-                                    <p>{selectedCountry ? "Страна" : "Покрытие"}</p>
+                                <div className="data-flex">
                                     <div
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 8,
-                                            cursor: mode === "regions" ? "pointer" : "default",
-                                            opacity: mode === "regions" ? 1 : 0.6, // optional: gray out when disabled
-                                        }}
-                                        onClick={mode === "regions" ? tariffFunc : undefined}
+                                        className="d-flex-div"
+                                        style={{ borderBottom: "1px solid #00000026" }}
                                     >
                                         <p>
                                             {selectedCountry
-                                                ? (selectedCountry?.country_name?.ru ||
-                                                    selectedCountry?.country_name?.en ||
-                                                    selectedCountry?.country_code || "—")
-                                                : (`${regionCoverage} стран` ?? "—")}
+                                                ? t("esim.tariffs.country")
+                                                : t("esim.tariffs.coverage")}
                                         </p>
-                                        {selectedRegion && (
-                                            <svg
-                                                width="24"
-                                                height="24"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                style={{ opacity: mode === "regions" ? 1 : 0.4 }} // visually muted if disabled
-                                            >
-                                                <path
-                                                    d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01"
-                                                    stroke="black"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        )}
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                alignItems: "center",
+                                                gap: 8,
+                                                cursor:
+                                                    mode === "regions"
+                                                        ? "pointer"
+                                                        : "default",
+                                                opacity:
+                                                    mode === "regions" ? 1 : 0.6,
+                                            }}
+                                            onClick={
+                                                mode === "regions"
+                                                    ? tariffFunc
+                                                    : undefined
+                                            }
+                                        >
+                                            <p>
+                                                {selectedCountry
+                                                    ? selectedCountry?.country_name?.ru ||
+                                                    selectedCountry?.country_name?.en ||
+                                                    selectedCountry?.country_name?.tm ||
+                                                    selectedCountry?.country_code ||
+                                                    "—"
+                                                    : regionCoverage != null
+                                                        ? t(
+                                                            "esim.tariffs.coverageCountriesShort",
+                                                            {
+                                                                count: regionCoverage,
+                                                            }
+                                                        )
+                                                        : "—"}
+                                            </p>
+                                            {selectedRegion && (
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    style={{
+                                                        opacity:
+                                                            mode === "regions"
+                                                                ? 1
+                                                                : 0.4,
+                                                    }}
+                                                >
+                                                    <path
+                                                        d="M11.9999 11.9999H20.9999M20.9999 11.9999L17 8M20.9999 11.9999L17 15.9999M9 12H9.01M6 12H6.01M3 12H3.01"
+                                                        stroke="black"
+                                                        strokeWidth="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                    />
+                                                </svg>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="d-flex-div">
+                                        <p>{t("esim.tariffs.days")}</p>
+                                        <p>
+                                            {tariffItem.days != null
+                                                ? t("esim.tariffs.daysSuffix", {
+                                                    count: tariffItem.days,
+                                                })
+                                                : "—"}
+                                        </p>
                                     </div>
                                 </div>
-                                <div className="d-flex-div">
-                                    <p>Срок действия</p>
-                                    <p>{t.days ?? "—"} дней</p>
+
+                                <div className="esim-price">
+                                    <b>{t("esim.tariffs.price")}</b>
+                                    <b>
+                                        {tariffItem.price_tmt != null
+                                            ? `${tariffItem.price_tmt} TMT`
+                                            : "—"}
+                                    </b>
                                 </div>
-                            </div>
 
-                            <div className="esim-price">
-                                <b>Сумма</b>
-                                <b>{t.price_tmt != null ? `${t.price_tmt} ТМТ` : "—"}</b>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSelectedTariff(tariffItem);
+                                        formFunc();
+                                    }}
+                                >
+                                    {t("esim.tariffs.buy")}
+                                </button>
                             </div>
-
-                            <button
-                                type="button"
-                                onClick={() => { setSelectedTariff(t); formFunc(); }}
-                            >
-                                Купить
-                            </button>
-                        </div>
-                    ))}
+                        ))}
                 </div>
             </div>
 
@@ -585,87 +760,191 @@ function Esim() {
             <div className={payform ? "payment-form showform" : "payment-form"}>
                 <form>
                     <div>
-                        <p className="pay-h">Покупка тарифа</p>
+                        <p className="pay-h">{t("esim.purchase.title")}</p>
                         <div className="pay-data">
-                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
-                                <p>Покрытие</p>
+                            <div
+                                style={{
+                                    borderBottom: "1.5px solid #00000026",
+                                }}
+                            >
+                                <p>{t("esim.purchase.coverage")}</p>
                                 <p>{coverageLabel}</p>
                             </div>
-                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
-                                <p>Трафик</p>
+                            <div
+                                style={{
+                                    borderBottom: "1.5px solid #00000026",
+                                }}
+                            >
+                                <p>{t("esim.purchase.traffic")}</p>
                                 <p>{trafficLabel}</p>
                             </div>
                             <div>
-                                <p>Срок действия</p>
+                                <p>{t("esim.purchase.days")}</p>
                                 <p>{daysLabel}</p>
                             </div>
                             <div style={{ marginTop: 30 }}>
-                                <p>Сумма</p>
+                                <p>{t("esim.purchase.price")}</p>
                                 <p>{priceLabel}</p>
                             </div>
                         </div>
-                        <div style={{ display: "flex", alignItems: "center", gap: "16px", margin: "16px 0px" }}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 16H12.01M12 8V12M9 4H15L20 9V15L15 20H9L4 15V9L9 4Z" stroke="#F50100" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "16px",
+                                margin: "16px 0px",
+                            }}
+                        >
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path
+                                    d="M12 16H12.01M12 8V12M9 4H15L20 9V15L15 20H9L4 15V9L9 4Z"
+                                    stroke="#F50100"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
-                            <p style={{ fontSize: 14, fontWeight: 500, color: "#F50100" }}>Товар возврату не подлежит</p>
+                            <p
+                                style={{
+                                    fontSize: 14,
+                                    fontWeight: 500,
+                                    color: "#F50100",
+                                }}
+                            >
+                                {t("esim.purchase.nonRefundableNotice")}
+                            </p>
                         </div>
-                        <span className="pay-desc">После оплаты вы получите письмо со ссылкой QR/ для установки eSIM</span>
+                        <span className="pay-desc">
+                            {t("esim.purchase.emailNotice")}
+                        </span>
                     </div>
                     <div className="pay-data2">
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                            <p className="pay-h">Данные клиента</p>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={formFunc} className="close-payment">
-                                <path d="M6 6L18 18M18 6L6 18" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <p className="pay-h">
+                                {t("esim.purchase.clientData")}
+                            </p>
+                            <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                                onClick={formFunc}
+                                className="close-payment"
+                            >
+                                <path
+                                    d="M6 6L18 18M18 6L6 18"
+                                    stroke="black"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
                             </svg>
                         </div>
 
-                        <div className="pay-inputs" style={{ marginTop: 20 }}>
-                            <p className="pay-label">Электронный адрес</p>
+                        <div
+                            className="pay-inputs"
+                            style={{ marginTop: 20 }}
+                        >
+                            <p className="pay-label">
+                                {t("esim.purchase.email")}
+                            </p>
                             <input
                                 type="email"
-                                placeholder="Введите почту клиента"
+                                placeholder={t(
+                                    "esim.purchase.emailPlaceholder"
+                                )}
                                 value={clientEmail}
                                 onChange={(e) => {
                                     setClientEmail(e.target.value);
-                                    setFieldErrors((f) => ({ ...f, email: false }));
+                                    setFieldErrors((f) => ({
+                                        ...f,
+                                        email: false,
+                                    }));
                                 }}
-                                style={fieldErrors.email ? { border: "1px solid #F50100" } : {}}
+                                style={
+                                    fieldErrors.email
+                                        ? { border: "1px solid #F50100" }
+                                        : {}
+                                }
                             />
                         </div>
 
-                        <div className="pay-inputs" style={{ marginTop: 20 }}>
-                            <p className="pay-label">Номер телефона</p>
+                        <div
+                            className="pay-inputs"
+                            style={{ marginTop: 20 }}
+                        >
+                            <p className="pay-label">
+                                {t("esim.purchase.phone")}
+                            </p>
                             <input
                                 type="tel"
                                 inputMode="tel"
-                                placeholder="Введите номер телефона клиента"
+                                placeholder={t(
+                                    "esim.purchase.phonePlaceholder"
+                                )}
                                 value={clientPhone}
                                 onChange={(e) => {
-                                    let v = e.target.value.replace(/[^0-9+]/g, '');
+                                    let v = e.target.value.replace(
+                                        /[^0-9+]/g,
+                                        ""
+                                    );
                                     // allow + only at the first position and only once
-                                    v = v.replace(/\+/g, (m, offset) => (offset === 0 ? m : ''));
-                                    v = v.replace(/(.)(?=.*\+)/g, (ch, offset) => (ch === '+' ? '' : ch));
+                                    v = v.replace(
+                                        /\+/g,
+                                        (m, offset) =>
+                                            offset === 0 ? m : ""
+                                    );
+                                    v = v.replace(
+                                        /(.)(?=.*\+)/g,
+                                        (ch) => (ch === "+" ? "" : ch)
+                                    );
 
                                     v = v.slice(0, 12);
 
                                     setClientPhone(v);
-                                    setFieldErrors((f) => ({ ...f, phone: false }));
+                                    setFieldErrors((f) => ({
+                                        ...f,
+                                        phone: false,
+                                    }));
                                 }}
-                                style={fieldErrors.phone ? { border: "1px solid #F50100" } : {}}
+                                style={
+                                    fieldErrors.phone
+                                        ? { border: "1px solid #F50100" }
+                                        : {}
+                                }
                             />
                         </div>
                         <div className="pay-data">
-                            <div style={{ borderBottom: "1.5px solid #00000026" }}>
-                                <p>Покрытие</p>
+                            <div
+                                style={{
+                                    borderBottom: "1.5px solid #00000026",
+                                }}
+                            >
+                                <p>{t("esim.purchase.coverage")}</p>
                                 <p>{coverageLabel}</p>
                             </div>
                             <div>
-                                <p>Итого</p>
+                                <p>{t("esim.purchase.total")}</p>
                                 <p>{priceLabel}</p>
                             </div>
                         </div>
-                        <label className="checkbox" style={{ marginTop: 20 }}>
+                        <label
+                            className="checkbox"
+                            style={{ marginTop: 20 }}
+                        >
                             <input
                                 type="checkbox"
                                 checked={formConfirmed}
@@ -673,8 +952,10 @@ function Esim() {
                                     const checked = e.target.checked;
 
                                     if (checked) {
-                                        const emailErr = !isValidEmail(clientEmail);
-                                        const phoneErr = !clientPhone.trim();
+                                        const emailErr =
+                                            !isValidEmail(clientEmail);
+                                        const phoneErr =
+                                            !clientPhone.trim();
 
                                         setFieldErrors({
                                             email: emailErr,
@@ -691,16 +972,26 @@ function Esim() {
                                 }}
                             />
                             <span className="checkmark"></span>
-                            <span className="label">Я подтверждаю, что правильно указал все данные</span>
+                            <span className="label">
+                                {t("esim.purchase.confirmation")}
+                            </span>
                         </label>
                         <div>
                             <button
                                 type="button"
                                 className="pay-btn"
-                                disabled={!formConfirmed || !selectedTariff || paying}
+                                disabled={
+                                    !formConfirmed ||
+                                    !selectedTariff ||
+                                    paying
+                                }
                                 onClick={handleBuyEsim}
                             >
-                                {paying ? <div className="spinner"></div> : "Оплатить"}
+                                {paying ? (
+                                    <div className="spinner"></div>
+                                ) : (
+                                    t("esim.purchase.submit")
+                                )}
                             </button>
                         </div>
                     </div>
@@ -709,23 +1000,75 @@ function Esim() {
                     <div className="alerts">
                         {appAlert.type === "green" && (
                             <div className="alt green" role="alert">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11" stroke="#50A66A" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M16 3.93552C14.795 3.33671 13.4368 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21C16.9706 21 21 16.9706 21 12C21 11.662 20.9814 11.3283 20.9451 11M21 5L12 14L9 11"
+                                        stroke="#50A66A"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
                                 </svg>
                                 <span>{appAlert.message}</span>
-                                <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 20 20"
+                                    className="alt-close"
+                                    onClick={closeAlert}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 5L15 15M15 5L5 15"
+                                        stroke="black"
+                                        strokeOpacity="0.6"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
                                 </svg>
                             </div>
                         )}
                         {appAlert.type === "red" && (
                             <div className="alt red" role="alert">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z" stroke="#ED2428" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M16 12H8M12 21C16.9706 21 21 16.9706 21 12C21 7.02944 16.9706 3 12 3C7.02944 3 3 7.02944 3 12C3 16.9706 7.02944 21 12 21Z"
+                                        stroke="#ED2428"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
                                 </svg>
                                 <span>{appAlert.message}</span>
-                                <svg width="20" height="20" viewBox="0 0 20 20" className="alt-close" onClick={closeAlert} xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M5 5L15 15M15 5L5 15" stroke="black" strokeOpacity="0.6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <svg
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 20 20"
+                                    className="alt-close"
+                                    onClick={closeAlert}
+                                    xmlns="http://www.w3.org/2000/svg"
+                                >
+                                    <path
+                                        d="M5 5L15 15M15 5L5 15"
+                                        stroke="black"
+                                        strokeOpacity="0.6"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    />
                                 </svg>
                             </div>
                         )}
@@ -744,7 +1087,7 @@ function Esim() {
                             cursor: "pointer",
                         }}
                     >
-                        <span>Сервис доступен в следующих странах</span>
+                        <span>{t("esim.coverage.modalTitle")}</span>
                         <svg
                             width="24"
                             height="24"
@@ -764,7 +1107,13 @@ function Esim() {
                     </div>
 
                     <div className="esim-inpt" style={{ marginTop: 26 }}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <svg
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
                             <path
                                 fillRule="evenodd"
                                 clipRule="evenodd"
@@ -775,7 +1124,7 @@ function Esim() {
                         </svg>
                         <input
                             type="text"
-                            placeholder="Название страны"
+                            placeholder={t("esim.coverage.searchPlaceholder")}
                             value={coverageSearch}
                             onChange={(e) => setCoverageSearch(e.target.value)}
                         />
@@ -783,7 +1132,7 @@ function Esim() {
                         {coverageSearch && (
                             <button
                                 type="button"
-                                aria-label="Сбросить поиск"
+                                aria-label={t("esim.search.clear")}
                                 onClick={() => setCoverageSearch("")}
                                 style={{ marginLeft: 8 }}
                             >
@@ -794,56 +1143,82 @@ function Esim() {
 
                     <div className="list-auto" style={{ paddingRight: 15 }}>
                         {covLoading && (
-                            <li style={{ padding: 12, opacity: 0.7 }}>Загрузка стран...</li>
+                            <li style={{ padding: 12, opacity: 0.7 }}>
+                                {t("esim.coverage.loading")}
+                            </li>
                         )}
                         {covErr && !covLoading && (
                             <li style={{ padding: 12, color: "#ED2428" }}>{covErr}</li>
                         )}
 
-                        {!covLoading && !covErr && selectedRegion && filteredCoverage.map((c) => (
-                            <li
-                                key={c.country_code}
-                                style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                    gap: 10,
-                                    padding: "10px 0",
-                                }}
-                            >
-                                {c.flag_url ? (
-                                    <img
-                                        src={c.flag_url}
-                                        alt={c.country_name?.ru || c.country_name?.en || c.country_code}
-                                        width={28}
-                                        height={20}
-                                        style={{ borderRadius: 6, objectFit: "cover" }}
-                                    />
-                                ) : (
-                                    <div
+                        {!covLoading &&
+                            !covErr &&
+                            selectedRegion &&
+                            filteredCoverage.map((c) => (
+                                <li
+                                    key={c.country_code}
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: 10,
+                                        padding: "10px 0",
+                                    }}
+                                >
+                                    {c.flag_url ? (
+                                        <img
+                                            src={c.flag_url}
+                                            alt={
+                                                c.country_name?.ru ||
+                                                c.country_name?.en ||
+                                                c.country_code
+                                            }
+                                            width={28}
+                                            height={20}
+                                            style={{
+                                                borderRadius: 6,
+                                                objectFit: "cover",
+                                            }}
+                                        />
+                                    ) : (
+                                        <div
+                                            style={{
+                                                width: 28,
+                                                height: 20,
+                                                borderRadius: 6,
+                                                background: "#eee",
+                                            }}
+                                        />
+                                    )}
+
+                                    <p style={{ fontWeight: 500 }}>
+                                        {c.country_name?.ru ||
+                                            c.country_name?.en ||
+                                            c.country_code}
+                                    </p>
+
+                                    <p
                                         style={{
-                                            width: 28,
-                                            height: 20,
-                                            borderRadius: 6,
-                                            background: "#eee",
+                                            marginLeft: "auto",
+                                            fontSize: 14,
                                         }}
-                                    />
-                                )}
+                                    >
+                                        {t("esim.coverage.tariffsCount", {
+                                            count: c.tariff_count ?? 0,
+                                        })}
+                                    </p>
+                                </li>
+                            ))}
 
-                                <p style={{ fontWeight: 500 }}>
-                                    {c.country_name?.ru || c.country_name?.en || c.country_code}
-                                </p>
-
-                                <p style={{ marginLeft: "auto", fontSize: 14 }}>
-                                    {(c.tariff_count ?? "—")} тарифов
-                                </p>
-                            </li>
-                        ))}
-
-                        {!covLoading && !covErr && selectedRegion && filteredCoverage.length === 0 && (
-                            <li style={{ padding: 12, opacity: 0.7 }}>
-                                {coverageSearch ? "Ничего не найдено" : "Нет стран с совпадающим кодом."}
-                            </li>
-                        )}
+                        {!covLoading &&
+                            !covErr &&
+                            selectedRegion &&
+                            filteredCoverage.length === 0 && (
+                                <li style={{ padding: 12, opacity: 0.7 }}>
+                                    {coverageSearch
+                                        ? t("esim.coverage.notFoundQuery")
+                                        : t("esim.coverage.notFound")}
+                                </li>
+                            )}
                     </div>
                 </ul>
             </div>

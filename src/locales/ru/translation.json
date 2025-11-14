@@ -276,5 +276,71 @@
         "errorTopupBuy": "Ошибка оформления пополнения",
         "successVoucher": "Покупка успешно создана. Продолжите в новой вкладке.",
         "successTopup": "Покупка успешно создана. Продолжите в новой вкладке."
+    },
+    "esim": {
+        "title": "e-SIM",
+        "tabs": {
+            "countries": "Страны",
+            "regions": "Регионы"
+        },
+        "search": {
+            "placeholderCountry": "Название страны",
+            "placeholderRegion": "Название региона",
+            "clear": "Сбросить поиск",
+            "nothingFound": "Ничего не найдено",
+            "loading": "Загрузка…"
+        },
+        "list": {
+            "showTariffs": "Показать тарифы",
+            "tariffsCount": "{{count}} тарифов",
+            "countriesLoadError": "Не удалось загрузить страны.",
+            "regionsLoadError": "Не удалось загрузить регионы."
+        },
+        "tariffs": {
+            "title": "Тарифы",
+            "loading": "Загружаем тарифы…",
+            "loadError": "Не удалось загрузить тарифы.",
+            "notFound": "Тарифы не найдены.",
+            "selectCountry": "Выберите страну чтобы посмотреть тарифы.",
+            "unlimited": "Безлимит",
+            "country": "Страна",
+            "coverage": "Покрытие",
+            "coverageCountriesShort": "{{count}} стран",
+            "days": "Срок действия",
+            "daysSuffix": "{{count}} дней",
+            "price": "Сумма",
+            "buy": "Купить"
+        },
+        "coverage": {
+            "modalTitle": "Сервис доступен в следующих странах",
+            "searchPlaceholder": "Название страны",
+            "loading": "Загрузка стран...",
+            "loadError": "Не удалось загрузить список стран региона.",
+            "tariffsCount": "{{count}} тарифов",
+            "notFoundQuery": "Ничего не найдено",
+            "notFound": "Нет стран с совпадающим кодом."
+        },
+        "purchase": {
+            "title": "Покупка тарифа",
+            "coverage": "Покрытие",
+            "traffic": "Трафик",
+            "days": "Срок действия",
+            "price": "Сумма",
+            "nonRefundableNotice": "Товар возврату не подлежит",
+            "emailNotice": "После оплаты вы получите письмо со ссылкой QR/ для установки eSIM",
+            "clientData": "Данные клиента",
+            "email": "Электронный адрес",
+            "emailPlaceholder": "Введите почту клиента",
+            "phone": "Номер телефона",
+            "phonePlaceholder": "Введите номер телефона клиента",
+            "total": "Итого",
+            "confirmation": "Я подтверждаю, что правильно указал все данные",
+            "submit": "Оплатить",
+            "selectTariffError": "Выберите тариф",
+            "invalidClientData": "Заполните данные клиента корректно",
+            "orderSuccess": "Заказ eSIM создан. Продолжите в новой вкладке.",
+            "orderError": "Ошибка оформления eSIM",
+            "orderFailed": "Не удалось оформить eSIM"
+        }
     }
 }

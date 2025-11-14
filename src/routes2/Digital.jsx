@@ -6,8 +6,8 @@ import "../styles/Digital.css";
 import { useTranslation } from "react-i18next";
 
 const CATEGORIES = [
-    { key: "business", label: "Сервисы" },
-    { key: "games", label: "Игры" },
+    { key: "business", labelKey: "digital.categoryBusiness" },
+    { key: "games", labelKey: "digital.categoryGames" },
 ];
 
 function Digital() {
@@ -153,7 +153,9 @@ function Digital() {
 
             <div style={{ marginTop: 24 }}>
                 <p className="digital-search-h s2" style={{ marginTop: 16 }}>
-                    {CATEGORIES.find(c => c.key === category)?.label}
+                    {CATEGORIES.find(c => c.key === category)
+                        ? t(CATEGORIES.find(c => c.key === category).labelKey)
+                        : ""}
                 </p>
 
                 <div className="digital-btns">
@@ -177,7 +179,7 @@ function Digital() {
                                     <path d="M15.375 13.625V17.125M17.125 15.375H13.625M14.75 9.25H16C17.1046 9.25 18 8.35457 18 7.25V6C18 4.89543 17.1046 4 16 4H14.75C13.6454 4 12.75 4.89543 12.75 6V7.25C12.75 8.35457 13.6454 9.25 14.75 9.25ZM6 18H7.25C8.35457 18 9.25 17.1046 9.25 16V14.75C9.25 13.6454 8.35457 12.75 7.25 12.75H6C4.89543 12.75 4 13.6454 4 14.75V16C4 17.1046 4.89543 18 6 18ZM6 9.25H7.25C8.35457 9.25 9.25 8.35457 9.25 7.25V6C9.25 4.89543 8.35457 4 7.25 4H6C4.89543 4 4 4.89543 4 6V7.25C4 8.35457 4.89543 9.25 6 9.25Z" stroke={category === "business" ? "white" : "black"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                 </svg>
                             )}
-                            <p>{c.label}</p>
+                            <p>{t(c.labelKey)}</p>
                         </button>
                     ))}
                 </div>

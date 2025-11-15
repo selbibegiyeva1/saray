@@ -12,6 +12,29 @@ function Steam() {
     const [activeVoucher, setActiveVoucher] = useState(null);
     const [openFaq, setOpenFaq] = useState(null);
 
+    const steamTopupFaqItems = [
+        { id: 1, qKey: "faq_steam_topup.0.question", aKey: "faq_steam_topup.0.answer" },
+        { id: 2, qKey: "faq_steam_topup.1.question", aKey: "faq_steam_topup.1.answer" },
+        { id: 3, qKey: "faq_steam_topup.2.question", aKey: "faq_steam_topup.2.answer" },
+        { id: 4, qKey: "faq_steam_topup.3.question", aKey: "faq_steam_topup.3.answer" },
+        { id: 5, qKey: "faq_steam_topup.4.question", aKey: "faq_steam_topup.4.answer" },
+        { id: 6, qKey: "faq_steam_topup.5.question", aKey: "faq_steam_topup.5.answer" },
+        { id: 7, qKey: "faq_steam_topup.6.question", aKey: "faq_steam_topup.6.answer" },
+        { id: 8, qKey: "faq_steam_topup.7.question", aKey: "faq_steam_topup.7.answer" },
+    ];
+
+    const steamVoucherFaqItems = [
+        { id: 1, qKey: "faq_steam_voucher.0.question", aKey: "faq_steam_voucher.0.answer" },
+        { id: 2, qKey: "faq_steam_voucher.1.question", aKey: "faq_steam_voucher.1.answer" },
+        { id: 3, qKey: "faq_steam_voucher.2.question", aKey: "faq_steam_voucher.2.answer" },
+        { id: 4, qKey: "faq_steam_voucher.3.question", aKey: "faq_steam_voucher.3.answer" },
+        { id: 5, qKey: "faq_steam_voucher.4.question", aKey: "faq_steam_voucher.4.answer" },
+        { id: 6, qKey: "faq_steam_voucher.5.question", aKey: "faq_steam_voucher.5.answer" },
+        { id: 7, qKey: "faq_steam_voucher.6.question", aKey: "faq_steam_voucher.6.answer" },
+        { id: 8, qKey: "faq_steam_voucher.7.question", aKey: "faq_steam_voucher.7.answer" },
+        { id: 9, qKey: "faq_steam_voucher.8.question", aKey: "faq_steam_voucher.8.answer" },
+    ];
+
     // inside Steam component, add state
     const [voucherRegions, setVoucherRegions] = useState([]);
     const [selectedRegion, setSelectedRegion] = useState("");
@@ -752,589 +775,119 @@ function Steam() {
 
                         {/* POPOLNENIE (steam.tabTopup) */}
                         {activeTab === "topup" && (
-                            <div className="quests" style={{ marginTop: 24 }}>
-
-                                {/* 1 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 1 ? null : 1)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Что такое логин Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
+                            <div className="quests">
+                                {steamTopupFaqItems.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="quest"
+                                        onClick={() =>
+                                            setOpenFaq(openFaq === item.id ? null : item.id)
+                                        }
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div
                                             style={{
-                                                transform: openFaq === 1 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
                                             }}
                                         >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 1 && (
-                                        <div>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Это комбинация букв, цифр и знака «_», которую вы указываете при входе в Steam.
-                                                <br />
-                                                Если вы введете неверный логин — деньги уйдут другому пользователю с этим логином.
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>Важно: точка продаж и клиент несут ответственность за корректность указания логина Steam.</b>
+                                            <p>{t(item.qKey)}</p>
+                                            <svg
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                style={{
+                                                    transform:
+                                                        openFaq === item.id
+                                                            ? "rotate(180deg)"
+                                                            : "rotate(0deg)",
+                                                    transition: "0.2s",
+                                                }}
+                                            >
+                                                <path
+                                                    d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z"
+                                                    fill="#626C77"
+                                                />
+                                            </svg>
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* 2 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 2 ? null : 2)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как узнать регион своего аккаунта Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 2 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
+                                        {openFaq === item.id && (
+                                            <div style={{ maxWidth: 962 }}>
+                                                <p
+                                                    style={{
+                                                        marginTop: 10,
+                                                        fontSize: 14,
+                                                        color: "#00000099",
+                                                    }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: t(item.aKey),
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-
-                                    {openFaq === 2 && (
-                                        <div>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Вы можете проверить регион своего аккаунта через сайт или приложение  Steam (также мобильное):
-                                            </span>
-                                            <ul style={{ marginLeft: 5, fontSize: 14, listStyle: "none", color: "#00000099" }}>
-                                                <li>1. В правом верхнем углу нажмите на имя своего профиля</li>
-                                                <li>2. В выпадающем меню выберите "Об аккаунте: ..."</li>
-                                                <li>3. Найдите поле "Страна"</li>
-                                                <li>4. В строке «Страна» будет указан ваш текущий регион.</li>
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 3 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 3 ? null : 3)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Аккаунты Steam каких стран можно пополнить?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 3 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 3 && (
-                                        <>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Пополнение игрового баланса с минимальной комиссией доступно для пользователей следующих стран:
-                                            </span>
-                                            <br />
-                                            <ul style={{ marginLeft: 25, fontSize: 14, color: "#00000099" }}>
-                                                <li>Россия</li>
-                                                <li>Туркменистан</li>
-                                                <li>Азербайджан</li>
-                                                <li>Армения</li>
-                                                <li>Беларусь</li>
-                                                <li>Казахстан</li>
-                                                <li>Кыргызстан</li>
-                                                <li>Молдова</li>
-                                                <li>Таджикистан</li>
-                                                <li>Узбекистан</li>
-                                            </ul>
-                                        </>
-                                    )}
-                                </div>
-
-                                {/* 4 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 4 ? null : 4)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как пополнить новый аккаунт Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 4 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 4 && (
-                                        <div style={{ maxWidth: 962 }}>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                При первом пополнении нового акааунта есть риск сменить страну магазина Steam. Он может стать, к примеру, казахстанским, то цены везде будут в тенге.
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>Чтобы этого избежать, следуйте инструкции:</b>
-                                            <ul style={{ fontSize: 14, color: "#00000099", listStyle: "none" }}>
-                                                <li>1. Войдите в  свой аккаунт Steam в браузере или программе. Не используйте VPN — иначе домашний регион аккаунта сменится, цены на товары Steam будут указаны в другой валюте.</li>
-                                                <li>2. Добавьте на аккаунт минимум две бесплатные игры. Например, PUBG и Dota 2. Можно добавлять игры через библиотеку Steam в приложении на смартфоне.</li>
-                                                <li>3. Играйте не менее 2-3 часов в добавленных играх.</li>
-                                                <li>4. Пополните аккаунт на минимальную сумму — 100 манат</li>
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 5 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 5 ? null : 5)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Можно ли вернуть деньги после пополнения?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 5 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 5 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            К сожалению, это невозможно. Средства зачисляются на Steam-кошелёк мгновенно.
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* 6 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 6 ? null : 6)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как быстро зачисляются деньги на игровой кошелёк Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 6 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 6 && (
-                                        <div style={{ maxWidth: 962 }}>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Деньги поступят в Стим в течение 15 минут. В редких случаях — до 2 часов.
-                                                <br /><br />
-                                                Если деньги не пришли в течение нескольких часов, напишите нам в поддержку указанную в письме. Мы проверим платёж и постараемся помочь.
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 7 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 7 ? null : 7)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Можно ли вернуть деньги, если ошибся в логине?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 7 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 7 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            Если введенный логин существует — деньги вернуть не получится.
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* 8 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 8 ? null : 8)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Если платёж отменён по техническим причинам?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 8 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 8 && (
-                                        <div style={{ maxWidth: 962 }}>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Проведение платежа может быть недоступно по техническим причинам при обновлении сервиса , попробуйте выполнить операцию позже.
-                                            </span>
-                                        </div>
-                                    )}
-                                </div>
+                                ))}
                             </div>
                         )}
 
                         {/* VOUCHER (steam.tabVoucher) */}
                         {activeTab === "voucher" && (
-                            <div className="quests" style={{ marginTop: 24 }}>
-
-                                {/* 1 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 1 ? null : 1)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Что такое ваучер Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
+                            <div className="quests">
+                                {steamVoucherFaqItems.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="quest"
+                                        onClick={() =>
+                                            setOpenFaq(openFaq === item.id ? null : item.id)
+                                        }
+                                        style={{ cursor: "pointer" }}
+                                    >
+                                        <div
                                             style={{
-                                                transform: openFaq === 1 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
                                             }}
                                         >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 1 && (
-                                        <div style={{ maxWidth: 962 }}>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Ваучер Steam — это цифровой код, который позволяет пополнить баланс вашего аккаунта Steam на выбранную сумму. Он подходит для покупки игр, DLC, предметов и любых товаров внутри платформы.
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>Важно: точка продаж и клиент несут ответственность за корректность указания логина Steam.</b>
+                                            <p>{t(item.qKey)}</p>
+                                            <svg
+                                                width="24"
+                                                height="24"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                style={{
+                                                    transform:
+                                                        openFaq === item.id
+                                                            ? "rotate(180deg)"
+                                                            : "rotate(0deg)",
+                                                    transition: "0.2s",
+                                                }}
+                                            >
+                                                <path
+                                                    d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z"
+                                                    fill="#626C77"
+                                                />
+                                            </svg>
                                         </div>
-                                    )}
-                                </div>
 
-                                {/* 2 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 2 ? null : 2)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Есть ли ограничения по региону?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 2 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
+                                        {openFaq === item.id && (
+                                            <div style={{ maxWidth: 962 }}>
+                                                <p
+                                                    style={{
+                                                        marginTop: 10,
+                                                        fontSize: 14,
+                                                        color: "#00000099",
+                                                    }}
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: t(item.aKey),
+                                                    }}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
-
-                                    {openFaq === 2 && (
-                                        <div>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Да, каждый ваучер привязан к определённому региону. <br />При покупке регион указывается заранее.
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>Если клиент ошибся при выборе региона, замена кода невозможна — выбирайте внимательно</b>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 3 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 3 ? null : 3)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как узнать регион своего аккаунта Steam?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 3 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 3 && (
-                                        <div>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Вы можете проверить регион своего аккаунта через сайт или приложение  Steam (также мобильное):
-                                            </span>
-                                            <ul style={{ marginLeft: 5, listStyle: "none", fontSize: 14, color: "#00000099" }}>
-                                                <li>1. В правом верхнем углу нажмите на имя своего профиля</li>
-                                                <li>2. В выпадающем меню выберите "Об аккаунте: ..."</li>
-                                                <li>3. Найдите поле "Страна"</li>
-                                                <li>4. В строке «Страна» будет указан ваш текущий регион.</li>
-                                            </ul>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 4 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 4 ? null : 4)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как я получу ваучер после оплаты?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 4 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 4 && (
-                                        <div>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                После успешной оплаты , ваучер и инструкция по активации придет в течение 3–15 минут на ваш e‑mail указанный при заполнении
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>
-                                                Важно: точка продаж и клиент несут ответственность за корректность указания email
-                                                <br />
-                                                Если была допущена ошибка в написании адреса, система отправит ваучер на неверную почту, и это не является техническим сбоем.
-                                            </b>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 5 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 5 ? null : 5)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Что делать, если не пришло письмо с ваучером?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 5 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 5 && (
-                                        <div style={{ maxWidth: 962 }}>
-                                            <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Первоначально проверьте в почте папку «Спам», «Промоакции» и «Рассылки».
-                                            </span>
-                                            <br />
-                                            <span style={{ fontSize: 14, color: "#00000099", display: "flex" }}>
-                                                Убедитесь, что адрес почты был указан без ошибок.
-                                            </span>
-                                            <br />
-                                            <b style={{ fontSize: 14, color: "#00000099" }}>
-                                                Если была допущена ошибка в указании почты при оформлении, точка продаж может вручить ваучер клиенту лично и передать код вручную.
-                                                <br />
-                                                В истории транзакции будет доступна отдельная ссылка “QR/Инструкция”, по которому продавец может получить код активации и выдать его клиенту.
-                                            </b>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* 6 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 6 ? null : 6)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Можно ли вернуть деньги за ваучер после покупки?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 6 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 6 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            К сожалению, нет. Ваучер невозвратный.
-                                            <br /><br />
-                                            Если ваучер окажется недействительным, мы проведём проверку и предоставим новый рабочий код
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* 7 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 7 ? null : 7)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Как долго действует ваучер?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 7 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 7 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            Срок действия не ограничен — вы можете активировать его в любое время.
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* 8 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 8 ? null : 8)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Что делать, если система пишет, что код уже активирован?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 8 ? "rotate(180deg)" : "rotate(0deg)",
-                                                transition: "0.2s"
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 8 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            Обратитесь в поддержку указанную в письме. Мы проверим код у поставщика и при подтверждении проблемы заменим его на новый.
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* 9 */}
-                                <div
-                                    className="quest"
-                                    onClick={() => setOpenFaq(openFaq === 9 ? null : 9)}
-                                    style={{ cursor: "pointer" }}
-                                >
-                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                        <p>Можно ли купить ваучер в подарок?</p>
-                                        <svg
-                                            width="24"
-                                            height="24"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            style={{
-                                                transform: openFaq === 9 ? "rotate(180deg)" : "rotate(0deg)", // ✅
-                                                transition: "0.2s",
-                                            }}
-                                        >
-                                            <path d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z" fill="#626C77" />
-                                        </svg>
-                                    </div>
-
-                                    {openFaq === 9 && (
-                                        <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                                            Да, вы можете указать любой email получателя или переслать письмо с кодом вручную.
-                                        </span>
-                                    )}
-                                </div>
+                                ))}
                             </div>
                         )}
                     </div>

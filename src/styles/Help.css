@@ -53,10 +53,6 @@
     margin-top: 14px;
 }
 
-.quest {
-    margin-bottom: 36px;
-}
-
 @media(max-width: 425px) {
     .f-flex-block {
         flex-direction: column;

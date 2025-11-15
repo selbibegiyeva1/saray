@@ -342,5 +342,145 @@
             "orderError": "eSIM resmileşdirmekde ýalňyşlyk",
             "orderFailed": "eSIM resmileşdirmek başartmady"
         }
-    }
+    },
+    "faq_esim": [
+        {
+            "question": "eSIM näme?",
+            "answer": "Bu, daşary ýurt operatorlarynyň eSIM profilini diňe daşary ýurtda gurnamak üçin sanly QR kodudyr. <br /><br />Haryt, syýahatlarda ykjam internet elýeterliligini üpjün edýär, ses / jaňlary we SMS-leri öz içine almaýar , ýerli nomer bermeýär we Türkmenistanyň içinde işlemeýär."
+        },
+        {
+            "question": "eSIM haýsy enjamlarda işleýär?",
+            "answer": "eSIM häzirki zaman iPhone, iPad we Android enjamlarynda goldanylýar.<br /><br />Enjamyňyzyň eSIM-i goldaýandygyny barlamak üçin, jaň aýlaýan re मोडimde *#06# aýlaň. Eger EID belgisini görseňiz, eSIM gurnap bilersiňiz.<br /><br /><b>Wajyp: Satyn almazdan öň, telefonyňyzyň modeliniň eSIM bilen işleýändigine göz ýetiriň. Bu barlag üçin jogapkärçilik alyjyda we satyjyda.</b>"
+        },
+        {
+            "question": "Satyn alandan soň eSIM üçin puly yzyna gaýtaryp bolarmy?",
+            "answer": "Gynansak-da, ýok. eSIM gaýtarylmaýar."
+        },
+        {
+            "question": "Tölegden soň eSIM-i nähili alaryn?",
+            "answer": "Üstünlikli tölegden soň, QR kod we işjeňleşdirme boýunça görkezme 3–15 minudyň dowamynda, dolduran wagtyňyz görkezen e-poçtaňyza geler.<br /><br /><b>Wajyp: Söwda nokady we müşderi e-poçtanyň dogry görkezilmegine jogapkärdir. Eger salgyny ýazmakda ýalňyşlyk goýberilen bolsa, ulgam wauçeri nädogry poçta iberer we bu tehniki näsazlyk däldir.</b>"
+        },
+        {
+            "question": "Eger QR kody bar hat gelmese näme etmeli?",
+            "answer": "Ilki bilen poçtaňyzdaky 'Spam', 'Mahabatlandyryş' we 'Iberilenler' papkalaryny barlaň.<br /><br />Poçta salgysynyň ýalňyşsyz görkezilendigine göz ýetiriň.<br /><br /><b>Eger resmileşdireniňizde poçtany görkezmekde ýalňyşlyk goýberilen bolsa, söwda nokady wauçeri müşderä şahsy özü gowşuryp we kody el bilen berip biler.<br />Tranzaksiýa taryhynda aýratyn 'QR/Görkezme' salgysy elýeterli bolar, onuň arkaly satyjy işjeňleşdirme koduny alyp, ony müşderä berip biler.</b>"
+        },
+        {
+            "question": "eSIM-iň möhleti haçandan başlap hasaplanýar?",
+            "answer": "eSIM goldanýan bir ulgama birikdirilen pursadyndan başlap işleýär."
+        },
+        {
+            "question": "Eger ulgam kod eýýäm işjeňleşdirildi diýip ýazsa näme etmeli?",
+            "answer": "Hatda görkezilen goldaw gullugyna ýüz tutuň. Kody üpjün edijiden barlarys we mesele tassyklanan ýagdaýynda ony täzesine çalşarys."
+        },
+        {
+            "question": "Türkmenistanda men eSIM ulanyp bilerinmi?",
+            "answer": "Ýok, bu mümkin däl. eSIM diňe onuň üçin çykarylan ýurdunda işleýär."
+        }
+    ],
+    "faq_voucher": [
+        {
+            "question": "Wauçer näme?",
+            "answer": "Wauçer – sanlardan we harplardan ybarat özboluşly kombinasiýa. Wauçeriň pul nominallary bolýar, işjeňleşdirilenden soň şol summa oýun hasabyňyzyň gapjygyna geçirilýär."
+        },
+        {
+            "question": "Sebit boýunça çäklendirmeler barmy?",
+            "answer": "Hawa, her bir wauçer belli bir sebit bilen baglanyşykly.<br />Satyn alanyňyzda sebit öňünden saýlanýar.<br /><br /><b>Eger müşderi sebit saýlamasynda ýalňyşsa, kody çalyşmak mümkin däl — saýlanyňyzda seresap boluň.</b>"
+        },
+        {
+            "question": "Tölegden soň wauçeri nähili alaryn?",
+            "answer": "Üstünlikli tölegden soň, wauçer we ony işjeňleşdirmek boýunça görkezme 3–15 minudyň dowamynda dolduran wagtyňyz görkezen e-poçtaňyza geler.<br /><br /><b>Wajyp: Söwda nokady we müşderi e-poçtanyň dogry görkezilmegine jogapkärdir. <br />Eger salgyny ýazmakda ýalňyşlyk goýberilen bolsa, ulgam wauçeri nädogry poçta iberer we bu tehniki näsazlyk däldir.</b>"
+        },
+        {
+            "question": "Eger wauçerli hat gelmese näme etmeli?",
+            "answer": "Ilki bilen poçtaňyzdaky 'Spam', 'Mahabatlandyryş' we 'Iberilenler' papkalaryny barlaň.<br /><br />Poçta salgysynyň ýalňyşsyz görkezilendigine göz ýetiriň.<br /><br /><b>Eger resmileşdireniňizde poçtany görkezmekde ýalňyşlyk goýberilen bolsa, söwda nokady wauçeri müşderä şahsy özü gowşuryp we kody el bilen berip biler.<br />Tranzaksiýa taryhynda aýratyn  “QR/Инструкция”salgysy elýeterli bolar, onuň arkaly satyjy işjeňleşdirme koduny alyp, ony müşderä berip biler.</b>"
+        },
+        {
+            "question": "Satyn alandan soň wauçer üçin puly yzyna gaýtaryp bolarmy?",
+            "answer": "Gynansak-da, ýok. Wauçer yzyna gaýtarylmaýar.<br /><br />Eger wauçer nädogry bolsa, biz barlag geçirip, täze işleýän kody bereris."
+        },
+        {
+            "question": "Wauçer näçe wagt güýjünde bolýar?",
+            "answer": "Möhleti çäklendirilmedik — ony islendik wagt işjeňleşdirip bilersiňiz."
+        },
+        {
+            "question": "Eger ulgam kod eýýäm işjeňleşdirildi diýip ýazsa näme etmeli?",
+            "answer": "Hatda görkezilen goldaw gullugyna ýüz tutuň. Kody üpjün edijiden barlarys we mesele tassyklanan ýagdaýynda ony täzesine çalşarys."
+        },
+        {
+            "question": "Wauçeri sowgat hökmünde satyn alyp bolarmy?",
+            "answer": "Hawa, alyjynyň islendik e-poçtasyny görkezip ýa-da kodly haty el bilen iberip bilersiňiz."
+        }
+    ],
+    "faq_steam_topup": [
+        {
+            "question": "Steam logini näme?",
+            "answer": "Bu, Steame gireniňizde görkezýän harplaryňyzyň, sanlaryňyzyň we '_' belgisiniň utgaşmasydyr.<br />Eger nädogry login girizseňiz, pul şol loginli başga bir ulanyja gider.<br /><br /><b>Wajyp: Söwda nokady we müşderi Steam logininiň dogry görkezilmegine jogapkärdir.</b>"
+        },
+        {
+            "question": "Steam hasabyňyzyň sebitini nähili bilmeli?",
+            "answer": "Hasabyňyzyň sebitini Steam web sahypasy ýa-da programmasy (şol sanda ykjam) arkaly barlap bilersiňiz:<br />1. Ýokarky sag burçda profil adyňyza basyň<br />2. Açylýan menýuda 'Об аккаунте: ...' saýlaň<br />3. 'Страна' meýdanyny tapyň<br />4. 'Страна' setirinde siziň häzirki sebitiňiz görkeziler."
+        },
+        {
+            "question": "Haýsy ýurtlaryň Steam hasaplaryny dolduryp bolýar?",
+            "answer": "Iň az komissiýa bilen oýun balansyny doldurmak aşakdaky ýurtlaryň ulanyjylary üçin elýeterlidir:<br /><br />• Russiýa<br />• Türkmenistan<br />• Azerbaýjan<br />• Ermenistan<br />• Belarus<br />• Gazagystan<br />• Gyrgyzystan<br />• Moldowa<br />• Täjigistan<br />• Özbegistan"
+        },
+        {
+            "question": "Täze Steam hasabyny nähili doldurmaly?",
+            "answer": "Täze hasaby ilkinji gezek dolduranyňyzda, Steam dükanynyň ýurduny üýtgetmek howpy bar. Meselem, ol gazagystanly bolup biler, şonda ähli ýerdäki nyrhlar tenge-de bolar.<br /><br />Munuň öňüni almak üçin görkezmeleri ýerine ýetiriň:<br />1. Brauzerde ýa-da programmada Steam hasabyňyza giriň. VPN ulanmaň — ýogsa hasabyňyzyň esasy sebiti üýtgär, Steam harytlarynyň bahalary başga walýutada görkeziler.<br />2. Hasabyňyza iň azyndan iki sany mugt oýun goşuň. Meselem, PUBG we Dota 2. Oýunlary smartfondaky programmadaky Steam kitaphanasy arkaly goşup bilersiňiz.<br />3. Goşulan oýunlarda iň azyndan 2-3 sagat oýnaň.<br />4. Hasabyňyzy iň az möçberde dolduryň — 100 manat."
+        },
+        {
+            "question": "Doldurandan soň puly yzyna gaýtaryp bolýarmy?",
+            "answer": "Gynansak-da, bu mümkin däl. Serişdeler derrew Steam gapjygyna geçirilýär."
+        },
+        {
+            "question": "Steam oýun gapjygyna pul nähili çalt geçirilýär?",
+            "answer": "Pul Steam-e 15 minudyň dowamynda geler. Seýrek ýagdaýlarda — 2 sagada çenli.<br /><br />Eger pul birnäçe sagadyň dowamynda gelmese, hatda görkezilen goldaw gullugyna ýazyň. Tölegi barlaýarys we kömek etmäge synanyşarys."
+        },
+        {
+            "question": "Steam-i dolduranda loginde ýalňyşlyk goýbersem, puly yzyna gaýtaryp bolarmy?",
+            "answer": "Eger girizilen login bar bolsa, puly yzyna gaýtaryp bolmaz."
+        },
+        {
+            "question": "Eger töleg tehniki sebäplere görä ýatyrylsa?",
+            "answer": "Hyzmat täzelenende tölegiň geçirilmegi tehniki sebäplere görä elýeterli bolmazlygy mümkin, amaly soňrak ýerine ýetirmäge synanyşyň."
+        }
+    ],
+    "faq_steam_voucher": [
+        {
+            "question": "Steam wauçeri näme?",
+            "answer": "Steam wauçeri — bu siziň Steam hasabyňyzyň balansyny saýlanan möçberde doldurmaga mümkinçilik berýän sanly kod. Ol oýunlary, DLC-leri, predmetleri we platformanyň içindäki islendik harytlary satyn almak üçin amatlydyr."
+        },
+        {
+            "question": "Sebit boýunça çäklendirmeler barmy?",
+            "answer": "Hawa, her bir wauçer belli bir sebite baglydyr. Satyn alanyňyzda sebit öňünden görkezilýär.<br /><br /><b>Eger müşderi sebiti saýlanda ýalňyşsa, kody çalyşmak mümkin däl — ünsli saýlaň.</b>"
+        },
+        {
+            "question": "Steam hasabymyň sebitini nähili bilip bilerin?",
+            "answer": "Hasabyňyzyň sebitini Steam web sahypasy ýa-da programmasy (şol sanda ykjam) arkaly barlap bilersiňiz:<br />1. Ýokarky sag burçda profil adyňyza basyň<br />2. Açylýan menýuda 'Об аккаунте: ...' saýlaň<br />3. 'Страна' meýdanyny tapyň<br />4. 'Страна' setirinde siziň häzirki sebitiňiz görkeziler."
+        },
+        {
+            "question": "Tölegden soň wauçeri nähili alaryn?",
+            "answer": "Üstünlikli tölegden soň, wauçer we ony işjeňleşdirmek boýunça görkezme 3–15 minudyň dowamynda dolduran wagtyňyz görkezen e-poçtaňyza geler.<br /><br /><b>Wajyp: Söwda nokady we müşderi e-poçtanyň dogry görkezilmegine jogapkärdir.<br />Eger salgyny ýazmakda ýalňyşlyk goýberilen bolsa, ulgam wauçeri nädogry poçta iberer we bu tehniki näsazlyk däldir.</b>"
+        },
+        {
+            "question": "Eger wauçerli hat gelmese näme etmeli?",
+            "answer": "Ilki bilen poçtaňyzdaky 'Spam', 'Mahabatlandyryş' we 'Iberilenler' papkalaryny barlaň.<br /><br />Poçta salgysynyň ýalňyşsyz görkezilendigine göz ýetiriň.<br /><br /><b>Eger resmileşdireniňizde poçtany görkezmekde ýalňyşlyk goýberilen bolsa, söwda nokady wauçeri müşderä şahsy özü gowşuryp we kody el bilen berip biler.<br />Tranzaksiýa taryhynda aýratyn  “QR/Инструкция”salgysy elýeterli bolar, onuň arkaly satyjy işjeňleşdirme koduny alyp, ony müşderä berip biler.</b>"
+        },
+        {
+            "question": "Satyn alandan soň wauçer üçin puly yzyna gaýtaryp bolarmy?",
+            "answer": "Gynansak-da, ýok. Wauçer yzyna gaýtarylmaýar.<br /><br />Eger wauçer nädogry bolsa, biz barlag geçirip, täze işleýän kody bereris."
+        },
+        {
+            "question": "Wauçer näçe wagt güýjünde bolýar?",
+            "answer": "Möhleti çäklendirilmedik — ony islendik wagt işjeňleşdirip bilersiňiz."
+        },
+        {
+            "question": "Eger ulgam kod eýýäm işjeňleşdirildi diýip ýazsa näme etmeli?",
+            "answer": "Hatda görkezilen goldaw gullugyna ýüz tutuň. Kody üpjün edijiden barlarys we mesele tassyklanan ýagdaýynda ony täzesine çalşarys."
+        },
+        {
+            "question": "Wauçeri sowgat hökmünde satyn alyp bolarmy?",
+            "answer": "Hawa, alyjynyň islendik e-poçtasyny görkezip ýa-da kodly haty el bilen iberip bilersiňiz."
+        }
+    ]
 }

@@ -653,10 +653,12 @@ function Product() {
                 </div>
 
                 {openFaq === 1 && (
-                  <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
-                    Ваучер — уникальная комбинация из цифр и букв. У ваучера есть денежный номинал,
-                    который зачисляется на игровой кошелек при активации.
-                  </span>
+                  <div style={{ width: 962 }}>
+                    <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
+                      Ваучер — уникальная комбинация из цифр и букв. У ваучера есть денежный номинал,
+                      который зачисляется на игровой кошелек при активации.
+                    </span>
+                  </div>
                 )}
               </div>
 
@@ -759,7 +761,7 @@ function Product() {
                 </div>
 
                 {openFaq === 4 && (
-                  <div>
+                  <div style={{ maxWidth: 962 }}>
                     <span style={{ marginTop: 10, fontSize: 14, color: "#00000099", display: "flex" }}>
                       Первоначально проверьте в почте папку «Спам», «Промоакции» и «Рассылки».
                     </span>

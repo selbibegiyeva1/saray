@@ -564,7 +564,7 @@ function Steam() {
                                 </div>
                             </div>
 
-                            <div className="steam-block" style={{ marginTop: 16 }} id='topup'>
+                            <div className="steam-block" style={{ marginTop: 16, paddingBottom: 60 }} id='topup'>
                                 <p className='s-block-h'>{t("steam.accTopup")}</p>
                                 <div className="block-grid" style={{ marginTop: 20 }}>
                                     <div>
@@ -624,7 +624,7 @@ function Steam() {
                                     </div>
                                 </div>
                                 <div className="block-grid">
-                                    <div>
+                                    <div style={{ position: "relative" }}>
                                         <span>{t("steam.topupAmountTmt")}</span>
                                         <div style={{ position: "relative" }}>
                                             <input
@@ -675,7 +675,7 @@ function Steam() {
                                         </div>
 
                                         {limitError && (
-                                            <div className='block-flex' style={{ color: "#F50100", marginTop: 6, fontSize: 14 }}>
+                                            <div className='block-flex' id="steam-err" style={{ color: "#F50100", marginTop: 6, fontSize: 14 }}>
                                                 <p>{limitError}</p>
                                             </div>
                                         )}

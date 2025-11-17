@@ -22,7 +22,7 @@ function Sidebar({ sidebar, sidebarFunc }) {
 
     return (
         <div className={sidebar ? "sidebar moveleft" : "sidebar"}>
-            <ul>
+            <ul style={{listStyle: "none"}}>
                 <li>
                     <NavLink
                         to={user?.role === "OPERATOR" ? "/operator" : "/home"}

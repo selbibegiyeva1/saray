@@ -112,7 +112,7 @@ export default function Buy({
         PENDING: { label: t("transactions.status.pending"), Icon: PendingIcon },
     };
 
-    const perPage = 10;
+    const perPage = 9;
     const [page, setPage] = useState(1);
     const [rows, setRows] = useState([]);
     const [totalPages, setTotalPages] = useState(null);
@@ -407,15 +407,15 @@ export default function Buy({
                             )}
 
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
-                                <tr className="row-titles" style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p>{t("transactions.date")}</p>
+                                <tr className="row-titles buy" style={{ marginBottom: 16 }}>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
                                     <p>{t("transactions.time")}</p>
                                     <p>{t("transactions.txId")}</p>
                                     <p>{t("transactions.operator")}</p>
                                     <p>{t("transactions.category")}</p>
                                     <p>{t("transactions.description")}</p>
                                     <p>{t("transactions.statusLabel")}</p>
-                                    <p>{t("transactions.amount")}</p>
+                                    <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
                                 </tr>
 
                                 {!err &&
@@ -436,8 +436,8 @@ export default function Buy({
                                         const label = StatusDef?.label || tx.status;
 
                                         return (
-                                            <tr key={tx.transaction_id || i} className="row-titles row-data">
-                                                <p>{date}</p>
+                                            <tr key={tx.transaction_id || i} className="row-titles row-data buy">
+                                                <p style={{ textAlign: "left" }}>{date}</p>
                                                 <p>{time}</p>
                                                 <p
                                                     className="trans-overflow"
@@ -463,11 +463,11 @@ export default function Buy({
                                                         style={{ display: "flex", alignItems: "center", gap: 6 }}
                                                     >
                                                         {Icon && <Icon />}
-                                                        <p className="trans-overflow">{label}</p>
+                                                        <p>{label}</p>
                                                     </div>
                                                 </div>
 
-                                                <p>{tx.amount} TMT</p>
+                                                <p style={{ textAlign: "right" }}>{tx.amount} TMT</p>
                                             </tr>
                                         );
                                     })}

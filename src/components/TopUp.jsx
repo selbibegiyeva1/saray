@@ -275,13 +275,12 @@ function TopUp({
                             )}
 
                             <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
-                                <tr className="row-titles topup">
-                                    <p>{t("transactions.date")}</p>
-                                    <p>{t("transactions.time")}</p>
-                                    <p>{t("transactions.txId")}</p>
+                                <tr className="row-titles topup" style={{ marginBottom: 16 }}>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
+                                    <p style={{ textAlign: "left" }}>{t("transactions.txId")}</p>
                                     <p>{t("transactions.balance_b")}</p>
                                     <p>{t("transactions.balance_a")}</p>
-                                    <p>{t("transactions.amount")}</p>
+                                    <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
                                 </tr>
 
                                 {!err &&
@@ -298,14 +297,14 @@ function TopUp({
 
                                         return (
                                             <tr key={tx.transaction_id || i} className="row-titles row-data topup">
-                                                <p>{date}</p>
-                                                <p>{time}</p>
+                                                <p style={{ textAlign: "left" }}>{date} {time}</p>
                                                 <p
                                                     className="trans-overflow"
                                                     style={{
                                                         color: "#2D85EA",
                                                         cursor: "pointer",
                                                         textDecoration: "underline",
+                                                        textAlign: "left"
                                                     }}
                                                     onClick={() => copyTxId(tx.transaction_id)}
                                                 >
@@ -313,7 +312,7 @@ function TopUp({
                                                 </p>
                                                 <p className="trans-overflow">{fmtMoney(tx.balance_before)}</p>
                                                 <p>{fmtMoney(tx.balance_after)}</p>
-                                                <p className="trans-overflow">{fmtMoney(tx.amount)}</p>
+                                                <p style={{ textAlign: "right" }} className="trans-overflow">{fmtMoney(tx.amount)}</p>
                                             </tr>
                                         );
                                     })}

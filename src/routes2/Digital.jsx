@@ -5,6 +5,10 @@ import "../styles/Digital.css";
 
 import { useTranslation } from "react-i18next";
 
+// NEW: skeleton imports (same as other components)
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
+
 const CATEGORIES = [
     { key: "business", labelKey: "digital.categoryBusiness" },
     { key: "games", labelKey: "digital.categoryGames" },
@@ -141,6 +145,7 @@ function Digital() {
                                     }
                                     alt={name}
                                     style={{ width: 23 }}
+                                    loading="lazy"                  // <-- lazy load
                                     onError={(e) => (e.currentTarget.src = "/image.png")}
                                 />
                                 <p style={{ fontSize: 14, fontWeight: 600 }}>{name}</p>
@@ -185,8 +190,24 @@ function Digital() {
                 </div>
 
                 {err && <div className="error" role="alert" style={{ marginTop: 24 }}>{err}</div>}
-                {loading && <div className="loading" style={{ marginTop: 24 }}>Загрузка…</div>}
 
+                {/* SKELETON STATE: while waiting for API */}
+                {loading && !err && (
+                    <div className="digital-grid" style={{ marginTop: 24 }}>
+                        {Array.from({ length: 12 }).map((_, i) => (
+                            <div key={i} className="digital-card">
+                                <Skeleton height={200} width="100%" />
+                                <div style={{ marginTop: 8 }}>
+                                    <center>
+                                        <Skeleton height={16} width={120} />
+                                    </center>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {/* NORMAL DATA STATE */}
                 {!loading && !err && (
                     <div className="digital-grid">
                         {filtered.map(item => {
@@ -203,6 +224,7 @@ function Digital() {
                                     <img
                                         src={item.icon_url || "/image.png"}
                                         alt={item.group_name}
+                                        loading="lazy"  // <-- lazy load API images too
                                         onError={(e) => { e.currentTarget.src = "/image.png"; }}
                                     />
                                     <center><b>{item.group_name}</b></center>

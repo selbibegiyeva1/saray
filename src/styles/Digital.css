@@ -146,4 +146,8 @@
     .Digital {
         padding: 0px 16px;
     }
+
+        .digital-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

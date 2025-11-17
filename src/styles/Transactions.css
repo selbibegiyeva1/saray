@@ -24,7 +24,7 @@
 
 table {
     width: 100%;
-    height: 100%;
+    height: 524px;
     padding-right: 10px;
 }
 
@@ -112,7 +112,7 @@ table .status-cell {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    margin: 24px 0px 89px 0px;
+    margin-top: 24px;
 }
 
 .pags button {

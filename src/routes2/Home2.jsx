@@ -238,156 +238,158 @@ function Home2() {
                 </div>
             </div>
 
-            {/* === Inserted transactions table (exact same API & table structure as Buy) === */}
-            <div className="transactions-container oper-trans" style={{ marginTop: 24 }}>
-                {loading ? (
-                    <div className="loading-overlay" aria-busy="true" aria-live="polite">
-                        <Skeleton height={24} width={204} />
-                        <div style={{ margin: "14px 0px" }}>
-                            <Skeleton height={32} />
-                        </div>
-                        {[...Array(10)].map((_, i) => (
-                            <div key={i} className="loading-grid buyload" style={{ marginBottom: 16 }}>
-                                <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
-                                <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
+            <div style={{ marginBottom: 89 }}>
+                {/* === Inserted transactions table (exact same API & table structure as Buy) === */}
+                <div className="transactions-container oper-trans" style={{ marginTop: 24 }}>
+                    {loading ? (
+                        <div className="loading-overlay" aria-busy="true" aria-live="polite">
+                            <Skeleton height={24} width={204} />
+                            <div style={{ margin: "14px 0px" }}>
+                                <Skeleton height={32} />
                             </div>
-                        ))}
-                    </div>
-                ) : (
-                    <>
-                        <div className="search-table" style={{ marginBottom: 14 }}>
-                            <p className="tb-head">{t("transactions.latest")}</p>
-                            <svg
-                                width="40" height="40" viewBox="0 0 40 40" fill="none"
-                                xmlns="http://www.w3.org/2000/svg"
-                                className={`refresh-table ${loading ? "spinning" : ""}`}
-                                role="button"
-                                aria-label={t("common.refresh") || "Refresh"}
-                                tabIndex={0}
-                                title={t("common.refresh") || "Refresh"}
-                                onClick={() => { if (!loading) setRefreshTick(v => v + 1); }}
-                                onKeyDown={(e) => {
-                                    if ((e.key === "Enter" || e.key === " ") && !loading) setRefreshTick(v => v + 1);
-                                }}
-                                style={{ cursor: loading ? "not-allowed" : "pointer", outline: "none" }}
-                            >
-                                <rect width="40" height="40" rx="8" fill="#2D85EA" />
-                                <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </div>
-
-                        <div className="table-viewport" style={{ position: "relative" }}>
-                            {(err || (!err && rows.length === 0)) && (
-                                <div className="table-message">
-                                    <p>{err || t("transactions.noData")}</p>
+                            {[...Array(10)].map((_, i) => (
+                                <div key={i} className="loading-grid buyload" style={{ marginBottom: 16 }}>
+                                    <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
+                                    <Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} /><Skeleton height={30} />
                                 </div>
-                            )}
-
-                            <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
-                                <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
-                                    <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
-                                    <p>{t("transactions.email")}</p>
-                                    <p style={{ textAlign: "left" }}>{t("transactions.txId")}</p>
-                                    <p>{t("transactions.operator")}</p>
-                                    <p style={{ textAlign: "left" }}>{t("transactions.category")}</p>
-                                    <p>{t("transactions.description")}</p>
-                                    <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
-                                    <p>{t("transactions.statusLabel")}</p>
-                                    <p style={{ textAlign: "right" }}>{t("transactions.link")}</p>
-                                </tr>
-
-                                {!err &&
-                                    rows.map((tx, i) => {
-                                        const { date, time, invalid } = formatDateTime(tx.datetime);
-                                        if (invalid) {
-                                            return (
-                                                <div key={`invalid-${i}`} className="table-message">
-                                                    <p>{t("transactions.empty")}</p>
-                                                </div>
-                                            );
-                                        }
-                                        const key = normalizeStatus(tx.status);
-                                        const StatusDef = STATUS[key];
-                                        const Icon = StatusDef?.Icon;
-                                        const label = StatusDef?.label || tx.status;
-
-                                        return (
-                                            <tr key={tx.transaction_id || i} className="row-titles row-data oper-row">
-                                                <p style={{ textAlign: "left" }}>{date} {time}</p>
-                                                <p className="trans-overflow">{tx.email}</p>
-                                                <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline", textAlign: "left" }} onClick={() => copyTxId(tx.transaction_id)}>
-                                                    {tx.transaction_id}
-                                                </p>
-                                                <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
-                                                <p style={{ textAlign: "left" }}>{tx.category}</p>
-                                                <p>{tx.description}</p>
-                                                <p style={{ textAlign: "right" }}>{tx.amount} TMT</p>
-                                                <div className="status-block">
-                                                    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-                                                        {Icon && <Icon />}
-                                                        <p style={{ width: "auto" }}>{label}</p>
-                                                    </div>
-                                                </div>
-                                                <p style={{ textAlign: "right" }}>
-                                                    {tx.instruction_url
-                                                        ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
-                                                        : "—"}
-                                                </p>
-                                            </tr>
-                                        );
-                                    })}
-                            </table>
-
-                            {copyToast.show && (
-                                <div
-                                    role="status"
-                                    aria-live="polite"
-                                    style={{
-                                        position: "fixed",
-                                        left: "50%",
-                                        bottom: 16,
-                                        transform: "translateX(-50%)",
-                                        padding: "15px 40px",
-                                        background: "white",
-                                        color: "black",
-                                        fontSize: 12,
-                                        borderRadius: 10,
-                                        border: "1px solid #00000026",
-                                        boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
-                                        zIndex: 9999,
-                                        pointerEvents: "none",
-                                        transition: "opacity 150ms ease",
+                            ))}
+                        </div>
+                    ) : (
+                        <>
+                            <div className="search-table" style={{ marginBottom: 14 }}>
+                                <p className="tb-head">{t("transactions.latest")}</p>
+                                <svg
+                                    width="40" height="40" viewBox="0 0 40 40" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className={`refresh-table ${loading ? "spinning" : ""}`}
+                                    role="button"
+                                    aria-label={t("common.refresh") || "Refresh"}
+                                    tabIndex={0}
+                                    title={t("common.refresh") || "Refresh"}
+                                    onClick={() => { if (!loading) setRefreshTick(v => v + 1); }}
+                                    onKeyDown={(e) => {
+                                        if ((e.key === "Enter" || e.key === " ") && !loading) setRefreshTick(v => v + 1);
                                     }}
+                                    style={{ cursor: loading ? "not-allowed" : "pointer", outline: "none" }}
                                 >
-                                    {t("navbar.copied")}
-                                </div>
-                            )}
-                        </div>
-                    </>
-                )}
-            </div>
+                                    <rect width="40" height="40" rx="8" fill="#2D85EA" />
+                                    <path d="M11.0156 18H15M11.0156 18V14M11.0156 18L14.3431 14.3431C17.4673 11.219 22.5327 11.219 25.6569 14.3431C28.781 17.4673 28.781 22.5327 25.6569 25.6569C22.5327 28.781 17.4673 28.781 14.3431 25.6569C13.5593 24.873 12.9721 23.9669 12.5816 23" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                </svg>
+                            </div>
 
-            {/* Numbered pagination (same behavior as Buy) */}
-            {totalPages && totalPages > 1 && (
-                <div className="pags">
-                    {buildPageItems(page, totalPages).map((item, idx) =>
-                        item === "…" ? (
-                            <button key={`ellipsis-${idx}`} className="inactive-btn" disabled>
-                                …
-                            </button>
-                        ) : (
-                            <button
-                                key={item}
-                                className={item === page ? "active-btn" : "inactive-btn"}
-                                disabled={loading}
-                                onClick={() => setPage(item)}
-                            >
-                                {item}
-                            </button>
-                        )
+                            <div className="table-viewport" style={{ position: "relative" }}>
+                                {(err || (!err && rows.length === 0)) && (
+                                    <div className="table-message">
+                                        <p>{err || t("transactions.noData")}</p>
+                                    </div>
+                                )}
+
+                                <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
+                                    <tr className="row-titles oper-row" style={{ marginBottom: 16, marginTop: 14 }}>
+                                        <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
+                                        <p>{t("transactions.email")}</p>
+                                        <p style={{ textAlign: "left" }}>{t("transactions.txId")}</p>
+                                        <p>{t("transactions.operator")}</p>
+                                        <p style={{ textAlign: "left" }}>{t("transactions.category")}</p>
+                                        <p>{t("transactions.description")}</p>
+                                        <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
+                                        <p>{t("transactions.statusLabel")}</p>
+                                        <p style={{ textAlign: "right" }}>{t("transactions.link")}</p>
+                                    </tr>
+
+                                    {!err &&
+                                        rows.map((tx, i) => {
+                                            const { date, time, invalid } = formatDateTime(tx.datetime);
+                                            if (invalid) {
+                                                return (
+                                                    <div key={`invalid-${i}`} className="table-message">
+                                                        <p>{t("transactions.empty")}</p>
+                                                    </div>
+                                                );
+                                            }
+                                            const key = normalizeStatus(tx.status);
+                                            const StatusDef = STATUS[key];
+                                            const Icon = StatusDef?.Icon;
+                                            const label = StatusDef?.label || tx.status;
+
+                                            return (
+                                                <tr key={tx.transaction_id || i} className="row-titles row-data oper-row">
+                                                    <p style={{ textAlign: "left" }}>{date} {time}</p>
+                                                    <p className="trans-overflow">{tx.email}</p>
+                                                    <p className="trans-overflow" style={{ color: "#2D85EA", cursor: "pointer", textDecoration: "underline", textAlign: "left" }} onClick={() => copyTxId(tx.transaction_id)}>
+                                                        {tx.transaction_id}
+                                                    </p>
+                                                    <p className="trans-overflow" style={{ color: "#2D85EA" }}>{tx.operator}</p>
+                                                    <p style={{ textAlign: "left" }}>{tx.category}</p>
+                                                    <p>{tx.description}</p>
+                                                    <p style={{ textAlign: "right" }}>{tx.amount} TMT</p>
+                                                    <div className="status-block">
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+                                                            {Icon && <Icon />}
+                                                            <p style={{ width: "auto" }}>{label}</p>
+                                                        </div>
+                                                    </div>
+                                                    <p style={{ textAlign: "right" }}>
+                                                        {tx.instruction_url
+                                                            ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
+                                                            : "—"}
+                                                    </p>
+                                                </tr>
+                                            );
+                                        })}
+                                </table>
+
+                                {copyToast.show && (
+                                    <div
+                                        role="status"
+                                        aria-live="polite"
+                                        style={{
+                                            position: "fixed",
+                                            left: "50%",
+                                            bottom: 16,
+                                            transform: "translateX(-50%)",
+                                            padding: "15px 40px",
+                                            background: "white",
+                                            color: "black",
+                                            fontSize: 12,
+                                            borderRadius: 10,
+                                            border: "1px solid #00000026",
+                                            boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+                                            zIndex: 9999,
+                                            pointerEvents: "none",
+                                            transition: "opacity 150ms ease",
+                                        }}
+                                    >
+                                        {t("navbar.copied")}
+                                    </div>
+                                )}
+                            </div>
+                        </>
                     )}
                 </div>
-            )}
+
+                {/* Numbered pagination (same behavior as Buy) */}
+                {totalPages && totalPages > 1 && (
+                    <div className="pags">
+                        {buildPageItems(page, totalPages).map((item, idx) =>
+                            item === "…" ? (
+                                <button key={`ellipsis-${idx}`} className="inactive-btn" disabled>
+                                    …
+                                </button>
+                            ) : (
+                                <button
+                                    key={item}
+                                    className={item === page ? "active-btn" : "inactive-btn"}
+                                    disabled={loading}
+                                    onClick={() => setPage(item)}
+                                >
+                                    {item}
+                                </button>
+                            )
+                        )}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

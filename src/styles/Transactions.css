@@ -55,7 +55,7 @@ table {
 }
 
 .row-titles.buy {
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(9, 1fr);
 }
 
 .row-titles.row-data {

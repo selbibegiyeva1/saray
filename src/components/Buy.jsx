@@ -408,13 +408,14 @@ export default function Buy({
                                 <table style={{ opacity: err || (!err && rows.length === 0) ? 0.3 : 1 }}>
                                     <tr className="row-titles buy" style={{ marginBottom: 16 }}>
                                         <p style={{ textAlign: "left" }}>{t("transactions.date")}</p>
-                                        <p>{t("transactions.time")}</p>
+                                        <p>{t("transactions.email")}</p>
                                         <p>{t("transactions.txId")}</p>
                                         <p>{t("transactions.operator")}</p>
                                         <p>{t("transactions.category")}</p>
                                         <p>{t("transactions.description")}</p>
+                                        <p>{t("transactions.amount")}</p>
                                         <p>{t("transactions.statusLabel")}</p>
-                                        <p style={{ textAlign: "right" }}>{t("transactions.amount")}</p>
+                                        <p style={{ textAlign: "right" }}>{t("transactions.link")}</p>
                                     </tr>
 
                                     {!err &&
@@ -436,8 +437,8 @@ export default function Buy({
 
                                             return (
                                                 <tr key={tx.transaction_id || i} className="row-titles row-data buy">
-                                                    <p style={{ textAlign: "left" }}>{date}</p>
-                                                    <p>{time}</p>
+                                                    <p style={{ textAlign: "left" }}>{date} {time}</p>
+                                                    <p className="trans-overflow">{tx.email}</p>
                                                     <p
                                                         className="trans-overflow"
                                                         style={{
@@ -455,18 +456,18 @@ export default function Buy({
                                                     </p>
                                                     <p>{tx.category}</p>
                                                     <p>{tx.description}</p>
-
+                                                    <p>{tx.amount} TMT</p>
                                                     <div className="status-block">
-                                                        <div
-                                                            className="status-cell"
-                                                            style={{ display: "flex", alignItems: "center", gap: 6 }}
-                                                        >
+                                                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
                                                             {Icon && <Icon />}
-                                                            <p>{label}</p>
+                                                            <p style={{ width: "auto" }}>{label}</p>
                                                         </div>
                                                     </div>
-
-                                                    <p style={{ textAlign: "right" }}>{tx.amount} TMT</p>
+                                                    <p style={{ textAlign: "right" }}>
+                                                        {tx.instruction_url
+                                                            ? <a href={tx.instruction_url} target="_blank" rel="noreferrer" style={{ color: "#2D85EA" }}>{t("transactions.qr")}</a>
+                                                            : "—"}
+                                                    </p>
                                                 </tr>
                                             );
                                         })}

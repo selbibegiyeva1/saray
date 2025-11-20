@@ -184,21 +184,21 @@ function EarnedReport() {
         <div className="table-viewport">
           <table>
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
-              <p>{t("reports.period")}</p>
+              <p style={{ textAlign: "left" }}>{t("reports.period")}</p>
               <p>{t("reports.category")}</p>
               <p>{t("reports.turnoverReports")}</p>
               <p>{t("reports.transactionsReports")}</p>
-              <p>{t("reports.reward")}</p>
+              <p style={{ textAlign: "right" }}>{t("reports.reward")}</p>
             </tr>
 
             {hasTransactions ? (
               (filteredTransactions.length > 0 ? filteredTransactions : []).map((tx, i) => (
                 <tr key={i} className="row-titles row-data withdrawn">
-                  <p>{tx.date}</p>
+                  <p style={{ textAlign: "left" }}>{tx.date}</p>
                   <p>{tx.time}</p>
                   <p className="trans-overflow">{tx.txId}</p>
                   <p className="trans-overflow">{tx.orderId}</p>
-                  <p>{tx.category}</p>
+                  <p style={{ textAlign: "right" }}>{tx.category}</p>
                 </tr>
               ))
             ) : (

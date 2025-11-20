@@ -15,11 +15,6 @@ function WithdrawnReport() {
     { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
     { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
     { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
-    { date: "Авг 6, 2024", time: "15:56", txId: "Наличными", orderId: "Выдача наличными офис номер 2", category: "58.451,32 ТМТ" },
   ];
 
   return (
@@ -55,21 +50,21 @@ function WithdrawnReport() {
           <table>
 
             <tr className="row-titles withdrawn" style={{ marginBottom: 16, marginTop: 14 }}>
-              <p>{t("reports.columns.dateWithdrawal")}</p>
+              <p style={{ textAlign: "left" }}>{t("reports.columns.dateWithdrawal")}</p>
               <p>{t("reports.columns.timeWithdrawal")}</p>
               <p>{t("reports.columns.methodWithdrawal")}</p>
               <p>{t("reports.columns.comment")}</p>
-              <p>{t("reports.columns.amountWithdrawal")}</p>
+              <p style={{ textAlign: "right" }}>{t("reports.columns.amountWithdrawal")}</p>
             </tr>
 
             {hasTransactions ? (
               transactions.map((tx, i) => (
                 <tr key={i} className="row-titles row-data withdrawn">
-                  <p>{tx.date}</p>
+                  <p style={{ textAlign: "left" }}>{tx.date}</p>
                   <p>{tx.time}</p>
                   <p className="trans-overflow">{tx.txId}</p>
                   <p className="trans-overflow">{tx.orderId}</p>
-                  <p>{tx.category}</p>
+                  <p style={{ textAlign: "right" }}>{tx.category}</p>
                 </tr>
               ))
             ) : (

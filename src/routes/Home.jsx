@@ -40,7 +40,7 @@ function Home() {
   const [tempCategory, setTempCategory] = useState("all");
 
   const [payment, setPayment] = useState("card");
-  const [period, setPeriod] = useState("day");
+  const [period, setPeriod] = useState("all_time");
   const [chartLabels, setChartLabels] = useState([]);
   const [chartValues, setChartValues] = useState([]);
   const [revenueValues, setRevenueValues] = useState([]);

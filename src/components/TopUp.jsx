@@ -34,13 +34,11 @@ function TopUp({
 
     // ======= Header state (no category filter on TopUp) =======
     const [openDay, setOpenDay] = useState(false);
-    const [uiPeriod, setUiPeriod] = useState(
-        (sharedPeriod === "all_time" ? "all" : sharedPeriod) || "all"
-    );
+    const [uiPeriod, setUiPeriod] = useState("all_time");
 
     useEffect(() => {
         if (sharedPeriod) {
-            setUiPeriod(sharedPeriod === "all_time" ? "all" : sharedPeriod);
+            setUiPeriod("all");
         }
     }, [sharedPeriod]);
 

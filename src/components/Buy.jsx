@@ -57,13 +57,11 @@ export default function Buy({
     const [appliedCategory, setAppliedCategory] = useState("All");   // drives API
     const [pendingCategory, setPendingCategory] = useState("All");   // UI selection only
     // UI state must be one of: "day" | "week" | "month" | "year" | "all"
-    const [period, setPeriod] = useState(
-        (sharedPeriod === "all_time" ? "all" : sharedPeriod) || "all"
-    );
+    const [period, setPeriod] = useState("all_time");
 
     useEffect(() => {
         if (sharedPeriod) {
-            setPeriod(sharedPeriod === "all_time" ? "all" : sharedPeriod);
+            setPeriod("all");
         }
     }, [sharedPeriod]);
 

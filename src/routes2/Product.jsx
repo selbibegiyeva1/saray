@@ -635,67 +635,6 @@ function Product() {
           ) : (
             <div style={{ opacity: 0.7, padding: 16 }}>{t("product.noData")}</div>
           )}
-
-          {/* ========== FAQ (для всех продуктов, ваучер + пополнение) ========== */}
-          <div style={{ marginTop: 40 }}>
-            <p className="s-block-h">FAQ</p>
-
-            <div className="quests">
-              {voucherFaqItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="quest"
-                  onClick={() =>
-                    setOpenFaq(openFaq === item.id ? null : item.id)
-                  }
-                  style={{ cursor: "pointer" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <p>{t(item.qKey)}</p>
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      style={{
-                        transform:
-                          openFaq === item.id
-                            ? "rotate(180deg)"
-                            : "rotate(0deg)",
-                        transition: "0.2s",
-                      }}
-                    >
-                      <path
-                        d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z"
-                        fill="#626C77"
-                      />
-                    </svg>
-                  </div>
-
-                  {openFaq === item.id && (
-                    <div style={{ maxWidth: 962 }}>
-                      <p
-                        style={{
-                          marginTop: 10,
-                          fontSize: 14,
-                          color: "#00000099",
-                        }}
-                        dangerouslySetInnerHTML={{
-                          __html: t(item.aKey),
-                        }}
-                      />
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Right column: Оплата + open modal */}
@@ -781,6 +720,67 @@ function Product() {
                 {t("product.modalPay")}
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* ========== FAQ (для всех продуктов, ваучер + пополнение) ========== */}
+        <div>
+          <p className="s-block-h">FAQ</p>
+
+          <div className="quests">
+            {voucherFaqItems.map((item) => (
+              <div
+                key={item.id}
+                className="quest"
+                onClick={() =>
+                  setOpenFaq(openFaq === item.id ? null : item.id)
+                }
+                style={{ cursor: "pointer" }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <p>{t(item.qKey)}</p>
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    style={{
+                      transform:
+                        openFaq === item.id
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                      transition: "0.2s",
+                    }}
+                  >
+                    <path
+                      d="M18.9882 9C19.8882 9 20.3382 10.077 19.7022 10.706L16.5722 13.802C14.4182 15.934 13.3402 17 12.0002 17C10.6602 17 9.58319 15.934 7.42719 13.802L4.29819 10.706C3.66119 10.076 4.11219 9 5.01319 9C5.28019 9 5.53719 9.105 5.72719 9.293L8.85719 12.388C9.97519 13.494 10.6722 14.178 11.2462 14.611C11.7632 15.001 11.9432 15.001 11.9972 15.001H12.0032C12.0562 15.001 12.2372 15.001 12.7542 14.611C13.3282 14.179 14.0262 13.494 15.1442 12.388L18.2732 9.293C18.4636 9.10498 18.7206 8.99969 18.9882 9Z"
+                      fill="#626C77"
+                    />
+                  </svg>
+                </div>
+
+                {openFaq === item.id && (
+                  <div style={{ maxWidth: 962 }}>
+                    <p
+                      style={{
+                        marginTop: 10,
+                        fontSize: 14,
+                        color: "#00000099",
+                      }}
+                      dangerouslySetInnerHTML={{
+                        __html: t(item.aKey),
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
